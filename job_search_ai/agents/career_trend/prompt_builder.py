@@ -12,7 +12,7 @@ Responsibility:
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Final, Optional
+from typing import TYPE_CHECKING, Final, Optional       
 
 from job_search_ai.agents.career_trend.schemas import SearchResult, StudentProfile
 
