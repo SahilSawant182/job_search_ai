@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>StrideNex AI — Career Trend Agent</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+	<style>
+		{% include "job_search_ai/www/career-trend-demo.css" %}
+	</style>
+</head>
+<body>
+
+	<!-- Top Bar -->
+	<div class="top-bar">
+		<div class="container-xl d-flex justify-content-between align-items-center h-100">
+			<div class="d-flex align-items-center gap-3">
+				<div class="brand-logo">
+					<i class="bi bi-cpu-fill"></i>
+				</div>
+				<div>
+					<div class="brand-name">StrideNex <span class="brand-accent">AI</span></div>
+					<div class="brand-sub">Career Intelligence Platform</div>
+				</div>
+			</div>
+			<div class="d-flex align-items-center gap-2">
+				<span class="demo-badge"><i class="bi bi-shield-check-fill me-1"></i>Internal Demo</span>
+				<a href="/app/job-search-ai-settings/Job%20Search%20AI%20Settings" target="_blank" class="config-btn" id="btn-config">
+					<i class="bi bi-gear-fill me-1"></i>View Configuration
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<!-- Hero Intro Strip -->
+	<div class="hero-strip">
+		<div class="container-xl">
+			<div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+				<div>
+					<h1 class="hero-title">Career Trend Agent <span class="version-tag">v1.0</span></h1>
+					<p class="hero-sub">Analyse real-time labour market data and generate personalised career recommendations.</p>
+				</div>
+				<div class="d-flex gap-2 flex-wrap">
+					<div class="stat-chip"><i class="bi bi-lightning-charge-fill text-warning me-1"></i>Live Tavily Search</div>
+					<div class="stat-chip"><i class="bi bi-cpu text-info me-1"></i>Qwen LLM</div>
+					<div class="stat-chip"><i class="bi bi-diagram-3-fill text-success me-1"></i>5-Stage Pipeline</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<main class="container-xl main-content">
+
+		<!-- Error Alert -->
+		<div id="error-container" class="d-none mb-4">
+			<div class="alert-modern alert-danger-modern d-flex align-items-start gap-3" role="alert">
+				<i class="bi bi-exclamation-triangle-fill fs-5 flex-shrink-0 mt-1"></i>
+				<div class="flex-grow-1">
+					<div class="fw-semibold mb-1">Analysis Failed</div>
+					<div id="error-message" class="small"></div>
+				</div>
+				<button type="button" class="btn-close-custom" onclick="document.getElementById('error-container').classList.add('d-none')">
+					<i class="bi bi-x-lg"></i>
+				</button>
+			</div>
+		</div>
+
+		<div class="row g-4">
+
+			<!-- LEFT: Input Panel -->
+			<div class="col-xl-4 col-lg-5">
+				<div class="panel h-100">
+					<div class="panel-header">
+						<div class="panel-icon"><i class="bi bi-person-badge-fill"></i></div>
+						<div>
+							<div class="panel-title">Student Profile</div>
+							<div class="panel-sub">Configure the candidate parameters</div>
+						</div>
+					</div>
+					<div class="panel-body">
+						<form id="profile-form">
+
+							<div class="form-group">
+								<label class="form-lbl" for="degree"><i class="bi bi-mortarboard-fill me-1 text-primary"></i>Degree</label>
+								<input type="text" class="form-field" id="degree" value="Engineering" placeholder="e.g. Engineering" required>
+							</div>
+
+							<div class="form-group">
+								<label class="form-lbl" for="branch"><i class="bi bi-diagram-2-fill me-1 text-primary"></i>Branch / Specialisation</label>
+								<input type="text" class="form-field" id="branch" value="Computer Engineering" placeholder="e.g. Computer Science" required>
+							</div>
+
+							<div class="row g-3">
+								<div class="col-6">
+									<div class="form-group mb-0">
+										<label class="form-lbl" for="year"><i class="bi bi-calendar3 me-1 text-primary"></i>Academic Year</label>
+										<select class="form-field" id="year" required>
+											<option value="1" selected>Year 1</option>
+											<option value="2">Year 2</option>
+											<option value="3">Year 3</option>
+											<option value="4">Year 4</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-6">
+									<div class="form-group mb-0">
+										<label class="form-lbl" for="country"><i class="bi bi-geo-alt-fill me-1 text-primary"></i>Country</label>
+										<input type="text" class="form-field" id="country" value="India" placeholder="e.g. India" required>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="form-lbl" for="interests"><i class="bi bi-heart-fill me-1 text-primary"></i>Interests</label>
+								<input type="text" class="form-field" id="interests" value="AI, Backend" placeholder="e.g. AI, Machine Learning">
+								<div class="field-hint">Comma-separated</div>
+							</div>
+
+							<div class="form-group">
+								<label class="form-lbl" for="skills"><i class="bi bi-code-slash me-1 text-primary"></i>Skills</label>
+								<input type="text" class="form-field" id="skills" value="Java, Python" placeholder="e.g. Python, Java">
+								<div class="field-hint">Comma-separated</div>
+							</div>
+
+							<button type="submit" class="analyze-btn w-100 mt-2" id="submit-btn">
+								<i class="bi bi-stars me-2"></i>Analyze Career Trends
+							</button>
+						</form>
+					</div>
+
+					<!-- Config Note at bottom of form panel -->
+					<div class="config-note">
+						<i class="bi bi-info-circle-fill me-2 text-primary"></i>
+						Powered by <strong>Job Search AI Settings</strong> — API keys, LLM model, and search parameters are read from the Frappe configuration.
+						<a href="/app/job-search-ai-settings/Job%20Search%20AI%20Settings" target="_blank" class="config-link ms-1">Edit Settings →</a>
+					</div>
+				</div>
+			</div>
+
+			<!-- RIGHT: Output Panel -->
+			<div class="col-xl-8 col-lg-7">
+
+				<!-- Welcome State -->
+				<div id="welcome-card" class="panel h-100 d-flex align-items-center justify-content-center">
+					<div class="text-center py-5 px-4">
+						<div class="welcome-icon mb-4"><i class="bi bi-graph-up-arrow"></i></div>
+						<h4 class="fw-bold mb-2">Ready to Analyse</h4>
+						<p class="text-muted mb-0" style="max-width:360px; margin:0 auto">Fill in the student profile on the left and click <strong>Analyze Career Trends</strong> to run the live AI pipeline.</p>
+					</div>
+				</div>
+
+				<!-- Loading State -->
+				<div id="loading-card" class="panel d-none">
+					<div class="panel-header border-bottom-0 pb-0">
+						<div class="panel-icon anim-spin"><i class="bi bi-arrow-repeat"></i></div>
+						<div>
+							<div class="panel-title">Running AI Pipeline</div>
+							<div class="panel-sub">This usually takes 10 – 30 seconds</div>
+						</div>
+					</div>
+					<div class="panel-body pt-3">
+						<div class="pipeline-track">
+							<div class="pipeline-step" id="step-profile">
+								<div class="step-dot"></div>
+								<div class="step-connector"></div>
+								<div class="step-label"><span class="step-num">1</span> Student Profile Loaded</div>
+							</div>
+							<div class="pipeline-step" id="step-queries">
+								<div class="step-dot"></div>
+								<div class="step-connector"></div>
+								<div class="step-label"><span class="step-num">2</span> Building Search Queries</div>
+							</div>
+							<div class="pipeline-step" id="step-trends">
+								<div class="step-dot"></div>
+								<div class="step-connector"></div>
+								<div class="step-label"><span class="step-num">3</span> Searching Live Market Data</div>
+							</div>
+							<div class="pipeline-step" id="step-filter">
+								<div class="step-dot"></div>
+								<div class="step-connector"></div>
+								<div class="step-label"><span class="step-num">4</span> Filtering &amp; Ranking Results</div>
+							</div>
+							<div class="pipeline-step" id="step-llm">
+								<div class="step-dot"></div>
+								<div class="step-connector"></div>
+								<div class="step-label"><span class="step-num">5</span> AI Market Analysis (LLM)</div>
+							</div>
+							<div class="pipeline-step" id="step-done">
+								<div class="step-dot"></div>
+								<div class="step-connector" style="display:none"></div>
+								<div class="step-label"><span class="step-num">6</span> Generating Recommendations</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Results State -->
+				<div id="results-container" class="d-none">
+
+					<!-- Summary Card -->
+					<div class="panel mb-4">
+						<div class="panel-body">
+							<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
+								<div>
+									<div class="results-tag"><i class="bi bi-check-circle-fill me-1"></i>Analysis Complete</div>
+									<h5 class="fw-bold mt-2 mb-1">Overall Career Strategy</h5>
+									<div class="text-muted small">Generated <span id="generated-time" class="fw-semibold text-dark"></span></div>
+								</div>
+								<div class="model-chip" id="model-badge"></div>
+							</div>
+							<p class="strategy-text mb-0" id="strategy-text"></p>
+						</div>
+					</div>
+
+					<!-- Metrics Row -->
+					<div class="metrics-row mb-4">
+						<div class="metric-card">
+							<div class="metric-icon bg-primary-soft text-primary"><i class="bi bi-clock-fill"></i></div>
+							<div class="metric-val" id="metric-total">—</div>
+							<div class="metric-label">Total Time</div>
+						</div>
+						<div class="metric-card">
+							<div class="metric-icon bg-info-soft text-info"><i class="bi bi-search"></i></div>
+							<div class="metric-val" id="metric-search">—</div>
+							<div class="metric-label">Search Time</div>
+						</div>
+						<div class="metric-card">
+							<div class="metric-icon bg-warning-soft text-warning"><i class="bi bi-cpu-fill"></i></div>
+							<div class="metric-val" id="metric-llm">—</div>
+							<div class="metric-label">LLM Time</div>
+						</div>
+						<div class="metric-card">
+							<div class="metric-icon bg-success-soft text-success"><i class="bi bi-file-text-fill"></i></div>
+							<div class="metric-val" id="metric-prompt">—</div>
+							<div class="metric-label">Prompt Chars</div>
+						</div>
+						<div class="metric-card">
+							<div class="metric-icon bg-danger-soft text-danger"><i class="bi bi-collection-fill"></i></div>
+							<div class="metric-val" id="metric-results">—</div>
+							<div class="metric-label">Sources Used</div>
+						</div>
+					</div>
+
+					<!-- Career Cards -->
+					<h6 class="section-heading"><i class="bi bi-bookmark-star-fill me-2"></i>Recommended Career Paths</h6>
+					<div id="career-paths"></div>
+
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<footer class="site-footer">
+		<div class="container-xl">
+			<span>© 2026 StrideNex — Internal Preview Only</span>
+			<span class="footer-sep">·</span>
+			<span>Career Trend Agent v1.0</span>
+		</div>
+	</footer>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+		{% include "job_search_ai/www/career-trend-demo.js" %}
+	</script>
+</body>
+</html>
