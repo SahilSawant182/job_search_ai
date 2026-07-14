@@ -86,39 +86,39 @@ class Evidence:
 
     @classmethod
     def from_knowledge(cls, records: "list[RetrievedKnowledge]") -> "list[Evidence]":
-        """Convert a list of RetrievedKnowledge objects into Evidence items.
+        """Convert RetrievedKnowledge records into structured Evidence items.
 
-        Produces compact, structured content that gives the LLM exactly the
-        facts it needs to make career recommendations — no prose, no filler.
+        Phase 9: emits tiered skill blocks so the LLM can produce accurate
+        skill-gap analysis and per-tier explanations.
         """
         items = []
         for r in records:
-            # Compact structured fact block — field: value pairs
             parts = []
             if r.industry:
                 parts.append(f"Industry: {r.industry}")
-            if r.category:
-                parts.append(f"Category: {r.category}")
             if r.future_demand:
                 parts.append(f"Demand: {r.future_demand}")
             if r.career_stage:
                 parts.append(f"Stage: {r.career_stage}")
             if r.companies:
                 parts.append(f"Hiring: {', '.join(r.companies[:4])}")
-
             content = " | ".join(parts) if parts else r.career_name
-
-            # Separate required vs advanced skills for better LLM reasoning
-            skills_all = r.skills[:12]  # top 12 by importance
 
             items.append(cls(
                 title   = r.career_name,
-                source  = f"KB:{r.doc_name}",   # compact source label
+                source  = f"KB:{r.doc_name}",
                 url     = "",
                 content = content,
                 score   = r.similarity,
-                skills  = skills_all,
+                skills  = getattr(r, "required_skills", r.skills[:6]),
+                # Pass tier lists as extra attributes via a dict trick on the dataclass
+                # PromptBuilder reads these via hasattr
             ))
+            # Attach tier data directly to allow PromptBuilder to use it
+            items[-1].__dict__["_required"]  = getattr(r, "required_skills", [])
+            items[-1].__dict__["_advanced"]  = getattr(r, "advanced_skills", [])
+            items[-1].__dict__["_nice"]      = getattr(r, "nice_skills",     [])
+            items[-1].__dict__["_roadmap"]   = getattr(r, "learning_roadmap", "")
         return items
 
 
@@ -280,15 +280,23 @@ class PromptBuilder:
     def _evidence_section(self, evidence: list[Evidence], is_kh: bool = False) -> str:
         if is_kh:
             lines = ["Evidence:"]
-            for idx, item in enumerate(evidence, start=1):
+            for item in evidence:
+                # Phase 9: structured tiered skill block
+                req  = item.__dict__.get("_required", item.skills[:4])
+                adv  = item.__dict__.get("_advanced", [])
+                nice = item.__dict__.get("_nice",     [])
+                road = item.__dict__.get("_roadmap",  "")
+
                 content = item.content.strip()
-                # Keep content compact but not destructively small
-                if len(content) > 120:
-                    content = content[:117] + "…"
-                content = " ".join(content.split())
+                if len(content) > 100:
+                    content = content[:97] + "…"
                 block = f"{item.title} | {content}"
-                if item.skills:
-                    block += f" | Skills: {', '.join(item.skills[:6])}"
+                if req:
+                    block += f" | Required: {', '.join(req[:5])}"
+                if adv:
+                    block += f" | Advanced: {', '.join(adv[:4])}"
+                if nice:
+                    block += f" | Nice: {', '.join(nice[:3])}"
                 lines.append(block)
             return "\n".join(lines)
         else:

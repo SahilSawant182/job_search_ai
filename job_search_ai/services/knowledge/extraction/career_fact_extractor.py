@@ -2,30 +2,7 @@
 # job_search_ai/services/knowledge/extraction/career_fact_extractor.py
 #
 # CareerFactExtractor — FULLY DETERMINISTIC (no LLM calls)
-# ---------------------------------------------------------
-# Extracts career facts from cleaned web-page text using only
-# Python heuristics. Zero LLM calls. Zero network I/O.
-#
-# Architecture principle: ONE USER REQUEST = ONE LLM CALL
-#   - The LLM is called exactly once per student request,
-#     at the final recommendation generation stage.
-#   - Everything before that call must be deterministic Python.
-#
-# What this module extracts deterministically
-# -------------------------------------------
-#   career_name   — inferred from titles / headings in the text
-#   industry      — matched from INDUSTRY_KEYWORDS
-#   category      — matched from CATEGORY_KEYWORDS
-#   demand        — matched from DEMAND_KEYWORDS
-#   stage         — matched from STAGE_KEYWORDS
-#   summary       — first substantive sentence (≤300 chars)
-#   min/max_salary — extracted via salary regex
-#   currency      — inferred from salary context
-#   skills        — raw token list (normalised later by SkillNormalizer)
-#   companies     — matched from KNOWN_COMPANIES
-#   evidence_count — number of source texts that yielded evidence
-#   confidence    — deterministic formula: source_reliability + completeness
-
+# Phase 9: Canonical career names + per-source skill synthesis
 from __future__ import annotations
 
 import logging
@@ -35,7 +12,104 @@ logger = logging.getLogger(__name__)
 
 
 # ---------------------------------------------------------------------------
-# Keyword tables — all deterministic, no LLM
+# Canonical career name table
+# ---------------------------------------------------------------------------
+
+CANONICAL_CAREERS: dict[str, str] = {
+    # Frontend
+    "frontend developer": "Frontend Developer",
+    "front-end developer": "Frontend Developer",
+    "front end developer": "Frontend Developer",
+    "ui developer": "Frontend Developer",
+    "react developer": "React Developer",
+    "angular developer": "Angular Developer",
+    "vue developer": "Vue.js Developer",
+    # Backend
+    "backend developer": "Backend Developer",
+    "back-end developer": "Backend Developer",
+    "back end developer": "Backend Developer",
+    "server-side developer": "Backend Developer",
+    "node developer": "Node.js Developer",
+    "django developer": "Python Backend Developer",
+    "spring developer": "Java Backend Developer",
+    # Full Stack
+    "full stack developer": "Full Stack Developer",
+    "fullstack developer": "Full Stack Developer",
+    "full-stack developer": "Full Stack Developer",
+    "mern developer": "Full Stack Developer",
+    "mean developer": "Full Stack Developer",
+    # Data
+    "data scientist": "Data Scientist",
+    "data analyst": "Data Analyst",
+    "data engineer": "Data Engineer",
+    "business analyst": "Business Analyst",
+    "bi developer": "Business Intelligence Developer",
+    "bi analyst": "Business Intelligence Analyst",
+    # AI / ML
+    "machine learning engineer": "Machine Learning Engineer",
+    "ml engineer": "Machine Learning Engineer",
+    "ai engineer": "AI Engineer",
+    "artificial intelligence engineer": "AI Engineer",
+    "deep learning engineer": "Deep Learning Engineer",
+    "nlp engineer": "NLP Engineer",
+    "computer vision engineer": "Computer Vision Engineer",
+    # Cloud / DevOps
+    "cloud engineer": "Cloud Engineer",
+    "devops engineer": "DevOps Engineer",
+    "site reliability engineer": "Site Reliability Engineer",
+    "sre": "Site Reliability Engineer",
+    "platform engineer": "Platform Engineer",
+    "infrastructure engineer": "Infrastructure Engineer",
+    # Mobile
+    "android developer": "Android Developer",
+    "ios developer": "iOS Developer",
+    "mobile developer": "Mobile Developer",
+    "flutter developer": "Flutter Developer",
+    "react native developer": "React Native Developer",
+    # Software Engineering
+    "software engineer": "Software Engineer",
+    "software developer": "Software Developer",
+    "application developer": "Software Developer",
+    "java developer": "Java Developer",
+    "python developer": "Python Developer",
+    "golang developer": "Go Developer",
+    ".net developer": ".NET Developer",
+    # Security
+    "cybersecurity analyst": "Cybersecurity Analyst",
+    "security engineer": "Security Engineer",
+    "penetration tester": "Penetration Tester",
+    "ethical hacker": "Penetration Tester",
+    # QA / Testing
+    "qa engineer": "QA Engineer",
+    "test engineer": "QA Engineer",
+    "automation tester": "Automation Test Engineer",
+    "sdet": "Automation Test Engineer",
+    # Design
+    "ui/ux designer": "UI/UX Designer",
+    "ux designer": "UI/UX Designer",
+    "ui designer": "UI/UX Designer",
+    "product designer": "Product Designer",
+    # Management
+    "product manager": "Product Manager",
+    "project manager": "Project Manager",
+    "engineering manager": "Engineering Manager",
+    # Database
+    "database administrator": "Database Administrator",
+    "dba": "Database Administrator",
+    "database engineer": "Database Engineer",
+    # Embedded
+    "embedded systems engineer": "Embedded Systems Engineer",
+    "firmware engineer": "Firmware Engineer",
+    "iot engineer": "IoT Engineer",
+    # Other tech
+    "blockchain developer": "Blockchain Developer",
+    "web3 developer": "Web3 Developer",
+    "game developer": "Game Developer",
+    "technical writer": "Technical Writer",
+}
+
+# ---------------------------------------------------------------------------
+# Keyword tables — deterministic, no LLM
 # ---------------------------------------------------------------------------
 
 INDUSTRY_KEYWORDS: dict[str, str] = {
@@ -77,7 +151,6 @@ INDUSTRY_KEYWORDS: dict[str, str] = {
     "software": "Technology",
     "technology": "Technology",
     "tech": "Technology",
-    "it ": "Technology",
     "information technology": "Technology",
 }
 
@@ -96,7 +169,7 @@ CATEGORY_KEYWORDS: dict[str, str] = {
     "researcher": "Researcher",
     "administrator": "Administrator",
     "tester": "Quality Assurance",
-    "qa ": "Quality Assurance",
+    "qa": "Quality Assurance",
     "devops": "DevOps",
     "security": "Security Specialist",
     "data": "Data Professional",
@@ -139,7 +212,13 @@ STAGE_KEYWORDS: dict[str, str] = {
     "research": "Future",
 }
 
-# Representative companies (extend as needed; keep deterministic)
+# Stage → suitable academic years
+STAGE_TO_YEARS: dict[str, str] = {
+    "Immediate Placement": "3,4",
+    "Growing": "2,3,4",
+    "Future": "1,2,3",
+}
+
 KNOWN_COMPANIES: list[str] = [
     "Google", "Microsoft", "Amazon", "Meta", "Apple", "Netflix", "Uber", "Airbnb",
     "IBM", "Oracle", "SAP", "Salesforce", "Adobe", "Accenture", "Deloitte",
@@ -154,7 +233,6 @@ KNOWN_COMPANIES: list[str] = [
     "Bain", "McKinsey", "BCG", "PwC", "EY", "KPMG",
 ]
 
-# Skill token patterns (raw strings; normalised later by SkillNormalizer)
 SKILL_PATTERNS: list[re.Pattern] = [
     re.compile(r'\b(' + '|'.join([
         r'python', r'java(?:script)?', r'typescript', r'golang?', r'rust', r'ruby',
@@ -185,7 +263,6 @@ SKILL_PATTERNS: list[re.Pattern] = [
     )
 ]
 
-# Salary extraction pattern
 _SALARY_RE = re.compile(
     r'(?:salary|package|ctc|lpa|lakh|pay|compensation)\D{0,20}'
     r'(?P<min>[\d,]+(?:\.\d+)?)\s*'
@@ -206,24 +283,12 @@ _SALARY_SINGLE_RE = re.compile(
 class CareerFactExtractor:
     """
     Extracts structured career facts from cleaned text deterministically.
-
+    Phase 9: canonical names + per-source skill synthesis.
     No LLM calls. No network I/O. Pure Python heuristics.
-
-    Architecture principle:
-        The LLM is called exactly once per student request — only during
-        final recommendation generation.  This extractor performs all
-        pre-processing work deterministically so no additional inference
-        is required inside the knowledge pipeline.
     """
 
     @staticmethod
     def extract(cleaned_text: str, source_reliability: int, country: str) -> dict:
-        """
-        Extract a single career facts dict from cleaned text.
-
-        For backward compatibility — returns the first item from extract_list().
-        Most callers should use extract_list() to get all extracted careers.
-        """
         results = CareerFactExtractor.extract_list(cleaned_text, source_reliability, country)
         return results[0] if results else {}
 
@@ -232,91 +297,52 @@ class CareerFactExtractor:
         cleaned_text: str,
         source_reliability: int,
         country: str,
+        source_texts: list[str] | None = None,
     ) -> list[dict]:
         """
-        Extract a list of career fact dicts from cleaned text.
-
-        One call to this method processes all source text at once.
-        Returns a list so KnowledgeBuilder can persist multiple careers
-        from a single Tavily batch.
-
-        Parameters
-        ----------
-        cleaned_text   : str  — already cleaned by ContentCleaner
-        source_reliability : int — aggregate reliability score (0-100)
-        country        : str  — target country (used for currency inference)
-
-        Returns
-        -------
-        list[dict] — one dict per distinct career detected in the text.
-            Each dict contains:
-                career_name, industry, category, demand, stage,
-                summary, min_salary, max_salary, currency,
-                skills (raw list), companies (raw list),
-                evidence_count, confidence
+        Extract career facts. source_texts is a list of individual source page texts
+        for per-source skill frequency counting. Falls back to [cleaned_text] if omitted.
         """
         if not cleaned_text or not cleaned_text.strip():
             return []
 
-        # Split text into paragraphs for per-paragraph analysis
+        sources = source_texts if source_texts else [cleaned_text]
         paragraphs = [p.strip() for p in re.split(r'\n\s*\n', cleaned_text) if p.strip()]
 
-        # ---------------------------------------------------------------
-        # Pass 1 — Extract career title candidates from headings/titles
-        # ---------------------------------------------------------------
         career_candidates = CareerFactExtractor._extract_career_titles(paragraphs)
-
         if not career_candidates:
-            # Fallback: treat the whole text as describing one career
-            # Use the dominant noun phrase from the first heading
             career_candidates = [CareerFactExtractor._fallback_career_name(paragraphs, country)]
 
-        # ---------------------------------------------------------------
-        # Pass 2 — For each career candidate, extract metadata
-        # ---------------------------------------------------------------
         full_text_lower = cleaned_text.lower()
-
         industry  = CareerFactExtractor._extract_industry(full_text_lower)
         category  = CareerFactExtractor._extract_category(full_text_lower)
         demand    = CareerFactExtractor._extract_demand(full_text_lower)
         stage     = CareerFactExtractor._extract_stage(full_text_lower)
         summary   = CareerFactExtractor._extract_summary(paragraphs)
         salaries  = CareerFactExtractor._extract_salary(full_text_lower, country)
-        skills    = CareerFactExtractor._extract_skills(cleaned_text)
+
+        # Per-source skill extraction — returns {raw_token: source_count}
+        skill_freq = CareerFactExtractor._extract_skills_per_source(sources)
+
         companies = CareerFactExtractor._extract_companies(cleaned_text)
         evidence_count = len(paragraphs)
+        suitable_years = STAGE_TO_YEARS.get(stage or "Growing", "2,3,4")
 
-        # ---------------------------------------------------------------
-        # Pass 3 — Compute deterministic confidence score
-        # ---------------------------------------------------------------
-        complete_fields = sum([
-            bool(industry),
-            bool(category),
-            bool(demand),
-            bool(skills),
-            bool(summary),
-        ])
+        complete_fields = sum([bool(industry), bool(category), bool(demand), bool(skill_freq), bool(summary)])
         completeness = int((complete_fields / 5) * 100)
         confidence = min(100, int(source_reliability * 0.55 + completeness * 0.45))
 
-        # ---------------------------------------------------------------
-        # Build result dicts — one per career candidate
-        # ---------------------------------------------------------------
         results = []
-        for career_name in career_candidates[:3]:  # cap at 3 careers per batch
+        for career_name in career_candidates[:3]:
             if not career_name or not career_name.strip():
                 continue
 
-            # Derive a per-career industry / category if the career name
-            # gives stronger signals than the general text
             career_industry = CareerFactExtractor._extract_industry(
                 career_name.lower() + " " + full_text_lower
             ) or industry
             career_category = CareerFactExtractor._extract_category(
                 career_name.lower() + " " + full_text_lower
             ) or category
-
-            # Enforce summary length ≤ 300 chars
             career_summary = summary[:297] + "..." if len(summary) > 297 else summary
 
             results.append({
@@ -326,27 +352,50 @@ class CareerFactExtractor:
                 "demand":         demand or "Medium",
                 "stage":          stage or "Growing",
                 "summary":        career_summary,
+                "suitable_years": suitable_years,
                 "min_salary":     salaries.get("min"),
                 "max_salary":     salaries.get("max"),
                 "currency":       salaries.get("currency", "INR" if "india" in full_text_lower else "USD"),
-                "skills":         skills,
+                "skill_freq":     skill_freq,      # {raw_token: source_count} for SkillNormalizer
+                "skills":         list(skill_freq.keys()),  # raw tokens for backward compat
                 "companies":      companies,
                 "evidence_count": max(1, evidence_count),
                 "confidence":     confidence,
+                "source_count":   len(sources),
             })
 
         return results
 
     # ------------------------------------------------------------------
-    # Private helpers — all deterministic Python, zero LLM calls
+    # Private helpers
     # ------------------------------------------------------------------
 
     @staticmethod
+    def _canonicalize_career_name(raw: str) -> str:
+        """Map a raw title candidate to a canonical career name via token overlap."""
+        raw_lower = raw.lower().strip()
+
+        # Direct match first
+        if raw_lower in CANONICAL_CAREERS:
+            return CANONICAL_CAREERS[raw_lower]
+
+        # Token overlap: find canonical entry with highest word overlap
+        raw_tokens = set(re.split(r'[\s/\-]+', raw_lower))
+        best_match = None
+        best_overlap = 0
+
+        for key, canonical in CANONICAL_CAREERS.items():
+            key_tokens = set(re.split(r'[\s/\-]+', key))
+            overlap = len(raw_tokens & key_tokens)
+            total = len(raw_tokens | key_tokens)
+            if total > 0 and overlap / total >= 0.60 and overlap > best_overlap:
+                best_overlap = overlap
+                best_match = canonical
+
+        return best_match if best_match else raw
+
+    @staticmethod
     def _extract_career_titles(paragraphs: list[str]) -> list[str]:
-        """
-        Extract career/job title candidates from markdown headings and
-        lines that contain title-case noun phrases with job keywords.
-        """
         candidates = []
         seen_lower: set[str] = set()
 
@@ -357,24 +406,18 @@ class CareerFactExtractor:
             r'security|qa|tester|researcher|intern)\b',
             re.IGNORECASE,
         )
-
         branch_keywords = re.compile(
             r'^(computer|mechanical|civil|electrical|electronics|chemical|'
-            r'information technology|it|bca|mca|mba|b\.?tech|b\.?e\.?|'
+            r'information technology|bca|mca|mba|b\.?tech|b\.?e\.?|'
             r'engineering|science|commerce|arts)\b',
             re.IGNORECASE,
         )
-
-        # Reject headings that start with a location/city name (e.g. "Hyderabad – DevOps")
         _location_re = re.compile(
             r'^(hyderabad|bangalore|bengaluru|mumbai|delhi|pune|chennai|kolkata|'
             r'ahmedabad|noida|gurgaon|gurugram|india|usa|uk|dubai|singapore|'
             r'remote|work from home|wfh)\b',
             re.IGNORECASE,
         )
-
-        # Strip decorative suffixes ONLY when preceded by a clear separator (—, –, -, |, :)
-        # Using a separator requirement prevents over-stripping like "Data Scientist Guide" -> ""
         _suffix_re = re.compile(
             r'\s*[—\-–|:]\s*(skills|career|guide|jobs|salary|2024|2025|2026|'
             r'trend|demand|scope|path|overview|top|best|review|report|hiring|'
@@ -384,52 +427,40 @@ class CareerFactExtractor:
 
         for para in paragraphs:
             first_line = para.split('\n')[0].strip()
-            # Remove markdown heading markers
             first_line = re.sub(r'^#{1,4}\s*', '', first_line).strip()
-            # Strip heading decorative suffixes
             first_line = _suffix_re.sub('', first_line).strip()
 
-            # Length constraints — job titles are 4–60 chars
             if len(first_line) < 4 or len(first_line) > 60:
                 continue
-
-            # Reject sentences (end with period, comma, question mark, or start with lowercase)
             if first_line.endswith(('.', ',', '?', '!')):
                 continue
             if first_line and first_line[0].islower():
                 continue
-
-            # Reject location-prefixed headings (e.g. "Hyderabad – DevOps & Cloud-based projects")
             if _location_re.match(first_line):
                 continue
-
-            # If ANY em/en-dash remains after suffix stripping, it's a location/comparison heading
             if re.search(r'[—–‒\u2013\u2014]', first_line):
                 continue
-
-            # Must contain a job keyword
             if not job_keywords.search(first_line):
                 continue
-
-            # Must NOT be a branch/degree name
             if branch_keywords.match(first_line):
                 continue
 
-            key = first_line.lower()
+            # Canonicalize
+            canonical = CareerFactExtractor._canonicalize_career_name(first_line)
+            key = canonical.lower()
             if key not in seen_lower:
                 seen_lower.add(key)
-                candidates.append(first_line)
+                candidates.append(canonical)
 
         return candidates
 
     @staticmethod
     def _fallback_career_name(paragraphs: list[str], country: str) -> str:
-        """Return a best-guess career name when heading extraction yields nothing."""
         for para in paragraphs:
             first = para.split('\n')[0].strip()
             first = re.sub(r'^#{1,4}\s*', '', first).strip()
             if 5 < len(first) < 80 and first[0].isupper():
-                return first
+                return CareerFactExtractor._canonicalize_career_name(first)
         return "Software Professional"
 
     @staticmethod
@@ -451,7 +482,6 @@ class CareerFactExtractor:
         for phrase, demand in DEMAND_KEYWORDS.items():
             if phrase in text_lower:
                 return demand
-        # Count occurrence of generic positive signals
         high_signals = sum(1 for w in ["demand", "hiring", "opportunity", "grow", "expand"] if w in text_lower)
         if high_signals >= 3:
             return "High"
@@ -466,11 +496,6 @@ class CareerFactExtractor:
 
     @staticmethod
     def _extract_summary(paragraphs: list[str]) -> str:
-        """Extract the first substantive sentence as the career summary (≤300 chars).
-
-        Skips markdown headings and navigation/SEO noise lines.
-        Picks the first sentence that reads like a real career description.
-        """
         _noise_re = re.compile(
             r'^(home|menu|search|login|register|contact|about|cookie|privacy|'
             r'terms|subscribe|newsletter|share|follow|tag|category|archive|'
@@ -478,7 +503,6 @@ class CareerFactExtractor:
             r'back to|related|popular|recent|trending|next|previous|scroll)\b',
             re.IGNORECASE,
         )
-        # Job title / heading pattern — lines that look like a title, not a description
         _heading_line_re = re.compile(
             r'^(engineer|developer|analyst|scientist|architect|manager|'
             r'designer|consultant|specialist|administrator|devops|fullstack|'
@@ -493,51 +517,50 @@ class CareerFactExtractor:
             body_lines = []
             for line in lines:
                 stripped = re.sub(r'^#{1,4}\s*', '', line).strip()
-                if not stripped:
+                if not stripped or len(stripped) < 25:
                     continue
-                # Skip short lines (likely a heading or navigation item)
-                if len(stripped) < 25:
-                    continue
-                # Skip lines that look like page titles or career name headings
                 if _heading_line_re.match(stripped):
                     continue
-                # Skip question/title lines
                 if stripped.endswith('?') and len(stripped) < 120:
                     continue
                 body_lines.append(stripped)
 
             if not body_lines:
                 continue
-
             clean = ' '.join(body_lines)
-
-            # Skip navigation/menu noise
-            if _noise_re.match(clean):
+            if _noise_re.match(clean) or clean.isupper():
                 continue
 
-            # Skip lines that are all-uppercase (often headings/callouts)
-            if clean.isupper():
-                continue
-
-            # Take the first proper sentence
             sentence_match = re.match(r'^([^.!?]+[.!?])', clean)
             if sentence_match:
                 sentence = sentence_match.group(1).strip()
                 if 20 <= len(sentence) <= 300:
                     return sentence
-
-            # Fallback: first 250 chars of meaningful text
             if len(clean) >= 20:
                 return clean[:250].strip()
-
         return ""
 
     @staticmethod
-    def _extract_salary(text_lower: str, country: str) -> dict:
-        """Extract min/max salary and currency using regex (deterministic)."""
-        result: dict = {}
+    def _extract_skills_per_source(sources: list[str]) -> dict[str, int]:
+        """
+        Extract raw skill tokens per source and return {token: source_count}.
+        A skill mentioned in 3/5 sources gets source_count=3.
+        """
+        token_source_counts: dict[str, int] = {}
+        for src_text in sources:
+            found_in_this_source: set[str] = set()
+            for pattern in SKILL_PATTERNS:
+                for m in pattern.finditer(src_text):
+                    tok = m.group(0).strip().lower()
+                    if tok:
+                        found_in_this_source.add(tok)
+            for tok in found_in_this_source:
+                token_source_counts[tok] = token_source_counts.get(tok, 0) + 1
+        return token_source_counts
 
-        # Range extraction
+    @staticmethod
+    def _extract_salary(text_lower: str, country: str) -> dict:
+        result: dict = {}
         m = _SALARY_RE.search(text_lower)
         if m:
             try:
@@ -545,50 +568,27 @@ class CareerFactExtractor:
                 result["max"] = float(m.group("max").replace(",", ""))
             except (ValueError, AttributeError):
                 pass
-
-        # Single value fallback
         if "min" not in result:
             m2 = _SALARY_SINGLE_RE.search(text_lower)
             if m2:
                 try:
-                    amount = float(m2.group("amount").replace(",", ""))
-                    result["min"] = amount
+                    result["min"] = float(m2.group("amount").replace(",", ""))
                 except (ValueError, AttributeError):
                     pass
-
-        # Currency inference
         if "inr" in text_lower or "lakh" in text_lower or "lpa" in text_lower or "india" in text_lower:
             result["currency"] = "INR"
-        elif "usd" in text_lower or "dollar" in text_lower or "united states" in text_lower:
+        elif "usd" in text_lower or "dollar" in text_lower:
             result["currency"] = "USD"
         elif "gbp" in text_lower or "pound" in text_lower:
             result["currency"] = "GBP"
-        elif "eur" in text_lower or "euro" in text_lower:
-            result["currency"] = "EUR"
         elif country and "india" in country.lower():
             result["currency"] = "INR"
         else:
             result["currency"] = "USD"
-
         return result
 
     @staticmethod
-    def _extract_skills(text: str) -> list[str]:
-        """
-        Extract raw skill tokens from text using pattern matching.
-        These are raw strings; SkillNormalizer maps them to canonical names.
-        """
-        found: set[str] = set()
-        for pattern in SKILL_PATTERNS:
-            for m in pattern.finditer(text):
-                tok = m.group(0).strip()
-                if tok:
-                    found.add(tok.lower())
-        return sorted(found)
-
-    @staticmethod
     def _extract_companies(text: str) -> list[str]:
-        """Extract known company names mentioned in the text."""
         found = []
         for company in KNOWN_COMPANIES:
             if re.search(r'\b' + re.escape(company) + r'\b', text, re.IGNORECASE):

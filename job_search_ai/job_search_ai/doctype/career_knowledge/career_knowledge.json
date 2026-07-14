@@ -12,8 +12,10 @@
   "category",
   "country",
   "applicable_branches",
+  "suitable_years",
   "quality_score",
   "summary",
+  "learning_roadmap",
   "market_intelligence_section",
   "future_demand",
   "career_stage",
@@ -78,6 +80,12 @@
    "label": "Applicable Branches"
   },
   {
+   "fieldname": "suitable_years",
+   "fieldtype": "Small Text",
+   "label": "Suitable Academic Years",
+   "description": "Comma-separated academic years e.g. 3,4"
+  },
+  {
    "fieldname": "quality_score",
    "fieldtype": "Int",
    "label": "Quality Score"
@@ -86,6 +94,11 @@
    "fieldname": "summary",
    "fieldtype": "Small Text",
    "label": "Summary"
+  },
+  {
+   "fieldname": "learning_roadmap",
+   "fieldtype": "Small Text",
+   "label": "Learning Roadmap"
   },
   {
    "fieldname": "market_intelligence_section",
