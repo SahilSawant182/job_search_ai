@@ -237,7 +237,7 @@ class KnowledgeRetriever:
 
         if not vector_hits:
             logger.info("KnowledgeRetriever: no vector results above threshold — returning empty list")
-            return []
+            return []     
 
         # Stage 4 — Load full records from MariaDB
         t = time.perf_counter()
