@@ -7,106 +7,11 @@ from __future__ import annotations
 
 import logging
 import re
+import frappe
+from job_search_ai.services.knowledge.extraction.career_canonicalizer import CareerCanonicalizer
 
 logger = logging.getLogger(__name__)
 
-
-# ---------------------------------------------------------------------------
-# Canonical career name table
-# ---------------------------------------------------------------------------
-
-CANONICAL_CAREERS: dict[str, str] = {
-    # Frontend
-    "frontend developer": "Frontend Developer",
-    "front-end developer": "Frontend Developer",
-    "front end developer": "Frontend Developer",
-    "ui developer": "Frontend Developer",
-    "react developer": "React Developer",
-    "angular developer": "Angular Developer",
-    "vue developer": "Vue.js Developer",
-    # Backend
-    "backend developer": "Backend Developer",
-    "back-end developer": "Backend Developer",
-    "back end developer": "Backend Developer",
-    "server-side developer": "Backend Developer",
-    "node developer": "Node.js Developer",
-    "django developer": "Python Backend Developer",
-    "spring developer": "Java Backend Developer",
-    # Full Stack
-    "full stack developer": "Full Stack Developer",
-    "fullstack developer": "Full Stack Developer",
-    "full-stack developer": "Full Stack Developer",
-    "mern developer": "Full Stack Developer",
-    "mean developer": "Full Stack Developer",
-    # Data
-    "data scientist": "Data Scientist",
-    "data analyst": "Data Analyst",
-    "data engineer": "Data Engineer",
-    "business analyst": "Business Analyst",
-    "bi developer": "Business Intelligence Developer",
-    "bi analyst": "Business Intelligence Analyst",
-    # AI / ML
-    "machine learning engineer": "Machine Learning Engineer",
-    "ml engineer": "Machine Learning Engineer",
-    "ai engineer": "AI Engineer",
-    "artificial intelligence engineer": "AI Engineer",
-    "deep learning engineer": "Deep Learning Engineer",
-    "nlp engineer": "NLP Engineer",
-    "computer vision engineer": "Computer Vision Engineer",
-    # Cloud / DevOps
-    "cloud engineer": "Cloud Engineer",
-    "devops engineer": "DevOps Engineer",
-    "site reliability engineer": "Site Reliability Engineer",
-    "sre": "Site Reliability Engineer",
-    "platform engineer": "Platform Engineer",
-    "infrastructure engineer": "Infrastructure Engineer",
-    # Mobile
-    "android developer": "Android Developer",
-    "ios developer": "iOS Developer",
-    "mobile developer": "Mobile Developer",
-    "flutter developer": "Flutter Developer",
-    "react native developer": "React Native Developer",
-    # Software Engineering
-    "software engineer": "Software Engineer",
-    "software developer": "Software Developer",
-    "application developer": "Software Developer",
-    "java developer": "Java Developer",
-    "python developer": "Python Developer",
-    "golang developer": "Go Developer",
-    ".net developer": ".NET Developer",
-    # Security
-    "cybersecurity analyst": "Cybersecurity Analyst",
-    "security engineer": "Security Engineer",
-    "penetration tester": "Penetration Tester",
-    "ethical hacker": "Penetration Tester",
-    # QA / Testing
-    "qa engineer": "QA Engineer",
-    "test engineer": "QA Engineer",
-    "automation tester": "Automation Test Engineer",
-    "sdet": "Automation Test Engineer",
-    # Design
-    "ui/ux designer": "UI/UX Designer",
-    "ux designer": "UI/UX Designer",
-    "ui designer": "UI/UX Designer",
-    "product designer": "Product Designer",
-    # Management
-    "product manager": "Product Manager",
-    "project manager": "Project Manager",
-    "engineering manager": "Engineering Manager",
-    # Database
-    "database administrator": "Database Administrator",
-    "dba": "Database Administrator",
-    "database engineer": "Database Engineer",
-    # Embedded
-    "embedded systems engineer": "Embedded Systems Engineer",
-    "firmware engineer": "Firmware Engineer",
-    "iot engineer": "IoT Engineer",
-    # Other tech
-    "blockchain developer": "Blockchain Developer",
-    "web3 developer": "Web3 Developer",
-    "game developer": "Game Developer",
-    "technical writer": "Technical Writer",
-}
 
 # ---------------------------------------------------------------------------
 # Keyword tables — deterministic, no LLM
@@ -233,36 +138,6 @@ KNOWN_COMPANIES: list[str] = [
     "Bain", "McKinsey", "BCG", "PwC", "EY", "KPMG",
 ]
 
-SKILL_PATTERNS: list[re.Pattern] = [
-    re.compile(r'\b(' + '|'.join([
-        r'python', r'java(?:script)?', r'typescript', r'golang?', r'rust', r'ruby',
-        r'php', r'swift', r'kotlin', r'scala', r'c\+\+', r'c#', r'\.net',
-        r'react(?:\.?js)?', r'angular(?:\.?js)?', r'vue(?:\.?js)?', r'next\.?js',
-        r'node(?:\.?js)?', r'express(?:\.?js)?', r'django', r'flask', r'fastapi',
-        r'spring boot', r'laravel',
-        r'sql', r'mysql', r'postgresql', r'mongodb', r'redis', r'cassandra',
-        r'elasticsearch', r'graphql', r'rest(?:ful)? api',
-        r'docker', r'kubernetes', r'terraform', r'ansible', r'jenkins',
-        r'aws', r'azure', r'gcp', r'google cloud',
-        r'git', r'linux', r'bash', r'shell scripting',
-        r'machine learning', r'deep learning', r'tensorflow', r'pytorch',
-        r'scikit-learn', r'pandas', r'numpy', r'spark', r'hadoop',
-        r'html5?', r'css3?', r'sass', r'tailwind(?:css)?', r'bootstrap',
-        r'figma', r'sketch', r'photoshop', r'illustrator',
-        r'agile', r'scrum', r'jira', r'ci/cd',
-        r'microservices', r'devops', r'devsecops',
-        r'nlp', r'computer vision', r'opencv',
-        r'tableau', r'power bi', r'excel',
-        r'blockchain', r'solidity', r'web3\.?js',
-        r'android', r'ios', r'react native', r'flutter',
-        r'cyber security', r'cybersecurity', r'penetration testing',
-        r'data analysis', r'data visualization', r'etl',
-        r'communication', r'leadership', r'problem solving', r'teamwork',
-    ]) + r')\b',
-    re.IGNORECASE,
-    )
-]
-
 _SALARY_RE = re.compile(
     r'(?:salary|package|ctc|lpa|lakh|pay|compensation)\D{0,20}'
     r'(?P<min>[\d,]+(?:\.\d+)?)\s*'
@@ -298,6 +173,7 @@ class CareerFactExtractor:
         source_reliability: int,
         country: str,
         source_texts: list[str] | None = None,
+        default_career_name: str | None = None,
     ) -> list[dict]:
         """
         Extract career facts. source_texts is a list of individual source page texts
@@ -309,16 +185,37 @@ class CareerFactExtractor:
         sources = source_texts if source_texts else [cleaned_text]
         paragraphs = [p.strip() for p in re.split(r'\n\s*\n', cleaned_text) if p.strip()]
 
-        career_candidates = CareerFactExtractor._extract_career_titles(paragraphs)
+        raw_candidates = CareerFactExtractor._extract_career_titles(paragraphs)
+        career_candidates = []
+        for title in raw_candidates:
+            if CareerCanonicalizer.is_marketing_title(title):
+                continue
+            canonical = CareerCanonicalizer.canonicalize(title)
+            if canonical and canonical not in career_candidates:
+                career_candidates.append(canonical)
+
         if not career_candidates:
-            career_candidates = [CareerFactExtractor._fallback_career_name(paragraphs, country)]
+            # Try to canonicalize default
+            if default_career_name:
+                canonical_def = CareerCanonicalizer.canonicalize(default_career_name)
+                if canonical_def:
+                    career_candidates = [canonical_def]
+                else:
+                    career_candidates = [default_career_name]
+            else:
+                fallback = CareerFactExtractor._fallback_career_name(paragraphs, country)
+                canonical_fb = CareerCanonicalizer.canonicalize(fallback)
+                if canonical_fb:
+                    career_candidates = [canonical_fb]
+                else:
+                    career_candidates = ["Software Developer"]
 
         full_text_lower = cleaned_text.lower()
         industry  = CareerFactExtractor._extract_industry(full_text_lower)
         category  = CareerFactExtractor._extract_category(full_text_lower)
         demand    = CareerFactExtractor._extract_demand(full_text_lower)
         stage     = CareerFactExtractor._extract_stage(full_text_lower)
-        summary   = CareerFactExtractor._extract_summary(paragraphs)
+        summary   = ""  # DO NOT store summaries
         salaries  = CareerFactExtractor._extract_salary(full_text_lower, country)
 
         # Per-source skill extraction — returns {raw_token: source_count}
@@ -328,8 +225,13 @@ class CareerFactExtractor:
         evidence_count = len(paragraphs)
         suitable_years = STAGE_TO_YEARS.get(stage or "Growing", "2,3,4")
 
-        complete_fields = sum([bool(industry), bool(category), bool(demand), bool(skill_freq), bool(summary)])
-        completeness = int((complete_fields / 5) * 100)
+        # Extract degrees and branches
+        degrees_list, branches_list = CareerFactExtractor._extract_degrees_and_branches(full_text_lower)
+        suitable_degrees = ", ".join(degrees_list)
+        suitable_branches = ", ".join(branches_list)
+
+        complete_fields = sum([bool(industry), bool(category), bool(demand), bool(skill_freq)])
+        completeness = int((complete_fields / 4) * 100)
         confidence = min(100, int(source_reliability * 0.55 + completeness * 0.45))
 
         results = []
@@ -343,7 +245,6 @@ class CareerFactExtractor:
             career_category = CareerFactExtractor._extract_category(
                 career_name.lower() + " " + full_text_lower
             ) or category
-            career_summary = summary[:297] + "..." if len(summary) > 297 else summary
 
             results.append({
                 "career_name":    career_name.strip(),
@@ -351,7 +252,10 @@ class CareerFactExtractor:
                 "category":       career_category or "Developer",
                 "demand":         demand or "Medium",
                 "stage":          stage or "Growing",
-                "summary":        career_summary,
+                "summary":        "",
+                "suitable_degrees": suitable_degrees,
+                "suitable_branches": suitable_branches,
+                "applicable_branches": suitable_branches,  # compat
                 "suitable_years": suitable_years,
                 "min_salary":     salaries.get("min"),
                 "max_salary":     salaries.get("max"),
@@ -372,27 +276,8 @@ class CareerFactExtractor:
 
     @staticmethod
     def _canonicalize_career_name(raw: str) -> str:
-        """Map a raw title candidate to a canonical career name via token overlap."""
-        raw_lower = raw.lower().strip()
-
-        # Direct match first
-        if raw_lower in CANONICAL_CAREERS:
-            return CANONICAL_CAREERS[raw_lower]
-
-        # Token overlap: find canonical entry with highest word overlap
-        raw_tokens = set(re.split(r'[\s/\-]+', raw_lower))
-        best_match = None
-        best_overlap = 0
-
-        for key, canonical in CANONICAL_CAREERS.items():
-            key_tokens = set(re.split(r'[\s/\-]+', key))
-            overlap = len(raw_tokens & key_tokens)
-            total = len(raw_tokens | key_tokens)
-            if total > 0 and overlap / total >= 0.60 and overlap > best_overlap:
-                best_overlap = overlap
-                best_match = canonical
-
-        return best_match if best_match else raw
+        """Map a raw title candidate to a canonical career name using the CareerCanonicalizer."""
+        return CareerCanonicalizer.canonicalize(raw) or raw
 
     @staticmethod
     def _extract_career_titles(paragraphs: list[str]) -> list[str]:
@@ -545,15 +430,54 @@ class CareerFactExtractor:
         """
         Extract raw skill tokens per source and return {token: source_count}.
         A skill mentioned in 3/5 sources gets source_count=3.
+        Loads skill names and aliases dynamically from MariaDB.
         """
         token_source_counts: dict[str, int] = {}
+        try:
+            # Load active skill names and aliases from Skill Master and Skill Alias
+            skills = frappe.get_all("Skill Master", filters={"active": 1}, fields=["skill_name"])
+            aliases = frappe.get_all("Skill Alias", fields=["alias"])
+            skill_words = set()
+            for s in skills:
+                val = s.get("skill_name")
+                if val:
+                    skill_words.add(val.strip().lower())
+            for a in aliases:
+                val = a.get("alias")
+                if val:
+                    skill_words.add(val.strip().lower())
+        except Exception as e:
+            logger.warning("Failed to fetch skills from database: %s", e)
+            # Minimal hardcoded fallback to prevent complete failure if DB connection issue/bootstrap
+            skill_words = {"python", "javascript", "typescript", "java", "c++", "docker", "kubernetes", "aws", "gcp", "azure", "sql", "git", "linux", "machine learning", "deep learning"}
+
+        if not skill_words:
+            # No Skill Master records found — use a baseline technology vocabulary
+            # to ensure extraction can proceed.  This is preferable to returning
+            # an empty dict which would cause validation to reject all careers.
+            skill_words = {
+                "python", "javascript", "typescript", "java", "c++", "c#", "go", "rust",
+                "docker", "kubernetes", "aws", "gcp", "azure", "sql", "nosql", "git",
+                "linux", "react", "angular", "vue", "node", "django", "flask", "spring",
+                "tensorflow", "pytorch", "scikit-learn", "pandas", "numpy", "spark",
+                "machine learning", "deep learning", "nlp", "computer vision",
+                "html", "css", "restful", "graphql", "mongodb", "postgresql", "redis",
+            }
+
+        # Compile dynamic regex pattern sorting by length descending to match longest first
+        sorted_words = sorted(list(skill_words), key=len, reverse=True)
+        escaped_words = [re.escape(w) for w in sorted_words]
+        pattern = re.compile(
+            r'(?<![\w\+])(' + '|'.join(escaped_words) + r')(?![a-zA-Z\+])',
+            re.IGNORECASE
+        )
+
         for src_text in sources:
             found_in_this_source: set[str] = set()
-            for pattern in SKILL_PATTERNS:
-                for m in pattern.finditer(src_text):
-                    tok = m.group(0).strip().lower()
-                    if tok:
-                        found_in_this_source.add(tok)
+            for m in pattern.finditer(src_text):
+                tok = m.group(0).strip().lower()
+                if tok:
+                    found_in_this_source.add(tok)
             for tok in found_in_this_source:
                 token_source_counts[tok] = token_source_counts.get(tok, 0) + 1
         return token_source_counts
@@ -564,15 +488,22 @@ class CareerFactExtractor:
         m = _SALARY_RE.search(text_lower)
         if m:
             try:
-                result["min"] = float(m.group("min").replace(",", ""))
-                result["max"] = float(m.group("max").replace(",", ""))
+                minsal = float(m.group("min").replace(",", ""))
+                maxsal = float(m.group("max").replace(",", ""))
+                # Reject if values look like years
+                if not (2020 <= minsal <= 2030 and 2020 <= maxsal <= 2030):
+                    result["min"] = minsal
+                    result["max"] = maxsal
             except (ValueError, AttributeError):
                 pass
         if "min" not in result:
             m2 = _SALARY_SINGLE_RE.search(text_lower)
             if m2:
                 try:
-                    result["min"] = float(m2.group("amount").replace(",", ""))
+                    amount = float(m2.group("amount").replace(",", ""))
+                    # Reject single numbers that look like years (e.g., 2025)
+                    if not (2020 <= amount <= 2030):
+                        result["min"] = amount
                 except (ValueError, AttributeError):
                     pass
         if "inr" in text_lower or "lakh" in text_lower or "lpa" in text_lower or "india" in text_lower:
@@ -594,3 +525,50 @@ class CareerFactExtractor:
             if re.search(r'\b' + re.escape(company) + r'\b', text, re.IGNORECASE):
                 found.append(company)
         return found
+
+    @staticmethod
+    def _extract_degrees_and_branches(text_lower: str) -> tuple[list[str], list[str]]:
+        # Degrees
+        degrees_found = set()
+        if re.search(r'\b(engineering|b\.?tech|b\.?e\.?|m\.?tech|m\.?e\.?)\b', text_lower):
+            degrees_found.add("Engineering")
+        if re.search(r'\bbca\b', text_lower):
+            degrees_found.add("BCA")
+        if re.search(r'\bmca\b', text_lower):
+            degrees_found.add("MCA")
+        if re.search(r'\b(b\.?sc|m\.?sc|science)\b', text_lower):
+            degrees_found.add("Science")
+        if re.search(r'\b(bba|mba|business)\b', text_lower):
+            degrees_found.add("Business Administration")
+        if re.search(r'\bcommerce\b', text_lower):
+            degrees_found.add("Commerce")
+
+        # Fallback to standard baseline if nothing found
+        if not degrees_found:
+            degrees_found = {"Engineering", "BCA", "MCA"}
+
+        # Branches
+        branches_found = set()
+        if re.search(r'\bcomputer (science|engineering)\b', text_lower) or re.search(r'\bcs[e]?\b', text_lower):
+            branches_found.add("Computer Science")
+            branches_found.add("Computer Engineering")
+        if re.search(r'\binformation technology\b', text_lower) or re.search(r'\bit\b', text_lower):
+            branches_found.add("Information Technology")
+        if re.search(r'\bsoftware engineering\b', text_lower):
+            branches_found.add("Software Engineering")
+        if re.search(r'\bdata science\b', text_lower):
+            branches_found.add("Data Science")
+        if re.search(r'\bmechanical\b', text_lower):
+            branches_found.add("Mechanical Engineering")
+        if re.search(r'\bcivil\b', text_lower):
+            branches_found.add("Civil Engineering")
+        if re.search(r'\belectrical\b', text_lower):
+            branches_found.add("Electrical Engineering")
+        if re.search(r'\belectronics\b', text_lower):
+            branches_found.add("Electronics Engineering")
+
+        if not branches_found:
+            branches_found = {"Computer Engineering", "Information Technology", "Computer Science"}
+
+        return sorted(list(degrees_found)), sorted(list(branches_found))
+

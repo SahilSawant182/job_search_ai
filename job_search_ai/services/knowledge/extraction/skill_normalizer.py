@@ -21,10 +21,15 @@ class SkillNormalizer:
         cls._alias_cache = {}
         masters = frappe.get_all("Skill Master", filters={"active": 1}, fields=["name", "skill_name"])
         for m in masters:
-            cls._master_cache[m.skill_name.lower()] = m.skill_name
+            name_val = m.get("skill_name")
+            if name_val:
+                cls._master_cache[name_val.lower()] = name_val
         aliases = frappe.get_all("Skill Alias", fields=["alias", "parent"])
         for a in aliases:
-            cls._alias_cache[a.alias.lower()] = a.parent
+            alias_val = a.get("alias")
+            parent_val = a.get("parent")
+            if alias_val and parent_val:
+                cls._alias_cache[alias_val.lower()] = parent_val
         cls._initialized = True
 
     @classmethod
@@ -70,7 +75,16 @@ class SkillNormalizer:
             canonical_name = (
                 self._master_cache.get(tok_clean)
                 or self._alias_cache.get(tok_clean)
+                or tok.strip()
             )
+            # Ensure proper capitalization if not in master cache
+            if canonical_name.lower() == tok_clean:
+                # Capitalize acronyms or normal tech words nicely
+                if len(canonical_name) <= 3:
+                    canonical_name = canonical_name.upper()
+                else:
+                    canonical_name = canonical_name.title()
+
             if canonical_name:
                 if canonical_name not in normalized_map:
                     normalized_map[canonical_name] = {"tokens": set(), "source_count": 0, "frequency": 0}
@@ -113,7 +127,7 @@ class SkillNormalizer:
             if evidence_proportion >= 0.60:
                 skill_type = "Required"
             elif evidence_proportion >= 0.30:
-                skill_type = "Advanced"
+                skill_type = "Preferred"
             else:
                 skill_type = "Nice To Have"
 

@@ -63,21 +63,14 @@ class QueryBuilder:
 
         # Derive the primary career focus from interests > skills > branch
         career_focus = self._infer_career_focus(student)
-        skills_str   = ", ".join(student.skills[:4]) if student.skills else student.branch
         country      = student.country or "India"
 
         queries: list[str] = [
-            # Q1: Career role + skills — most important, highest signal-to-noise
-            f"{career_focus} jobs skills requirements {country} 2025",
+            # Q1: Skills & requirements on trusted job platforms
+            f"{career_focus} skills requirements site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com {country}",
 
-            # Q2: Career role + country — local hiring market
-            f"{career_focus} career path salary hiring companies {country}",
-
-            # Q3: Skills demand — what the market is paying for
-            f"In-demand skills for {career_focus} developers engineers {country}",
-
-            # Q4: Year-context — placement readiness
-            self._year_context_query(student, career_focus, country),
+            # Q2: Career path & salary guides on trusted benchmark sites
+            f"{career_focus} salary guide career path site:levels.fyi OR site:glassdoor.com OR site:payscale.com {country}",
         ]
 
         logger.info("QueryBuilder: generated %d queries: %s", len(queries), queries)

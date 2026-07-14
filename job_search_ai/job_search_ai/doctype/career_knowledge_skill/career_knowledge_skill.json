@@ -24,7 +24,7 @@
    "fieldname": "skill_type",
    "fieldtype": "Select",
    "label": "Skill Type",
-   "options": "Required\nAdvanced\nNice To Have",
+   "options": "Required\nPreferred\nNice To Have",
    "default": "Required",
    "in_list_view": 1,
    "in_grid_view": 1

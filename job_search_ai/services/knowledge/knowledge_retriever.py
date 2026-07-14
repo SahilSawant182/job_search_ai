@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 import logging
+import re
 import time
 from typing import Any, TYPE_CHECKING
 
@@ -36,8 +37,9 @@ class RetrievedKnowledge:
         "doc_name", "similarity", "hybrid_score",
         "career_name", "industry", "category", "country",
         "summary", "future_demand", "career_stage", "confidence",
-        "skills", "required_skills", "advanced_skills", "nice_skills",
-        "companies", "suitable_years", "learning_roadmap", "needs_refresh",
+        "skills", "required_skills", "advanced_skills", "preferred_skills",
+        "nice_skills", "companies", "suitable_years", "learning_roadmap",
+        "needs_refresh", "suitable_degrees", "suitable_branches",
     )
 
     def __init__(
@@ -56,11 +58,14 @@ class RetrievedKnowledge:
         skills: list[str] | None = None,
         required_skills: list[str] | None = None,
         advanced_skills: list[str] | None = None,
+        preferred_skills: list[str] | None = None,
         nice_skills: list[str] | None = None,
         companies: list[str] | None = None,
         suitable_years: str = "",
         learning_roadmap: str = "",
         needs_refresh: bool = False,
+        suitable_degrees: str = "",
+        suitable_branches: str = "",
     ) -> None:
         self.doc_name        = doc_name
         self.similarity      = similarity
@@ -75,12 +80,16 @@ class RetrievedKnowledge:
         self.confidence      = confidence
         self.skills          = skills or []
         self.required_skills = required_skills or []
-        self.advanced_skills = advanced_skills or []
+        self.preferred_skills = preferred_skills or []
+        # Support both names for backward compatibility
+        self.advanced_skills = advanced_skills or self.preferred_skills
         self.nice_skills     = nice_skills or []
         self.companies       = companies or []
         self.suitable_years  = suitable_years
         self.learning_roadmap = learning_roadmap
         self.needs_refresh   = needs_refresh
+        self.suitable_degrees = suitable_degrees
+        self.suitable_branches = suitable_branches
 
     def __repr__(self) -> str:
         return (
@@ -171,10 +180,12 @@ class KnowledgeRetriever:
 
     def _search_vector_index(self, vector: list[float]) -> list:
         try:
+            base_threshold = float(self._settings.similarity_threshold)
+            vector_threshold = max(0.40, base_threshold - 0.20)
             return self._vector_index.search(
                 query_vector    = vector,
-                limit           = self._settings.max_retrieved_knowledge,
-                score_threshold = self._settings.similarity_threshold,
+                limit           = self._settings.max_retrieved_knowledge * 2,
+                score_threshold = vector_threshold,
             )
         except Exception as exc:
             raise KnowledgeRetrieverError(f"Vector search failed: {exc}") from exc
@@ -197,20 +208,20 @@ class KnowledgeRetriever:
             # Separate skills by tier
             all_skills      = []
             required_skills = []
-            advanced_skills = []
+            preferred_skills = []
             nice_skills     = []
             for row in (doc.skills or []):
-                sname = row.skill_name
-                stype = (row.skill_type or "Required")
+                sname = row.get("skill_name")
+                stype = (row.get("skill_type") or "Required")
                 all_skills.append(sname)
                 if stype == "Required":
                     required_skills.append(sname)
-                elif stype == "Advanced":
-                    advanced_skills.append(sname)
+                elif stype in ("Preferred", "Advanced"):
+                    preferred_skills.append(sname)
                 else:
                     nice_skills.append(sname)
 
-            companies = [row.company_name for row in (doc.companies or [])]
+            companies = [row.get("company_name") for row in (doc.companies or [])]
 
             from job_search_ai.services.knowledge.knowledge_lifecycle import KnowledgeLifecycle
             needs_ref = KnowledgeLifecycle.needs_refresh(doc)
@@ -218,15 +229,50 @@ class KnowledgeRetriever:
             # ── Hybrid Score ────────────────────────────────────────────
             embedding_sim = similarity
 
-            # 1. Branch match
+            # 1. Academic match (Branch & Degree)
             branch_score = 0.5
-            applicable_branches = getattr(doc, "applicable_branches", None)
+            applicable_branches = getattr(doc, "suitable_branches", None) or getattr(doc, "applicable_branches", None)
             if applicable_branches:
                 branches = [b.strip().lower() for b in applicable_branches.split(",") if b.strip()]
-                if student.branch.strip().lower() in branches:
+                sb_lower = student.branch.strip().lower()
+                if sb_lower in branches:
                     branch_score = 1.0
-                elif branches:
-                    branch_score = 0.0
+                else:
+                    # check for substring/keyword overlap
+                    student_words = set(re.findall(r'\w+', sb_lower)) - {"and", "engineering", "technology", "science"}
+                    matched = False
+                    for b in branches:
+                        b_words = set(re.findall(r'\w+', b)) - {"and", "engineering", "technology", "science"}
+                        if student_words & b_words:
+                            matched = True
+                            break
+                    if matched:
+                        branch_score = 0.8
+                    elif branches:
+                        branch_score = 0.0
+
+            degree_score = 0.5
+            suitable_degrees = getattr(doc, "suitable_degrees", None)
+            if suitable_degrees:
+                degrees = [d.strip().lower() for d in suitable_degrees.split(",") if d.strip()]
+                sd_lower = student.degree.strip().lower()
+                if sd_lower in degrees:
+                    degree_score = 1.0
+                else:
+                    # check for substring/keyword overlap
+                    student_words = set(re.findall(r'\w+', sd_lower)) - {"and", "degree", "of", "science", "arts"}
+                    matched = False
+                    for d in degrees:
+                        d_words = set(re.findall(r'\w+', d)) - {"and", "degree", "of", "science", "arts"}
+                        if student_words & d_words:
+                            matched = True
+                            break
+                    if matched:
+                        degree_score = 0.8
+                    elif degrees:
+                        degree_score = 0.0
+
+            academic_match_score = (branch_score + degree_score) / 2.0
 
             # 2. Required-skill overlap (Phase 9: weight required skills more)
             skill_score = 1.0
@@ -289,16 +335,15 @@ class KnowledgeRetriever:
 
             hybrid_similarity = round(
                 0.35 * embedding_sim +
-                0.10 * branch_score +
+                0.10 * academic_match_score +
                 0.15 * skill_score +
                 0.15 * interest_score +
-                0.10 * year_stage_score +    # Phase 9 NEW
+                0.10 * year_stage_score +
                 0.05 * country_score +
                 0.05 * quality_score +
                 0.05 * freshness_score,
                 4,
             )
-
             if hybrid_similarity >= self._settings.similarity_threshold:
                 records.append(RetrievedKnowledge(
                     doc_name         = doc.name,
@@ -314,12 +359,15 @@ class KnowledgeRetriever:
                     confidence       = float(doc.confidence or 0.0),
                     skills           = all_skills,
                     required_skills  = required_skills,
-                    advanced_skills  = advanced_skills,
+                    advanced_skills  = preferred_skills,
+                    preferred_skills = preferred_skills,
                     nice_skills      = nice_skills,
                     companies        = companies,
                     suitable_years   = getattr(doc, "suitable_years", "") or "",
                     learning_roadmap = getattr(doc, "learning_roadmap", "") or "",
                     needs_refresh    = needs_ref,
+                    suitable_degrees = getattr(doc, "suitable_degrees", "") or "",
+                    suitable_branches = getattr(doc, "suitable_branches", "") or "",
                 ))
 
         records.sort(key=lambda r: r.similarity, reverse=True)

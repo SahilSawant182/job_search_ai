@@ -13,7 +13,9 @@ class CompanyExtractor:
         r"blog", r"medium", r"news", r"daily", r"times", r"press",
         r"documentation", r"tutorial", r"guide", r"wiki", r"book",
         r"youtube", r"github", r"stackoverflow", r"reddit",
-        r"course", r"training", r"bootcamp", r"forum", r"society"
+        r"course", r"training", r"bootcamp", r"forum", r"society",
+        r"interviewbit", r"naukri", r"linkedin", r"glassdoor", r"indeed",
+        r"datamites", r"nareshit", r"codegnan", r"pulsejob", r"wikipedia"
     ]
 
     # Standard known employer suffix cleanup

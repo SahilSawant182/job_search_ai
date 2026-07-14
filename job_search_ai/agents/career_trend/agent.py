@@ -1,72 +1,31 @@
 """
 CareerTrendAgent — the single public entry point for career trend analysis.
 
-Responsibility:
-    Orchestrate the full pipeline from a StudentProfile to a
-    CareerTrendResponse.  The agent is now *Knowledge First*:
-
-    1. KnowledgeRetriever checks the Career Knowledge database first.
-    2. If enough high-confidence records are found, the LLM is called
-       directly — no web search occurs.
-    3. If the knowledge base lacks sufficient coverage, the existing Tavily
-       pipeline executes and the new results are persisted back to the
-       knowledge base for future use.
-
-New execution flow
-------------------
+Execution flow
+--------------
 
   Student
     │
-    ▼  Stage 1 — KnowledgeRetriever
-    │  (vector search → MariaDB load)
+    ▼  Stage 1 — KnowledgeRetriever  (vector search → MariaDB)
     │
-    ├─── Knowledge HIT ──────────────────────────────────────┐
-    │    count >= minimum_knowledge_results                   │
-    │    avg_similarity >= similarity_threshold               │
-    │                                                         ▼
-    │                                              Evidence.from_knowledge()
-    │                                                         │
-    │                                                         ▼
-    │                                                  PromptBuilder
-    │                                                         │
-    │                                                         ▼
-    │                                                       LLM
-    │                                                         │
-    │                                                         ▼
-    │                                                   Response ◄────────┐
-    │                                                                       │
-    └─── Knowledge MISS ──────────────────────────────────────┐             │
-         (fallback to web search)                              │             │
-                                                               ▼             │
-                                                       QueryBuilder          │
-                                                               │             │
-                                                               ▼             │
-                                                      Parallel Tavily Search │
-                                                               │             │
-                                                               ▼             │
-                                                        ResultFilter         │
-                                                               │             │
-                                                               ▼             │
-                                                       KnowledgeBuilder      │
-                                                       (for each result)     │
-                                                               │             │
-                                                     MariaDB + VectorIndex   │
-                                                               │             │
-                                                               ▼             │
-                                                  Evidence.from_search_results()
-                                                               │             │
-                                                               ▼             │
-                                                        PromptBuilder        │
-                                                               │             │
-                                                               ▼             │
-                                                             LLM ────────────┘
+    ├─── Knowledge HIT ──► Evidence.from_knowledge() ──► PromptBuilder ──► LLM
+    │
+    └─── Knowledge MISS
+              │
+              ▼  QueryBuilder → TavilyService → ResultFilter
+              │
+              ▼  KnowledgeBuilder  (persist to MariaDB + Qdrant)
+              │   └── returns MergedCareerProfile objects directly
+              │
+              ▼  Evidence.from_knowledge(profiles)  ──► PromptBuilder ──► LLM
 
-Error handling
+Key invariants
 --------------
-  If KnowledgeRetriever fails  → log warning, fall through to Tavily
-  If KnowledgeBuilder fails    → log warning, still serve recommendations
-  If VectorIndex fails         → log warning, MariaDB record is still saved
-  The user ALWAYS receives a response.
+  - Exactly ONE LLM call per request.
+  - MISS path never re-reads from MariaDB after KnowledgeBuilder persists.
+  - KnowledgeRetriever is used only on the HIT path and the initial check.
+  - PromptBuilder only receives structured knowledge — never raw search results.
+  - The user always receives a response even if KB update fails.
 """
 
 from __future__ import annotations
@@ -140,15 +99,13 @@ class CareerTrendAgent:
         else:
             # ── Knowledge MISS path — execute Tavily pipeline ───────────
             logger.info(
-                "CareerTrendAgent: Knowledge MISS (retrieved=%d  avg_sim=%.4f  "
-                "min_required=%d) — executing Tavily pipeline",
-                len(retrieved), avg_similarity, settings.minimum_knowledge_results,
+                "CareerTrendAgent: Knowledge MISS (retrieved=%d  avg_sim=%.4f) "
+                "— executing Tavily pipeline",
+                len(retrieved), avg_similarity,
             )
 
             # Stage 2 — QueryBuilder
-            t = time.perf_counter()
             queries = self._build_queries(student)
-            t_query = time.perf_counter() - t
 
             # Stage 3 — Tavily search
             t = time.perf_counter()
@@ -161,12 +118,19 @@ class CareerTrendAgent:
             filtered_results = self._filter(raw_results)
             t_filter = time.perf_counter() - t
 
-            # Stage 5 — KnowledgeBuilder (persist to MariaDB + Qdrant)
+            # Stage 5 — KnowledgeBuilder: persist and get structured profiles back
+            # No second DB read — profiles are returned directly from the builder.
             t = time.perf_counter()
-            knowledge_updated = self._build_knowledge(student, filtered_results, settings)
+            built_profiles = self._build_and_get_profiles(student, filtered_results)
             t_knowledge_build = time.perf_counter() - t
 
-            evidence = Evidence.from_search_results(filtered_results)
+            if built_profiles:
+                knowledge_updated = True
+                evidence = Evidence.from_knowledge(built_profiles)
+            else:
+                knowledge_updated = False
+                # Fallback: use raw search results as evidence (no structured KB)
+                evidence = Evidence.from_search_results(filtered_results)
 
         # ------------------------------------------------------------------
         # Stage 6 — StudentContext (deterministic, always runs)
@@ -179,7 +143,7 @@ class CareerTrendAgent:
         # Stage 7 — PromptBuilder
         # ------------------------------------------------------------------
         t = time.perf_counter()
-        prompt = self._build_prompt(student, evidence, context)
+        prompt = self._build_prompt(student, evidence, context, is_kh=knowledge_hit)
         t_prompt = time.perf_counter() - t
 
         # ------------------------------------------------------------------
@@ -338,52 +302,40 @@ class CareerTrendAgent:
         except Exception as exc:
             raise CareerTrendAgentError(f"ResultFilter failed: {exc}") from exc
 
-    def _build_knowledge(
-        self,
-        student: StudentProfile,
-        filtered_results: list,
-        settings,
-    ) -> bool:
-        """Persist Tavily results to MariaDB + VectorIndex via KnowledgeBuilder.
+    def _build_and_get_profiles(self, student: StudentProfile, filtered_results: list) -> list:
+        """
+        Run KnowledgeBuilder on the MISS path.
 
-        Passes the career_focus inferred from the student's profile (interests/skills)
-        as the starting career_name hint.  KnowledgeBuilder's deterministic extractor
-        will refine this further based on the actual content of the search results.
+        Returns a list of MergedCareerProfile objects that can be passed directly
+        to Evidence.from_knowledge().  The database has already been updated;
+        no second read is needed.
 
-        This stage is best-effort: errors are logged but never bubble up.
+        This stage is best-effort: errors are logged but never bubble up to the caller.
         """
         if not filtered_results:
-            return False
+            return []
 
-        logger.info("CareerTrendAgent: Stage — KnowledgeBuilder (updating knowledge base)")
+        logger.info("CareerTrendAgent: Stage — KnowledgeBuilder")
         try:
             from job_search_ai.services.knowledge.knowledge_builder import KnowledgeBuilder
-            from job_search_ai.agents.career_trend.query_builder import QueryBuilder
-
-            # Use the student's branch as the canonical branch context.
-            # KnowledgeBuilder uses this to populate applicable_branches on
-            # the created/updated Career Knowledge documents.
-            branch       = student.branch
-            country      = student.country
 
             builder = KnowledgeBuilder(
-                career_name = branch,
-                country     = country,
+                career_name=student.branch,
+                country=student.country,
             )
             result = builder.build(filtered_results)
             logger.info(
-                "KnowledgeBuilder: %s doc=%r  dims=%d",
+                "KnowledgeBuilder: %s  doc=%r  dims=%d  profiles=%d",
                 "created" if result.is_new else "updated",
-                result.doc_name, result.embedding_dim,
+                result.doc_name, result.embedding_dim, len(result.profiles),
             )
-            return True
+            return result.profiles
         except Exception as exc:
-            # Non-fatal — user still gets recommendations
             logger.warning(
-                "CareerTrendAgent: KnowledgeBuilder failed (%s) — continuing without KB update",
+                "CareerTrendAgent: KnowledgeBuilder failed (%s) — serving raw search evidence",
                 exc,
             )
-            return False
+            return []
 
     def _build_context(self, student: StudentProfile):
         logger.info("CareerTrendAgent: Stage — StudentContextBuilder")
@@ -402,10 +354,11 @@ class CareerTrendAgent:
         student: StudentProfile,
         evidence: list[Evidence],
         context=None,
+        is_kh: bool = True,
     ) -> str:
         logger.info("CareerTrendAgent: Stage — PromptBuilder (%d evidence items)", len(evidence))
         try:
-            prompt = PromptBuilder().build(student, evidence, context)
+            prompt = PromptBuilder().build(student, evidence, context, is_kh=is_kh)
             logger.info("PromptBuilder: prompt built (%d chars)", len(prompt))
             return prompt
         except Exception as exc:
