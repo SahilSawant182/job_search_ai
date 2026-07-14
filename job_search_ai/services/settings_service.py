@@ -73,6 +73,30 @@ class SettingsService:
 		return val
 
 	@property
+	def ollama_base_url(self) -> str:
+		"""Derive the Ollama server base URL (scheme + host + port) from ollama_endpoint.
+
+		ollama_endpoint stores the full path used by the LLM service, e.g.
+		  http://135.181.6.215:11434/api/generate
+		EmbeddingService needs the root, e.g.
+		  http://135.181.6.215:11434
+		This property strips the path component so callers can append their own path.
+		"""
+		import urllib.parse
+		parsed = urllib.parse.urlparse(self.ollama_endpoint)
+		return f"{parsed.scheme}://{parsed.netloc}"
+
+	@property
+	def embedding_model(self) -> str:
+		"""Name of the Ollama model used to generate text embeddings."""
+		return self._get_value("embedding_model", "EMBEDDING_MODEL", "nomic-embed-text")
+
+	@property
+	def embedding_timeout_seconds(self) -> int:
+		"""Timeout in seconds for embedding HTTP requests (falls back to llm_timeout_seconds)."""
+		return self._get_value("embedding_timeout_seconds", "EMBEDDING_TIMEOUT", self.llm_timeout_seconds)
+
+	@property
 	def default_llm_model(self):
 		return self._get_value("default_llm_model", "LLM_MODEL_NAME", "qwen2.5:1.5b")
 
@@ -107,6 +131,157 @@ class SettingsService:
 	@property
 	def enable_benchmark_mode(self):
 		return self._get_value("enable_benchmark_mode", "ENABLE_BENCHMARK_MODE", False)
+
+	# ------------------------------------------------------------------
+	# Vector Database (Qdrant)
+	# ------------------------------------------------------------------
+
+	@property
+	def qdrant_url(self) -> str:
+		"""Base URL of the Qdrant server (e.g. http://localhost:6333)."""
+		val = self._get_value("qdrant_url", "QDRANT_URL", "http://localhost:6333")
+		if not val or not str(val).strip():
+			raise ConfigurationError(
+				_("Qdrant URL is not configured. Please set it in Job Search AI Settings or the QDRANT_URL environment variable.")
+			)
+		return str(val).rstrip("/")
+
+	@property
+	def qdrant_collection_name(self) -> str:
+		"""Default Qdrant collection used for career intelligence vectors."""
+		val = self._get_value("qdrant_collection_name", "QDRANT_COLLECTION_NAME", "career_knowledge")
+		if not val or not str(val).strip():
+			raise ConfigurationError(
+				_("Qdrant Collection Name is not configured. Please set it in Job Search AI Settings or the QDRANT_COLLECTION_NAME environment variable.")
+			)
+		return str(val).strip()
+
+	@property
+	def embedding_dimension(self) -> int:
+		"""Dimension of vectors produced by the configured embedding model."""
+		val = self._get_value("embedding_dimension", "EMBEDDING_DIMENSION", 768)
+		try:
+			dim = int(val)
+		except (ValueError, TypeError):
+			raise ConfigurationError(
+				_("Embedding Dimension must be a positive integer. Got: {0}").format(val)
+			)
+		if dim <= 0:
+			raise ConfigurationError(
+				_("Embedding Dimension must be greater than 0. Got: {0}").format(dim)
+			)
+		return dim
+
+	@property
+	def vector_distance(self) -> str:
+		"""Distance metric used when creating Qdrant collections.
+
+		Valid values: Cosine, Dot, Euclid
+		"""
+		_VALID = {"Cosine", "Dot", "Euclid"}
+		val = self._get_value("vector_distance", "VECTOR_DISTANCE", "Cosine")
+		if not val or str(val).strip() not in _VALID:
+			raise ConfigurationError(
+				_("Similarity Metric must be one of {0}. Got: {1}").format(
+					", ".join(sorted(_VALID)), val
+				)
+			)
+		return str(val).strip()
+
+	# ------------------------------------------------------------------
+	# Knowledge Retrieval
+	# ------------------------------------------------------------------
+
+	@property
+	def similarity_threshold(self) -> float:
+		"""Minimum cosine similarity score (0.0–1.0) for a vector result to be included."""
+		val = self._get_value("similarity_threshold", "SIMILARITY_THRESHOLD", 0.75)
+		try:
+			f = float(val)
+		except (ValueError, TypeError):
+			raise ConfigurationError(
+				_("Similarity Threshold must be a float between 0.0 and 1.0. Got: {0}").format(val)
+			)
+		if not (0.0 <= f <= 1.0):
+			raise ConfigurationError(
+				_("Similarity Threshold must be between 0.0 and 1.0. Got: {0}").format(f)
+			)
+		return f
+
+	@property
+	def max_retrieved_knowledge(self) -> int:
+		"""Maximum number of Career Knowledge records returned per retrieval query."""
+		val = self._get_value("max_retrieved_knowledge", "MAX_RETRIEVED_KNOWLEDGE", 5)
+		try:
+			n = int(val)
+		except (ValueError, TypeError):
+			raise ConfigurationError(
+				_("Maximum Retrieved Knowledge must be a positive integer. Got: {0}").format(val)
+			)
+		if n <= 0:
+			raise ConfigurationError(
+				_("Maximum Retrieved Knowledge must be greater than 0. Got: {0}").format(n)
+			)
+		return n
+
+	@property
+	def minimum_knowledge_results(self) -> int:
+		"""Minimum number of retrieved Knowledge records needed to skip the Tavily web search."""
+		val = self._get_value("minimum_knowledge_results", "MINIMUM_KNOWLEDGE_RESULTS", 3)
+		try:
+			n = int(val)
+		except (ValueError, TypeError):
+			raise ConfigurationError(
+				_("Minimum Knowledge Results must be a positive integer. Got: {0}").format(val)
+			)
+		if n <= 0:
+			raise ConfigurationError(
+				_("Minimum Knowledge Results must be greater than 0. Got: {0}").format(n)
+			)
+		return n
+
+	@property
+	def refresh_batch_size(self) -> int:
+		"""Number of records processed in a single database batch."""
+		val = self._get_value("refresh_batch_size", "REFRESH_BATCH_SIZE", 20)
+		try:
+			n = int(val)
+		except (ValueError, TypeError):
+			raise ConfigurationError(
+				_("Refresh Batch Size must be a positive integer. Got: {0}").format(val)
+			)
+		if n <= 0:
+			raise ConfigurationError(
+				_("Refresh Batch Size must be greater than 0. Got: {0}").format(n)
+			)
+		return n
+
+	@property
+	def maximum_refresh_per_run(self) -> int:
+		"""Maximum number of records refreshed in a single execution run."""
+		val = self._get_value("maximum_refresh_per_run", "MAXIMUM_REFRESH_PER_RUN", 100)
+		try:
+			n = int(val)
+		except (ValueError, TypeError):
+			raise ConfigurationError(
+				_("Maximum Refresh Per Run must be a positive integer. Got: {0}").format(val)
+			)
+		if n <= 0:
+			raise ConfigurationError(
+				_("Maximum Refresh Per Run must be greater than 0. Got: {0}").format(n)
+			)
+		return n
+
+	@property
+	def enable_automatic_refresh(self) -> bool:
+		"""Whether automatic knowledge refresh is enabled."""
+		val = self._get_value("enable_automatic_refresh", "ENABLE_AUTOMATIC_REFRESH", 1)
+		if str(val).lower() in ("true", "1", "yes", "on"):
+			return True
+		if str(val).lower() in ("false", "0", "no", "off"):
+			return False
+		return bool(val)
+
 
 	def get_password(self, fieldname):
 		# 1. Preferred: DocType settings

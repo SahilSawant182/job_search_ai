@@ -161,6 +161,20 @@ document.addEventListener("DOMContentLoaded", function () {
 		document.getElementById("model-badge").innerText =
 			"\u{1F916} " + (meta.model || "qwen2.5:1.5b");
 
+		// Knowledge badge
+		const kbBadge = document.getElementById("knowledge-badge");
+		if (meta.knowledge_hit) {
+			kbBadge.innerText = "🧠 Knowledge Hit";
+			kbBadge.style.background = "#ecfdf5";
+			kbBadge.style.color = "#059669";
+			kbBadge.style.border = "1px solid #a7f3d0";
+		} else {
+			kbBadge.innerText = "🌐 Live Web Search";
+			kbBadge.style.background = "#fef3c7";
+			kbBadge.style.color = "#d97706";
+			kbBadge.style.border = "1px solid #fde68a";
+		}
+
 		// Strategy
 		document.getElementById("strategy-text").innerText = res.strategy || "";
 

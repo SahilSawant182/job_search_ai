@@ -207,10 +207,18 @@ class LLMService:
                 if future_demand not in ("Very High", "High", "Moderate"):
                     future_demand = "High"
 
+                conf_raw = path.get("confidence", 80)
+                if isinstance(conf_raw, str):
+                    conf_raw = "".join(c for c in conf_raw if c.isdigit())
+                try:
+                    confidence = int(conf_raw) if conf_raw else 80
+                except (ValueError, TypeError):
+                    confidence = 80
+
                 rec = CareerRecommendation(
                     career=path.get("career", ""),
                     category=path.get("category", ""),
-                    confidence=int(path.get("confidence", 80)),
+                    confidence=confidence,
                     why_for_you=path.get("why_for_you", ""),
                     career_stage=career_stage,
                     future_demand=future_demand,

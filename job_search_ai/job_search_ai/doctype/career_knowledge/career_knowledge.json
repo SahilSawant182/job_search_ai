@@ -1,0 +1,260 @@
+{
+ "actions": [],
+ "autoname": "CK-.#####",
+ "creation": "2026-07-13 14:00:00",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "general_information_section",
+  "career_name",
+  "industry",
+  "category",
+  "country",
+  "applicable_branches",
+  "quality_score",
+  "summary",
+  "market_intelligence_section",
+  "future_demand",
+  "career_stage",
+  "confidence",
+  "cb_market",
+  "minimum_salary",
+  "maximum_salary",
+  "currency",
+  "skills_section",
+  "skills",
+  "companies_section",
+  "companies",
+  "sources_section",
+  "sources",
+  "knowledge_metadata_section",
+  "source_count",
+  "knowledge_version",
+  "refresh_interval",
+  "expires_on",
+  "cb_meta",
+  "embedding_hash",
+  "last_updated",
+  "last_vector_updated",
+  "refresh_count",
+  "needs_refresh",
+  "active"
+ ],
+ "fields": [
+  {
+   "fieldname": "general_information_section",
+   "fieldtype": "Section Break",
+   "label": "General Information"
+  },
+  {
+   "fieldname": "career_name",
+   "fieldtype": "Data",
+   "label": "Career Name",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "industry",
+   "fieldtype": "Data",
+   "label": "Industry",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "category",
+   "fieldtype": "Data",
+   "label": "Category"
+  },
+  {
+   "fieldname": "country",
+   "fieldtype": "Link",
+   "label": "Country",
+   "options": "Country"
+  },
+  {
+   "fieldname": "applicable_branches",
+   "fieldtype": "Small Text",
+   "label": "Applicable Branches"
+  },
+  {
+   "fieldname": "quality_score",
+   "fieldtype": "Int",
+   "label": "Quality Score"
+  },
+  {
+   "fieldname": "summary",
+   "fieldtype": "Small Text",
+   "label": "Summary"
+  },
+  {
+   "fieldname": "market_intelligence_section",
+   "fieldtype": "Section Break",
+   "label": "Market Intelligence"
+  },
+  {
+   "fieldname": "future_demand",
+   "fieldtype": "Select",
+   "label": "Future Demand",
+   "options": "\nVery High\nHigh\nMedium\nLow"
+  },
+  {
+   "fieldname": "career_stage",
+   "fieldtype": "Select",
+   "label": "Career Stage",
+   "options": "\nImmediate Placement\nGrowing\nFuture"
+  },
+  {
+   "fieldname": "confidence",
+   "fieldtype": "Percent",
+   "label": "Confidence"
+  },
+  {
+   "fieldname": "cb_market",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "minimum_salary",
+   "fieldtype": "Currency",
+   "label": "Minimum Salary",
+   "options": "currency"
+  },
+  {
+   "fieldname": "maximum_salary",
+   "fieldtype": "Currency",
+   "label": "Maximum Salary",
+   "options": "currency"
+  },
+  {
+   "fieldname": "currency",
+   "fieldtype": "Data",
+   "label": "Currency",
+   "default": "INR"
+  },
+  {
+   "fieldname": "skills_section",
+   "fieldtype": "Section Break",
+   "label": "Skills"
+  },
+  {
+   "fieldname": "skills",
+   "fieldtype": "Table",
+   "label": "Skills",
+   "options": "Career Knowledge Skill"
+  },
+  {
+   "fieldname": "companies_section",
+   "fieldtype": "Section Break",
+   "label": "Companies"
+  },
+  {
+   "fieldname": "companies",
+   "fieldtype": "Table",
+   "label": "Companies",
+   "options": "Career Knowledge Company"
+  },
+  {
+   "fieldname": "sources_section",
+   "fieldtype": "Section Break",
+   "label": "Sources"
+  },
+  {
+   "fieldname": "sources",
+   "fieldtype": "Table",
+   "label": "Sources",
+   "options": "Career Knowledge Source"
+  },
+  {
+   "fieldname": "knowledge_metadata_section",
+   "fieldtype": "Section Break",
+   "label": "Knowledge Metadata"
+  },
+  {
+   "fieldname": "source_count",
+   "fieldtype": "Int",
+   "label": "Source Count"
+  },
+  {
+   "fieldname": "knowledge_version",
+   "fieldtype": "Int",
+   "label": "Knowledge Version",
+   "default": "1"
+  },
+  {
+   "fieldname": "refresh_interval",
+   "fieldtype": "Int",
+   "label": "Refresh Interval (days)",
+   "default": "30"
+  },
+  {
+   "fieldname": "expires_on",
+   "fieldtype": "Datetime",
+   "label": "Expires On"
+  },
+  {
+   "fieldname": "cb_meta",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "embedding_hash",
+   "fieldtype": "Data",
+   "label": "Embedding Hash",
+   "read_only": 1
+  },
+  {
+   "fieldname": "last_updated",
+   "fieldtype": "Datetime",
+   "label": "Last Updated",
+   "default": "Now"
+  },
+  {
+   "fieldname": "last_vector_updated",
+   "fieldtype": "Datetime",
+   "label": "Last Vector Updated"
+  },
+  {
+   "fieldname": "refresh_count",
+   "fieldtype": "Int",
+   "label": "Refresh Count",
+   "default": "0"
+  },
+  {
+   "fieldname": "needs_refresh",
+   "fieldtype": "Check",
+   "label": "Needs Refresh",
+   "default": "0"
+  },
+  {
+   "fieldname": "active",
+   "fieldtype": "Check",
+   "label": "Active",
+   "default": "1"
+  }
+ ],
+ "links": [],
+ "modified": "2026-07-13 15:16:00",
+ "modified_by": "Administrator",
+ "module": "Job Search AI",
+ "name": "Career Knowledge",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "career_name",
+ "track_changes": 1
+}

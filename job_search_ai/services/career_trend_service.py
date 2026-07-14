@@ -74,7 +74,11 @@ class CareerTrendService:
 				"llm_execution_time_seconds": metrics.get("llm_response_time", 0.0),
 				"prompt_length_characters": metrics.get("prompt_length", 0),
 				"search_results_used": metrics.get("filtered_results_count", 0),
-				"model": metrics.get("model_name", "qwen2.5:1.5b")
+				"model": metrics.get("model_name", "qwen2.5:1.5b"),
+				"knowledge_hit": metrics.get("knowledge_hit", False),
+				"avg_similarity_score": metrics.get("avg_similarity_score", 0.0),
+				"knowledge_count": metrics.get("knowledge_count", 0),
+				"tavily_used": metrics.get("tavily_used", True)
 			}
 			return res_dict
 		except Exception as exc:

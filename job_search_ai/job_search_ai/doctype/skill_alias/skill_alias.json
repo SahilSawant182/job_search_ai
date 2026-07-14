@@ -1,0 +1,40 @@
+{
+ "actions": [],
+ "creation": "2026-07-14 10:00:00",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "alias",
+  "canonical_skill"
+ ],
+ "fields": [
+  {
+   "fieldname": "alias",
+   "fieldtype": "Data",
+   "label": "Alias",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_grid_view": 1
+  },
+  {
+   "fieldname": "canonical_skill",
+   "fieldtype": "Link",
+   "label": "Canonical Skill",
+   "options": "Skill Master",
+   "in_list_view": 1,
+   "in_grid_view": 1
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-07-14 10:00:00",
+ "modified_by": "Administrator",
+ "module": "Job Search AI",
+ "name": "Skill Alias",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
