@@ -10,6 +10,7 @@ import time
 from typing import Any, TYPE_CHECKING
 
 import frappe
+from job_search_ai.services.knowledge.constants import RetrievalWeights
 
 if TYPE_CHECKING:
     from job_search_ai.services.settings_service import SettingsService
@@ -17,29 +18,26 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-
+   
 class KnowledgeRetrieverError(Exception):
     """Raised by KnowledgeRetriever for any retrieval pipeline failure."""
 
 
 class RetrievedKnowledge:
-    """A single Career Knowledge record returned by KnowledgeRetriever.
-
-    Phase 9 additions:
-        required_skills  — skills with skill_type == Required
-        advanced_skills  — skills with skill_type == Advanced
-        nice_skills      — skills with skill_type == Nice To Have
-        suitable_years   — e.g. "3,4"
-        learning_roadmap — e.g. "HTML → CSS → React"
-    """
+    """A single Career Knowledge record returned by KnowledgeRetriever."""
 
     __slots__ = (
-        "doc_name", "similarity", "hybrid_score",
+        "doc_name", "similarity", "hybrid_score", "retrieval_method",
         "career_name", "industry", "category", "country",
         "summary", "future_demand", "career_stage", "confidence",
         "skills", "required_skills", "advanced_skills", "preferred_skills",
         "nice_skills", "companies", "suitable_years", "learning_roadmap",
         "needs_refresh", "suitable_degrees", "suitable_branches",
+        "skill_coverage_score", "required_match_pct", "preferred_match_pct",
+        "nice_match_pct",
+        "matched_required_skills", "missing_required_skills",
+        "matched_preferred_skills", "missing_preferred_skills",
+        "quality_score", "evidence_count",
     )
 
     def __init__(
@@ -66,10 +64,22 @@ class RetrievedKnowledge:
         needs_refresh: bool = False,
         suitable_degrees: str = "",
         suitable_branches: str = "",
+        skill_coverage_score: float = 0.0,
+        required_match_pct: float = 0.0,
+        preferred_match_pct: float = 0.0,
+        nice_match_pct: float = 0.0,
+        matched_required_skills: list[str] | None = None,
+        missing_required_skills: list[str] | None = None,
+        matched_preferred_skills: list[str] | None = None,
+        missing_preferred_skills: list[str] | None = None,
+        retrieval_method: str = "vector",
+        quality_score: int = 70,
+        evidence_count: int = 1,
     ) -> None:
         self.doc_name        = doc_name
         self.similarity      = similarity
         self.hybrid_score    = hybrid_score
+        self.retrieval_method = retrieval_method
         self.career_name     = career_name
         self.industry        = industry
         self.category        = category
@@ -81,7 +91,6 @@ class RetrievedKnowledge:
         self.skills          = skills or []
         self.required_skills = required_skills or []
         self.preferred_skills = preferred_skills or []
-        # Support both names for backward compatibility
         self.advanced_skills = advanced_skills or self.preferred_skills
         self.nice_skills     = nice_skills or []
         self.companies       = companies or []
@@ -90,6 +99,16 @@ class RetrievedKnowledge:
         self.needs_refresh   = needs_refresh
         self.suitable_degrees = suitable_degrees
         self.suitable_branches = suitable_branches
+        self.skill_coverage_score = skill_coverage_score
+        self.required_match_pct   = required_match_pct
+        self.preferred_match_pct  = preferred_match_pct
+        self.nice_match_pct       = nice_match_pct
+        self.matched_required_skills  = matched_required_skills or []
+        self.missing_required_skills  = missing_required_skills or []
+        self.matched_preferred_skills = matched_preferred_skills or []
+        self.missing_preferred_skills = missing_preferred_skills or []
+        self.quality_score   = quality_score
+        self.evidence_count  = evidence_count
 
     def __repr__(self) -> str:
         return (
@@ -147,17 +166,128 @@ class KnowledgeRetriever:
         timings["vector_search"] = time.perf_counter() - t
         logger.info("KnowledgeRetriever: vector hits=%d  elapsed=%.3fs", len(vector_hits), timings["vector_search"])
 
-        if not vector_hits:
-            return []
-
-        t = time.perf_counter()
-        records = self._load_from_mariadb(vector_hits, student)
-        timings["db_fetch"] = time.perf_counter() - t
+        records = []
+        if vector_hits:
+            t = time.perf_counter()
+            records = self._load_from_mariadb(vector_hits, student)
+            timings["db_fetch"] = time.perf_counter() - t
 
         avg_similarity = sum(r.similarity for r in records) / len(records) if records else 0.0
+        threshold = float(self._settings.similarity_threshold)
+
+        if not records or avg_similarity < threshold:
+            fallback_records = self._fallback_name_match(student, threshold)
+            if fallback_records:
+                logger.info("KnowledgeRetriever: direct name match fallback found %d record(s)", len(fallback_records))
+                return fallback_records
+
         logger.info("KnowledgeRetriever: loaded=%d  avg_sim=%.4f  total=%.3fs",
                     len(records), avg_similarity, sum(timings.values()))
         return records
+
+    def _fallback_name_match(self, student: "StudentProfile", threshold: float) -> list[RetrievedKnowledge]:
+        """
+        Broader metadata-based fallback when vector search yields no strong hit.
+
+        Searches Career Knowledge records by:
+          - Canonical career name (from student interests or branch)
+          - Required/preferred skills overlap
+          - Student branch / suitable_branches text match
+
+        Records found here are tagged retrieval_method='metadata'.
+        Similarity is NOT fabricated — hybrid scoring from _load_from_mariadb
+        uses the real student context signals.
+        """
+        from job_search_ai.services.knowledge.extraction.career_canonicalizer import CareerCanonicalizer
+
+        # Build canonical name targets from student context
+        name_targets: list[str] = []
+        if student.interests:
+            for interest in student.interests[:3]:
+                canonical = CareerCanonicalizer.canonicalize(interest)
+                if canonical and canonical not in name_targets:
+                    name_targets.append(canonical)
+        if student.branch:
+            canonical = CareerCanonicalizer.canonicalize(student.branch)
+            if canonical and canonical not in name_targets:
+                name_targets.append(canonical)
+
+        # Collect candidate doc names from multiple search dimensions
+        matched_doc_names: list[str] = []
+        seen: set[str] = set()
+
+        # 1. Exact career name match
+        for target in name_targets:
+            rows = frappe.get_all(
+                "Career Knowledge",
+                filters={"career_name": target, "active": 1},
+                fields=["name"],
+                limit=2,
+            )
+            for row in rows:
+                if row["name"] not in seen:
+                    seen.add(row["name"])
+                    matched_doc_names.append(row["name"])
+
+        # 2. Branch / suitable_branches text overlap (LIKE match on student branch)
+        if student.branch and len(matched_doc_names) < 3:
+            branch_word = student.branch.split()[0] if student.branch.split() else ""
+            if branch_word and len(branch_word) > 3:
+                rows = frappe.get_all(
+                    "Career Knowledge",
+                    filters=[
+                        ["active", "=", 1],
+                        ["suitable_branches", "like", f"%{branch_word}%"],
+                    ],
+                    fields=["name"],
+                    limit=3,
+                )
+                for row in rows:
+                    if row["name"] not in seen:
+                        seen.add(row["name"])
+                        matched_doc_names.append(row["name"])
+
+        # 3. Skill name overlap — search for docs that mention a student skill
+        if student.skills and len(matched_doc_names) < 3:
+            for skill in student.skills[:3]:
+                rows = frappe.db.sql(
+                    """
+                    SELECT DISTINCT ck.name
+                    FROM `tabCareer Knowledge` ck
+                    JOIN `tabCareer Knowledge Skill` cs ON cs.parent = ck.name
+                    WHERE ck.active = 1
+                      AND cs.skill_name LIKE %(skill)s
+                    LIMIT 2
+                    """,
+                    {"skill": f"%{skill}%"},
+                    as_dict=True,
+                )
+                for row in rows:
+                    if row["name"] not in seen:
+                        seen.add(row["name"])
+                        matched_doc_names.append(row["name"])
+                if len(matched_doc_names) >= 3:
+                    break
+
+        if not matched_doc_names:
+            return []
+
+        # Use a stub hit with score=0.0 — hybrid scoring from _load_from_mariadb
+        # provides the real relevance signals; we never fabricate vector similarity.
+        class _MetadataHit:
+            def __init__(self, doc_id: str):
+                self.id = doc_id
+                self.score = 0.0  # no vector score available
+
+        stub_hits = [_MetadataHit(name) for name in matched_doc_names]
+        records = self._load_from_mariadb(stub_hits, student)
+
+        # Tag as metadata retrieval — do NOT overwrite similarity
+        for r in records:
+            r.retrieval_method = "metadata"
+
+        # Return records that clear the threshold after hybrid scoring
+        return [r for r in records if r.hybrid_score >= threshold]
 
     @staticmethod
     def _build_search_text(student: "StudentProfile") -> str:
@@ -274,17 +404,30 @@ class KnowledgeRetriever:
 
             academic_match_score = (branch_score + degree_score) / 2.0
 
-            # 2. Required-skill overlap (Phase 9: weight required skills more)
-            skill_score = 1.0
+            # 2. Skill coverage score (weighted compliance) — single source of truth
+            required_coverage = 0.0
+            preferred_coverage = 0.0
+            nice_coverage = 0.0
+            skill_coverage_score = 0.0
+            matched_req: list[str] = []
+            missing_req: list[str] = []
+            matched_pref: list[str] = []
+            missing_pref: list[str] = []
+
             if student.skills:
-                req_set = {s.lower() for s in required_skills}
-                all_set = {s.lower() for s in all_skills}
-                student_lower = [s.strip().lower() for s in student.skills]
-                req_matches = sum(1 for s in student_lower if s in req_set)
-                all_matches = sum(1 for s in student_lower if s in all_set)
-                n = len(student.skills)
-                # Required matches weighted 70%, all-skill matches 30%
-                skill_score = (req_matches / n * 0.7 + all_matches / n * 0.3) if n else 1.0
+                student_lower = {s.strip().lower() for s in student.skills}
+
+                matched_req  = [s for s in required_skills  if s.lower() in student_lower]
+                missing_req  = [s for s in required_skills  if s.lower() not in student_lower]
+                matched_pref = [s for s in preferred_skills if s.lower() in student_lower]
+                missing_pref = [s for s in preferred_skills if s.lower() not in student_lower]
+
+                required_coverage  = len(matched_req)  / len(required_skills)  if required_skills  else 1.0
+                preferred_coverage = len(matched_pref) / len(preferred_skills) if preferred_skills else 1.0
+                nice_set = {s.lower() for s in nice_skills}
+                nice_coverage = sum(1 for s in student_lower if s in nice_set) / len(nice_skills) if nice_skills else 1.0
+
+                skill_coverage_score = 0.7 * required_coverage + 0.2 * preferred_coverage + 0.1 * nice_coverage
 
             # 3. Interest overlap with synonym expansion
             interest_score = 0.0
@@ -295,17 +438,10 @@ class KnowledgeRetriever:
                 category_lower  = (doc.category    or "").lower()
 
                 expanded = set(interests_lower)
+                # Dynamic word-level tokenisation to find matches naturally without hardcoding
                 for interest in interests_lower:
-                    if interest in {"ai", "ml", "machine learning", "artificial intelligence", "deep learning"}:
-                        expanded.update({"ai", "ml", "machine learning", "artificial intelligence", "model"})
-                    elif interest in {"frontend", "front-end", "web development", "ui", "ux"}:
-                        expanded.update({"frontend", "front-end", "ui", "ux", "developer", "web"})
-                    elif interest in {"backend", "back-end", "database", "server", "sql"}:
-                        expanded.update({"backend", "back-end", "database", "server", "developer"})
-                    elif interest in {"data science", "data analysis", "data analyst", "analytics"}:
-                        expanded.update({"data science", "data", "analytics", "scientist"})
-                    elif interest in {"devops", "cloud", "infrastructure"}:
-                        expanded.update({"devops", "cloud", "infrastructure", "platform"})
+                    words = [w for w in re.findall(r'\w+', interest) if len(w) > 2]
+                    expanded.update(words)
 
                 matches = sum(1 for i in expanded if i in career_lower or i in industry_lower or i in category_lower)
                 interest_score = min(1.0, matches / max(1, len(interests_lower)))
@@ -320,7 +456,9 @@ class KnowledgeRetriever:
                 country_score = 1.0 if student.country.strip().lower() == doc_country.strip().lower() else 0.0
 
             # 6. Quality score
-            quality_score = min(1.0, (getattr(doc, "quality_score", None) or 70.0) / 100.0)
+            db_quality_score = int(getattr(doc, "quality_score", None) or 70)
+            db_evidence_count = max(1, int(getattr(doc, "source_count", None) or 1))
+            quality_score = min(1.0, db_quality_score / 100.0)
 
             # 7. Freshness score
             freshness_score = 1.0
@@ -334,14 +472,14 @@ class KnowledgeRetriever:
                     pass
 
             hybrid_similarity = round(
-                0.35 * embedding_sim +
-                0.10 * academic_match_score +
-                0.15 * skill_score +
-                0.15 * interest_score +
-                0.10 * year_stage_score +
-                0.05 * country_score +
-                0.05 * quality_score +
-                0.05 * freshness_score,
+                RetrievalWeights.VECTOR * embedding_sim +
+                RetrievalWeights.ACADEMIC * academic_match_score +
+                RetrievalWeights.SKILL * skill_coverage_score +
+                RetrievalWeights.INTEREST * interest_score +
+                RetrievalWeights.YEAR * year_stage_score +
+                RetrievalWeights.COUNTRY * country_score +
+                RetrievalWeights.QUALITY * quality_score +
+                RetrievalWeights.FRESH * freshness_score,
                 4,
             )
             if hybrid_similarity >= self._settings.similarity_threshold:
@@ -368,6 +506,17 @@ class KnowledgeRetriever:
                     needs_refresh    = needs_ref,
                     suitable_degrees = getattr(doc, "suitable_degrees", "") or "",
                     suitable_branches = getattr(doc, "suitable_branches", "") or "",
+                    skill_coverage_score = skill_coverage_score,
+                    required_match_pct   = required_coverage,
+                    preferred_match_pct  = preferred_coverage,
+                    nice_match_pct       = nice_coverage,
+                    matched_required_skills  = matched_req,
+                    missing_required_skills  = missing_req,
+                    matched_preferred_skills = matched_pref,
+                    missing_preferred_skills = missing_pref,
+                    retrieval_method         = "vector",
+                    quality_score            = db_quality_score,
+                    evidence_count           = db_evidence_count,
                 ))
 
         records.sort(key=lambda r: r.similarity, reverse=True)

@@ -2,7 +2,7 @@
 QueryBuilder — builds career-centric search queries from a StudentProfile.
 
 Responsibility:
-    Generate 4 targeted search queries based on the student's skills and
+    Generate targeted search queries based on the student's skills and
     interests, NOT their degree branch.  The knowledge base stores careers
     (Frontend Developer, Data Engineer, etc.), not branches (Computer Engineering).
     Queries must target careers so that Tavily results map cleanly onto Career
@@ -17,13 +17,17 @@ from __future__ import annotations
 import logging
 
 from job_search_ai.agents.career_trend.schemas import StudentProfile
+from job_search_ai.services.knowledge.constants import (
+    JOB_SEARCH_DOMAINS,
+    SALARY_SEARCH_DOMAINS,
+)
 
 logger = logging.getLogger(__name__)
 
 
 class QueryBuilder:
     """
-    Builds a list of 4 career-centric search queries from a StudentProfile.
+    Builds a list of career-centric search queries from a StudentProfile.
 
     Queries target specific career roles and required skills, not broad
     academic branches, so Tavily results can be correctly mapped to
@@ -41,16 +45,14 @@ class QueryBuilder:
 
         Strategy
         --------
-        1. Career role + skills query  — most specific, highest recall
-        2. Career role + country       — local market data
-        3. Skills demand trends        — skills-focused market intelligence
-        4. Career path + year-context  — placement-readiness perspective
+        1. Career role + skills query  — target job platforms
+        2. Career role + salary guides — target salary benchmark sites
 
         Args:
             student: A fully-populated StudentProfile.
 
         Returns:
-            A list containing exactly 4 search query strings.
+            A list containing targeted search query strings.
         """
         logger.info(
             "QueryBuilder: building career-centric queries — "
@@ -65,12 +67,15 @@ class QueryBuilder:
         career_focus = self._infer_career_focus(student)
         country      = student.country or "India"
 
+        job_sites = " OR ".join(JOB_SEARCH_DOMAINS)
+        salary_sites = " OR ".join(SALARY_SEARCH_DOMAINS)
+
         queries: list[str] = [
             # Q1: Skills & requirements on trusted job platforms
-            f"{career_focus} skills requirements site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com {country}",
+            f"{career_focus} skills requirements {job_sites} {country}",
 
             # Q2: Career path & salary guides on trusted benchmark sites
-            f"{career_focus} salary guide career path site:levels.fyi OR site:glassdoor.com OR site:payscale.com {country}",
+            f"{career_focus} salary guide career path {salary_sites} {country}",
         ]
 
         logger.info("QueryBuilder: generated %d queries: %s", len(queries), queries)
@@ -93,43 +98,8 @@ class QueryBuilder:
             return student.interests[0]
 
         if student.skills:
-            # Use skill cluster heuristics to derive a career focus
-            skills_lower = [s.lower() for s in student.skills]
-            if any(s in skills_lower for s in ["react", "vue", "angular", "html", "css", "javascript", "frontend"]):
-                return "Frontend Developer"
-            if any(s in skills_lower for s in ["node", "express", "django", "flask", "spring", "backend"]):
-                return "Backend Developer"
-            if any(s in skills_lower for s in ["react native", "flutter", "android", "ios", "mobile"]):
-                return "Mobile Developer"
-            if any(s in skills_lower for s in ["aws", "azure", "gcp", "kubernetes", "docker", "devops"]):
-                return "DevOps Cloud Engineer"
-            if any(s in skills_lower for s in ["python", "tensorflow", "pytorch", "ml", "machine learning", "data"]):
-                return "Data Scientist Machine Learning"
-            if any(s in skills_lower for s in ["sql", "tableau", "power bi", "analytics"]):
-                return "Data Analyst"
-            if any(s in skills_lower for s in ["figma", "ui", "ux", "design"]):
-                return "UI UX Designer"
-            if any(s in skills_lower for s in ["java", "c++", "c#", ".net"]):
-                return "Software Engineer"
-            # Return first skill as a proxy
+            # Return first skill as a direct proxy for career focus without hardcoded mappings
             return student.skills[0]
 
         # Last resort: return branch as-is (will still produce useful queries)
         return student.branch
-
-    def _year_context_query(
-        self,
-        student: StudentProfile,
-        career_focus: str,
-        country: str,
-    ) -> str:
-        """Build a year-aware query for placement-readiness intelligence."""
-        year = student.year
-        if year >= 4:
-            return f"Entry level {career_focus} jobs freshers placement {country} 2025"
-        elif year == 3:
-            return f"{career_focus} internship placement preparation {country}"
-        elif year == 2:
-            return f"{career_focus} career roadmap skills to learn {country}"
-        else:
-            return f"Future scope {career_focus} technology trends {country}"

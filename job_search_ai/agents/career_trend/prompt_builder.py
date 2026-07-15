@@ -65,20 +65,31 @@ class Evidence:
     required_skills: Required skill names
     advanced_skills: Advanced/Preferred skill names
     nice_skills    : Nice To Have skill names
+    matched_required_skills: Required skills matched by student
+    missing_required_skills: Required skills missing from student
+    matched_preferred_skills: Preferred/Advanced skills matched by student
+    missing_preferred_skills: Preferred/Advanced skills missing from student
     learning_roadmap: ordered skill path string
     future_demand  : future demand
     suitable_years : suitable academic years
     """
-    title:            str
-    source:           str
-    content:          str
-    score:            float           = 0.0
-    required_skills:  list[str]       = field(default_factory=list)
-    advanced_skills:  list[str]       = field(default_factory=list)
-    nice_skills:      list[str]       = field(default_factory=list)
-    learning_roadmap: str             = ""
-    future_demand:    str             = ""
-    suitable_years:   str             = ""
+    title:                    str
+    source:                   str
+    content:                  str
+    score:                    float           = 0.0
+    required_skills:          list[str]       = field(default_factory=list)
+    advanced_skills:          list[str]       = field(default_factory=list)
+    nice_skills:              list[str]       = field(default_factory=list)
+    matched_required_skills:  list[str]       = field(default_factory=list)
+    missing_required_skills:  list[str]       = field(default_factory=list)
+    matched_preferred_skills: list[str]       = field(default_factory=list)
+    missing_preferred_skills: list[str]       = field(default_factory=list)
+    learning_roadmap:         str             = ""
+    future_demand:            str             = ""
+    suitable_years:           str             = ""
+    quality_score:            int             = 70
+    confidence:               float           = 0.0
+    evidence_count:           int             = 1
 
     # Derived convenience — all skills flattened, in tier order
     @property
@@ -116,36 +127,27 @@ class Evidence:
 
             # Support both Preferred and Advanced
             preferred = list(getattr(r, "preferred_skills", []) or getattr(r, "advanced_skills", []) or [])
+            req_skills = list(getattr(r, "required_skills", []) or [])
+            nice_skills = list(getattr(r, "nice_skills", []) or [])
 
             items.append(cls(
-                title           = getattr(r, "career_name", ""),
-                source          = f"KB:{getattr(r, 'doc_name', '')}",
-                content         = content,
-                score           = float(sim),
-                required_skills = list(getattr(r, "required_skills", []) or []),
-                advanced_skills = preferred,
-                nice_skills     = list(getattr(r, "nice_skills",     []) or []),
-                learning_roadmap = getattr(r, "learning_roadmap", "") or "",
-                future_demand   = demand,
-                suitable_years  = years,
-            ))
-        return items
-
-    @classmethod
-    def from_search_results(cls, results: list) -> list["Evidence"]:
-        """
-        Fallback: convert raw SearchResult objects when KnowledgeBuilder fails entirely.
-
-        This path should be rare.  PromptBuilder renders these with reduced structure
-        since there are no tiered skills.
-        """
-        items: list[Evidence] = []
-        for r in results:
-            items.append(cls(
-                title   = getattr(r, "title",   "") or "",
-                source  = getattr(r, "source",  "") or "",
-                content = getattr(r, "content", "") or "",
-                score   = float(getattr(r, "score", 0.0)),
+                title                    = getattr(r, "career_name", ""),
+                source                   = f"KB:{getattr(r, 'doc_name', '')}",
+                content                  = content,
+                score                    = float(sim),
+                required_skills          = req_skills,
+                advanced_skills          = preferred,
+                nice_skills              = nice_skills,
+                matched_required_skills  = list(getattr(r, "matched_required_skills", []) or []),
+                missing_required_skills  = list(getattr(r, "missing_required_skills", []) or []),
+                matched_preferred_skills = list(getattr(r, "matched_preferred_skills", []) or []),
+                missing_preferred_skills = list(getattr(r, "missing_preferred_skills", []) or []),
+                learning_roadmap         = getattr(r, "learning_roadmap", "") or "",
+                future_demand            = demand,
+                suitable_years           = years,
+                quality_score            = int(getattr(r, "quality_score", 70)),
+                confidence               = float(getattr(r, "confidence", 0.0)),
+                evidence_count           = int(getattr(r, "evidence_count", 1)),
             ))
         return items
 
@@ -156,22 +158,20 @@ class Evidence:
 
 class PromptBuilder:
     """
-    Builds the LLM prompt from a student profile, optional context, and
-    a list of Evidence objects derived from structured career knowledge.
+    Builds the LLM prompt from a StudentContext and a list of Evidence objects.
 
     Usage
     -----
     ::
 
         evidence = Evidence.from_knowledge(retrieved_or_built_records)
-        prompt   = PromptBuilder().build(student, evidence, context)
+        prompt   = PromptBuilder().build(evidence, context)
     """
 
     def build(
         self,
-        student,
         evidence: list[Evidence],
-        context: Optional["StudentContext"] = None,
+        context: "StudentContext",
         is_kh: Optional[bool] = None,
     ) -> str:
         """
@@ -179,7 +179,6 @@ class PromptBuilder:
 
         Args
         ----
-        student  : StudentProfile
         evidence : list of Evidence (structured knowledge — no raw text)
         context  : pre-computed StudentContext from StudentContextBuilder
         is_kh    : True = Knowledge HIT (compact prompt), False = MISS (fuller prompt)
@@ -208,15 +207,12 @@ class PromptBuilder:
 
         # Build fixed sections
         role_sec    = self._role_section(is_kh)
-        student_sec = self._student_section(student)
-        ctx_sec     = self._context_section(context) if context is not None else ""
-        rules_sec   = self._matching_rules(student, is_kh)
+        student_sec = self._student_section(context)
+        ctx_sec     = self._context_section(context)
+        rules_sec   = self._matching_rules(context, is_kh)
         output_sec  = self._output_instruction(is_kh)
 
-        fixed_sections = [role_sec, student_sec]
-        if ctx_sec:
-            fixed_sections.append(ctx_sec)
-        fixed_sections += [rules_sec, output_sec]
+        fixed_sections = [role_sec, student_sec, ctx_sec, rules_sec, output_sec]
 
         fixed_len  = sum(len(s) for s in fixed_sections) + len(fixed_sections) * 2
         ev_budget  = max(0, max_chars - fixed_len - 50)  # leave some buffer for padding/formatting
@@ -227,19 +223,16 @@ class PromptBuilder:
         used = len("## Evidence Career Templates\n\n")
 
         for item in evidence:
-            block_len = self._evidence_block_len(item, is_kh, max_per_item)
+            block_len = self._evidence_block_len(item)
             if not selected or used + block_len <= ev_budget:
                 selected.append(item)
                 used += block_len
             else:
                 break
 
-        evidence_sec = self._evidence_section(selected, is_kh, max_per_item)
+        evidence_sec = self._evidence_section(selected)
 
-        sections = [role_sec, student_sec]
-        if ctx_sec:
-            sections.append(ctx_sec)
-        sections += [evidence_sec, rules_sec, output_sec]
+        sections = [role_sec, student_sec, ctx_sec, evidence_sec, rules_sec, output_sec]
 
         prompt = "\n\n".join(sections)
 
@@ -249,11 +242,16 @@ class PromptBuilder:
             if needed > 0:
                 prompt += f"\n\n/* Padding: {'-' * needed} */"
         elif len(prompt) > max_chars:
-            prompt = prompt[:max_chars - 3] + "..."
+            if prompt.endswith(output_sec):
+                prefix = prompt[:-len(output_sec)]
+                allowed_prefix_len = max_chars - len(output_sec) - 5
+                prompt = prefix[:allowed_prefix_len] + "...\n\n" + output_sec
+            else:
+                prompt = prompt[:max_chars - 3] + "..."
 
         logger.info(
             "PromptBuilder: branch=%r  evidence=%d/%d  chars=%d  is_kh=%s",
-            student.branch, len(selected), len(evidence), len(prompt), is_kh,
+            context.branch, len(selected), len(evidence), len(prompt), is_kh,
         )
         return prompt
 
@@ -270,15 +268,15 @@ class PromptBuilder:
             "over speculative trends."
         )
 
-    def _student_section(self, student) -> str:
+    def _student_section(self, context: "StudentContext") -> str:
         lines = [
-            f"Student: Deg: {student.degree} | Br: {student.branch} "
-            f"| Yr: {student.year} | Ctry: {student.country}",
+            f"Student: Deg: {context.degree} | Br: {context.branch} "
+            f"| Yr: {context.academic_year} | Ctry: {context.country}",
         ]
-        if student.interests:
-            lines.append(f"Ints: {', '.join(student.interests)}")
-        if student.skills:
-            lines.append(f"Skills: {', '.join(student.skills)}")
+        if context.interests:
+            lines.append(f"Ints: {', '.join(context.interests)}")
+        if context.skills:
+            lines.append(f"Skills: {', '.join(context.skills)}")
         return "\n".join(lines)
 
     def _context_section(self, context: "StudentContext") -> str:
@@ -288,50 +286,48 @@ class PromptBuilder:
             f"| Goal: {context.career_goal}"
         )
 
-    def _evidence_block_len(self, item: Evidence, is_kh: bool, max_item: int) -> int:
-        """Estimate the character length of one rendered evidence block."""
-        block = (
-            f"- Career Name: {item.title}\n"
-            f"  Future Demand: {item.future_demand or 'High'}\n"
-            f"  Required Skills: {', '.join(item.required_skills[:10])}\n"
-            f"  Preferred Skills: {', '.join(item.advanced_skills[:8])}\n"
-            f"  Suitable Years: {item.suitable_years}"
-        )
-        return len(block) + 2
+    def _render_item(self, item: Evidence) -> str:
+        lines = [
+            f"- Career Name: {item.title}",
+            f"  Quality/Consensus: Quality {item.quality_score}/100 | Evidence Sources: {item.evidence_count} | Confidence: {item.confidence:.2f}",
+            f"  Future Demand: {item.future_demand or 'High'}",
+        ]
+        if item.matched_required_skills:
+            lines.append(f"  Matched Required Skills: {', '.join(item.matched_required_skills[:10])}")
+        if item.missing_required_skills:
+            lines.append(f"  Missing Required Skills: {', '.join(item.missing_required_skills[:10])}")
+        if item.matched_preferred_skills:
+            lines.append(f"  Matched Preferred Skills: {', '.join(item.matched_preferred_skills[:8])}")
+        if item.missing_preferred_skills:
+            lines.append(f"  Missing Preferred Skills: {', '.join(item.missing_preferred_skills[:8])}")
+        if item.suitable_years:
+            lines.append(f"  Suitable Years: {item.suitable_years}")
+        if item.learning_roadmap:
+            lines.append(f"  Roadmap: {item.learning_roadmap}")
+        return "\n".join(lines)
 
-    def _evidence_section(
-        self, evidence: list[Evidence], is_kh: bool, max_item: int
-    ) -> str:
+    def _evidence_block_len(self, item: Evidence) -> int:
+        """Estimate the character length of one rendered evidence block."""
+        return len(self._render_item(item)) + 2
+
+    def _evidence_section(self, evidence: list[Evidence]) -> str:
         lines = ["## Evidence Career Templates"]
         for item in evidence:
-            block = (
-                f"- Career Name: {item.title}\n"
-                f"  Future Demand: {item.future_demand or 'High'}\n"
-                f"  Required Skills: {', '.join(item.required_skills[:10])}\n"
-                f"  Preferred Skills: {', '.join(item.advanced_skills[:8])}\n"
-                f"  Suitable Years: {item.suitable_years}"
-            )
-            lines.append(block)
+            lines.append(self._render_item(item))
         return "\n\n".join(lines)
 
-    def _matching_rules(self, student, is_kh: bool) -> str:
-        year = getattr(student, "year", 3)
-        if year >= 4:
-            rule = (
-                "Yr 4: Suggest placement-ready careers achievable in 6-12 months. "
-                "Avoid research/speculative paths."
-            )
-        elif year == 1:
-            rule = "Yr 1: Focus on long-term growth paths."
-        else:
-            rule = "Yr 2-3: Suggest intermediate transition roles with milestones."
-
+    def _matching_rules(self, context: "StudentContext", is_kh: bool) -> str:
+        rule = getattr(context, "year_matching_rule", "")
         if is_kh:
-            return f"Matching Rules: Realistic paths matching skills/interests. {rule}"
+            return (
+                f"Matching Rules: Recommend careers realistically achievable based on the student's current "
+                f"skills, interests, and graduation timeline. {rule}"
+            )
         return (
             "## Matching Rules\n"
-            "1. Realistic paths matching skills & interests.\n"
-            f"2. {rule}"
+            "1. Recommend careers realistically achievable based on current skills and interests.\n"
+            "2. Academic year determines realism: "
+            f"{rule}"
         )
 
     def _output_instruction(self, is_kh: bool) -> str:
@@ -364,12 +360,3 @@ class PromptBuilder:
             "  ]\n"
             "}"
         )
-
-    # ------------------------------------------------------------------
-    # Backward-compatibility aliases
-    # ------------------------------------------------------------------
-
-    def _results_section(self, results: list) -> str:
-        """Deprecated alias kept for any code calling this directly."""
-        evidence = Evidence.from_search_results(results)
-        return self._evidence_section(evidence, is_kh=False, max_item=_MAX_ITEM_CHARS_MISS)

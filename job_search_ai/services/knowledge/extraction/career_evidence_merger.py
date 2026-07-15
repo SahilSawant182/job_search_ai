@@ -12,6 +12,11 @@ from typing import Optional
 from job_search_ai.services.knowledge.extraction.career_canonicalizer import CareerCanonicalizer
 from job_search_ai.services.knowledge.extraction.company_extractor import CompanyExtractor
 from job_search_ai.services.knowledge.extraction.skill_normalizer import SkillNormalizer
+from job_search_ai.services.knowledge.constants import (
+    STAGE_TO_YEARS,
+    SKILL_TIER_REQUIRED_THRESHOLD,
+    SKILL_TIER_PREFERRED_THRESHOLD,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -101,7 +106,9 @@ class CareerEvidenceMerger:
                 val = f.get(field)
                 if not val:
                     continue
-                weight = float(f.get("confidence", 70))
+                reliability = float(f.get("source_reliability", 70))
+                confidence = float(f.get("confidence", 70))
+                weight = reliability * confidence
                 votes[val] = votes.get(val, 0.0) + weight
             return max(votes, key=votes.__getitem__) if votes else fallback
 
@@ -123,7 +130,7 @@ class CareerEvidenceMerger:
             return final_min, final_max
 
         # ── Field-level consensus ─────────────────────────────────────────
-        industry  = _weighted_vote("industry", "Technology")
+        industry  = _weighted_vote("industry", "General")
         category  = _weighted_vote("category", "Professional")
         demand    = _weighted_vote("demand",   "Medium")
         stage     = _weighted_vote("stage",    "Growing")
@@ -148,21 +155,24 @@ class CareerEvidenceMerger:
             skill_freq=merged_skill_freq,
         )
 
-        # Re-tier using evidence proportion across original source count
+        # Re-tier using evidence proportion relative to the max evidence count among all skills
         final_skills: list[dict] = []
-        for ns in normalized_skills:
-            ev_count    = ns.get("evidence_count", 1)
-            proportion  = ev_count / max(1, total_sources)
+        if normalized_skills:
+            max_evidence = max(ns.get("evidence_count", 1) for ns in normalized_skills)
+            for ns in normalized_skills:
+                ev_count = ns.get("evidence_count", 1)
+                proportion = ev_count / max(1, max_evidence)
 
-            if proportion >= 0.60:
-                tier = "Required"
-            elif proportion >= 0.30:
-                tier = "Preferred"
-            else:
-                tier = "Nice To Have"
+                if proportion >= SKILL_TIER_REQUIRED_THRESHOLD:
+                    tier = "Required"
+                elif proportion >= SKILL_TIER_PREFERRED_THRESHOLD:
+                    tier = "Preferred"
+                else:
+                    tier = "Nice To Have"
 
-            ns["skill_type"] = tier
-            final_skills.append(ns)
+                ns["skill_type"] = tier
+                ns["importance"] = round(proportion, 2)
+                final_skills.append(ns)
 
         final_skills.sort(key=lambda x: x["importance"], reverse=True)
 
@@ -172,23 +182,11 @@ class CareerEvidenceMerger:
             all_companies.extend(f.get("companies") or [])
         companies = CompanyExtractor.extract_and_filter(all_companies)
 
-        # ── Source deduplication ──────────────────────────────────────────
+        # ── Source deduplication (disabled for pure career profile model) ─────────────────
         merged_sources: list[dict] = []
-        seen_urls: set[str] = set()
-        for f in facts:
-            for src in (f.get("sources") or []):
-                url = src.get("source_url") or ""
-                if url and url not in seen_urls:
-                    seen_urls.add(url)
-                    merged_sources.append(src)
 
         # ── Suitable years from consensus stage ───────────────────────────
-        _STAGE_YEARS = {
-            "Immediate Placement": "3,4",
-            "Growing":             "2,3,4",
-            "Future":              "1,2,3",
-        }
-        suitable_years = _STAGE_YEARS.get(stage, "2,3,4")
+        suitable_years = STAGE_TO_YEARS.get(stage, "2,3,4")
 
         # ── Suitable degrees & branches union ─────────────────────────────
         degrees_set = set()
@@ -202,8 +200,8 @@ class CareerEvidenceMerger:
                 b_clean = b.strip()
                 if b_clean:
                     branches_set.add(b_clean)
-        suitable_degrees = ", ".join(sorted(list(degrees_set))) or "Engineering, BCA, MCA"
-        suitable_branches = ", ".join(sorted(list(branches_set))) or "Computer Engineering, Information Technology, Computer Science"
+        suitable_degrees = ", ".join(sorted(list(degrees_set)))
+        suitable_branches = ", ".join(sorted(list(branches_set)))
 
         # ── Learning roadmap from skill tiers ─────────────────────────────
         req_names  = [s["skill_name"] for s in final_skills if s["skill_type"] == "Required"][:5]
@@ -238,10 +236,5 @@ class CareerEvidenceMerger:
             "learning_roadmap":  roadmap,
             "evidence_count":    evidence_count,
         }
-
-    @staticmethod
-    def _best_summary(facts: list[dict], career_name: str) -> str:
-        """Return the best summary sentence from the cluster (always empty for career templates)."""
-        return ""
 
 

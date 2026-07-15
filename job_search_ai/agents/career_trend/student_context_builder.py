@@ -31,6 +31,7 @@ class StudentContext:
     graduation_timeline: str = ""
     recommendation_horizon: str = ""
     career_goal: str = ""
+    year_matching_rule: str = ""
 
     def to_dict(self) -> dict:
         return {
@@ -44,6 +45,7 @@ class StudentContext:
             "graduation_timeline": self.graduation_timeline,
             "recommendation_horizon": self.recommendation_horizon,
             "career_goal": self.career_goal,
+            "year_matching_rule": self.year_matching_rule,
         }
 
 
@@ -96,6 +98,14 @@ class StudentContextBuilder:
         else:
             goal = "Foundational Skill Building and Academic Exploration"
 
+        # 5. Year Matching Rule for LLM Prompt
+        if student.year >= 4 or student.year <= 0:
+            matching_rule = "Yr 4 (Immediate Career Horizon): The student is graduating soon. Recommend ONLY highly realistic, immediate roles achievable within 6-12 months (e.g. Frontend Developer, QA Engineer, Analyst). DO NOT recommend highly speculative or long-term/academic research roles (e.g. AI Scientist, Research Scientist) unless they already possess advanced skills/experience."
+        elif student.year == 1:
+            matching_rule = "Yr 1 (Long-term growth): The student has 3-4 years remaining. Outline long-term career growth, and multi-step transition paths, since there is sufficient learning time."
+        else:
+            matching_rule = "Yr 2-3 (Intermediate horizon): Recommend intermediate transition roles with clear milestones, matching skills and interests."
+
         return StudentContext(
             degree=student.degree,
             branch=student.branch,
@@ -107,4 +117,5 @@ class StudentContextBuilder:
             graduation_timeline=timeline,
             recommendation_horizon=horizon,
             career_goal=goal,
+            year_matching_rule=matching_rule,
         )

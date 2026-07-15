@@ -7,16 +7,25 @@ class CompanyExtractor:
     Ignores publishers, universities, news sites, and documentation sites.
     """
 
-    # Substrings that identify non-hiring institutions
-    EXCLUDED_PATTERNS = [
+    # Generic categories for non-hiring entities
+    EDU_PATTERNS = [
         r"university", r"college", r"school", r"academy", r"institute",
+        r"course", r"training", r"bootcamp"
+    ]
+    
+    PUBLISHER_PATTERNS = [
         r"blog", r"medium", r"news", r"daily", r"times", r"press",
         r"documentation", r"tutorial", r"guide", r"wiki", r"book",
-        r"youtube", r"github", r"stackoverflow", r"reddit",
-        r"course", r"training", r"bootcamp", r"forum", r"society",
-        r"interviewbit", r"naukri", r"linkedin", r"glassdoor", r"indeed",
-        r"datamites", r"nareshit", r"codegnan", r"pulsejob", r"wikipedia"
+        r"wikipedia", r"youtube", r"github", r"stackoverflow", r"reddit",
+        r"forum", r"society"
     ]
+    
+    PORTAL_PATTERNS = [
+        r"linkedin", r"glassdoor", r"indeed", r"naukri", r"monster", 
+        r"foundit", r"job", r"career", r"portal"
+    ]
+
+    EXCLUDED_PATTERNS = EDU_PATTERNS + PUBLISHER_PATTERNS + PORTAL_PATTERNS
 
     # Standard known employer suffix cleanup
     CLEANUP_SUFFIXES = [

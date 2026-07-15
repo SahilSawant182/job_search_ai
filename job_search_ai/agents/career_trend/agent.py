@@ -128,9 +128,9 @@ class CareerTrendAgent:
                 knowledge_updated = True
                 evidence = Evidence.from_knowledge(built_profiles)
             else:
-                knowledge_updated = False
-                # Fallback: use raw search results as evidence (no structured KB)
-                evidence = Evidence.from_search_results(filtered_results)
+                raise CareerTrendAgentError(
+                    "CareerTrendAgent: Failed to build structured career profiles from search results."
+                )
 
         # ------------------------------------------------------------------
         # Stage 6 — StudentContext (deterministic, always runs)
@@ -358,7 +358,7 @@ class CareerTrendAgent:
     ) -> str:
         logger.info("CareerTrendAgent: Stage — PromptBuilder (%d evidence items)", len(evidence))
         try:
-            prompt = PromptBuilder().build(student, evidence, context, is_kh=is_kh)
+            prompt = PromptBuilder().build(evidence, context, is_kh=is_kh)
             logger.info("PromptBuilder: prompt built (%d chars)", len(prompt))
             return prompt
         except Exception as exc:

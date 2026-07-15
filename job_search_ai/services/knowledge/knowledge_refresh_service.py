@@ -27,7 +27,6 @@ from typing import Any
 
 import frappe
 import frappe.utils
-from job_search_ai.agents.career_trend.query_builder import QueryBuilder
 from job_search_ai.agents.career_trend.result_filter import ResultFilter
 from job_search_ai.agents.career_trend.schemas import StudentProfile
 from job_search_ai.agents.career_trend.tavily_service import TavilyService
@@ -119,6 +118,7 @@ class KnowledgeRefreshService:
 
 
                     # Stage 1 — Generate search queries
+                    from job_search_ai.agents.career_trend.query_builder import QueryBuilder
                     queries = QueryBuilder().build(student)
 
                     # Stage 2 — Execute Tavily search

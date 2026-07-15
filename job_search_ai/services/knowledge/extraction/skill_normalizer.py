@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 import frappe
 import re
+from job_search_ai.services.knowledge.constants import (
+    SKILL_TIER_REQUIRED_THRESHOLD,
+    SKILL_TIER_PREFERRED_THRESHOLD,
+)
 
 
 class SkillNormalizer:
     """
     Normalizes candidate technical skills against the centralized Skill Master repository.
-    Phase 9: skill_type derived from evidence proportion (source breadth), not frequency score.
     """
 
     _master_cache = {}
@@ -57,10 +60,7 @@ class SkillNormalizer:
         skill_freq           : dict|None  — {raw_token: source_count} pre-computed
                                by CareerFactExtractor._extract_skills_per_source()
 
-        skill_type (Phase 9) — evidence proportion based:
-            >= 0.60 of sources → Required
-            >= 0.30 of sources → Advanced
-            else               → Nice To Have
+        skill_type — evidence proportion based.
         """
         if not candidate_tokens:
             return []
@@ -124,9 +124,9 @@ class SkillNormalizer:
             freq = data["frequency"]
             evidence_proportion = src_count / total_sources
 
-            if evidence_proportion >= 0.60:
+            if evidence_proportion >= SKILL_TIER_REQUIRED_THRESHOLD:
                 skill_type = "Required"
-            elif evidence_proportion >= 0.30:
+            elif evidence_proportion >= SKILL_TIER_PREFERRED_THRESHOLD:
                 skill_type = "Preferred"
             else:
                 skill_type = "Nice To Have"
