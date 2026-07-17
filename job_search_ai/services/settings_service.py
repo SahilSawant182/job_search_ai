@@ -66,11 +66,24 @@ class SettingsService:
 		return default_val
 
 	@property
+	def llm_provider(self):
+		return self._get_value("llm_provider", "LLM_PROVIDER", "ollama")
+
+	@property
+	def omniroute_base_url(self):
+		return self._get_value("omniroute_base_url", "OMNIROUTE_BASE_URL", "http://localhost:20128/v1")
+
+	@property
+	def omniroute_model(self):
+		return self._get_value("omniroute_model", "OMNIROUTE_MODEL", "career-agent")
+
+	@property
 	def ollama_endpoint(self):
 		val = self._get_value("ollama_endpoint", "OLLAMA_ENDPOINT", "http://135.181.6.215:11434/api/generate")
 		if not val:
 			raise ConfigurationError(_("Ollama Endpoint is not configured. Please set it in Job Search AI Settings or the OLLAMA_ENDPOINT environment variable."))
 		return val
+
 
 	@property
 	def ollama_base_url(self) -> str:

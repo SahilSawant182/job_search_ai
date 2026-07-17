@@ -6,6 +6,9 @@
  "engine": "InnoDB",
  "field_order": [
   "llm_config_section",
+  "llm_provider",
+  "omniroute_base_url",
+  "omniroute_model",
   "ollama_endpoint",
   "embedding_model",
   "default_llm_model",
@@ -51,6 +54,25 @@
    "fieldname": "llm_config_section",
    "fieldtype": "Section Break",
    "label": "LLM Configuration"
+  },
+  {
+   "default": "ollama",
+   "fieldname": "llm_provider",
+   "fieldtype": "Select",
+   "label": "LLM Provider",
+   "options": "ollama\nomniroute"
+  },
+  {
+   "default": "http://localhost:20128/v1",
+   "fieldname": "omniroute_base_url",
+   "fieldtype": "Data",
+   "label": "OmniRoute Base URL"
+  },
+  {
+   "default": "career-agent",
+   "fieldname": "omniroute_model",
+   "fieldtype": "Data",
+   "label": "OmniRoute Model"
   },
   {
    "default": "http://135.181.6.215:11434/api/generate",

@@ -89,7 +89,6 @@ class CareerRecommendation:
         future_demand: Projected market demand: "Very High", "High", or "Moderate".
         industry:      Broad industry sector/domain (e.g. "Cybersecurity").
         skills:        Specific skills the student should acquire or highlight.
-        sources:       URLs of the search results that support this recommendation.
     """
 
     career: str
@@ -100,7 +99,6 @@ class CareerRecommendation:
     future_demand: str
     industry: str
     skills: list[str] = field(default_factory=list)
-    sources: list[str] = field(default_factory=list)
 
     def __post_init__(self) -> None:
         if not (0 <= self.confidence <= 100):
@@ -156,7 +154,6 @@ class CareerTrendResponse:
                     "future_demand": r.future_demand,
                     "industry": r.industry,
                     "skills": r.skills,
-                    "sources": r.sources,
                 }
                 for r in self.recommended_paths
             ],

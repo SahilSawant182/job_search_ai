@@ -20,13 +20,15 @@ class KnowledgeValidator:
     Validates extracted career facts and computes a Quality Score (0–100).
     Soft quality-based validation instead of rigid rule enforcement.
 
-    Scoring dimensions
-    ------------------
+    Scoring dimensions (V2)
+    -----------------------
     1. Source reliability     — up to 20 pts
-    2. Fact completeness      — up to 30 pts
-    3. Suitability metadata   — up to 15 pts
-    4. Skill richness         — up to 20 pts
-    5. Company count          — up to 15 pts
+    2. Fact completeness      — up to 30 pts  (career_name, demand, suitable_years)
+    3. Suitability metadata   — up to 20 pts  (suitable_degrees + suitable_branches)
+    4. Skill richness         — up to 30 pts
+
+    Fields intentionally NOT scored (V2 — empty by design):
+      industry, category, stage, summary, companies, sources, salary
 
     Rejection criteria (obviously broken knowledge only)
     -----------------------------------------------------
@@ -97,19 +99,26 @@ class KnowledgeValidator:
         if rel_pts < 8:
             reasons.append(f"Low source reliability: {source_reliability}")
 
-        # ── 2. Fact completeness (max 30 pts, 5 pts × 6 fields) ────────
-        critical_fields = ["career_name", "industry", "category", "demand", "stage", "suitable_years"]
-        for f in critical_fields:
+        # ── 2. Fact completeness (max 40 pts) ──────────────────────────
+        # Required core fields (10 pts each, 30 pts max)
+        core_fields = ["career_name", "demand", "suitable_years"]
+        for f in core_fields:
             if facts.get(f):
-                score += 5
+                score += 10
             else:
                 reasons.append(f"Missing field: {f}")
+        # Optional enrichment fields (bonus 5 pts each, 10 pts max)
+        # industry and category are populated via heuristic inference.
+        # They improve retrieval quality but are not required for validity.
+        for opt_f in ["industry", "category"]:
+            if facts.get(opt_f):
+                score += 5
 
-        # ── 3. Suitability metadata quality (max 15 pts) ────────────────
+        # ── 3. Suitability metadata (max 20 pts) ────────────────────────
         degrees = (facts.get("suitable_degrees") or "").strip()
         branches = (facts.get("suitable_branches") or "").strip()
         if degrees:
-            score += 10
+            score += 15
         else:
             reasons.append("Missing suitable degrees")
         if branches:
@@ -117,28 +126,17 @@ class KnowledgeValidator:
         else:
             reasons.append("Missing suitable branches")
 
-        # ── 4. Skill richness (max 20 pts) ──────────────────────────────
+        # ── 4. Skill richness (max 30 pts) ──────────────────────────────
+        # Companies are not stored in V2 — that dimension is removed.
         n_skills = len(skills)
         if n_skills > 8:
-            score += 20
+            score += 30
         elif n_skills >= 5:
-            score += 15
+            score += 22
         elif n_skills >= 3:
-            score += 10
-        else:
-            score += 5
-
-        # ── 5. Company count (max 15 pts) ────────────────────────────────
-        companies = facts.get("companies", [])
-        n_comp    = len(companies)
-        if n_comp >= 3:
             score += 15
-        elif n_comp >= 2:
-            score += 10
-        elif n_comp >= 1:
-            score += 5
         else:
-            reasons.append("No recognizable hiring companies found")
+            score += 7
 
         # Soft validation threshold: reject only if Quality Score < 30
         quality_score = min(100, score)

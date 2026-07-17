@@ -90,6 +90,8 @@ class Evidence:
     quality_score:            int             = 70
     confidence:               float           = 0.0
     evidence_count:           int             = 1
+    suitable_degrees:         str             = ""
+    suitable_branches:        str             = ""
 
     # Derived convenience — all skills flattened, in tier order
     @property
@@ -106,19 +108,10 @@ class Evidence:
         items: list[Evidence] = []
         for r in records:
             parts = []
-            industry = getattr(r, "industry", "") or ""
             demand   = getattr(r, "future_demand", "") or ""
-            stage    = getattr(r, "career_stage", "") or ""
-            companies = getattr(r, "companies", []) or []
 
-            if industry:
-                parts.append(f"Industry: {industry}")
             if demand:
                 parts.append(f"Demand: {demand}")
-            if stage:
-                parts.append(f"Stage: {stage}")
-            if companies:
-                parts.append(f"Hiring: {', '.join(companies[:4])}")
 
             content = " | ".join(parts) if parts else getattr(r, "career_name", "")
 
@@ -129,6 +122,8 @@ class Evidence:
             preferred = list(getattr(r, "preferred_skills", []) or getattr(r, "advanced_skills", []) or [])
             req_skills = list(getattr(r, "required_skills", []) or [])
             nice_skills = list(getattr(r, "nice_skills", []) or [])
+            suitable_degrees = getattr(r, "suitable_degrees", "") or ""
+            suitable_branches = getattr(r, "suitable_branches", "") or ""
 
             items.append(cls(
                 title                    = getattr(r, "career_name", ""),
@@ -148,6 +143,8 @@ class Evidence:
                 quality_score            = int(getattr(r, "quality_score", 70)),
                 confidence               = float(getattr(r, "confidence", 0.0)),
                 evidence_count           = int(getattr(r, "evidence_count", 1)),
+                suitable_degrees         = suitable_degrees,
+                suitable_branches        = suitable_branches,
             ))
         return items
 
@@ -287,24 +284,27 @@ class PromptBuilder:
         )
 
     def _render_item(self, item: Evidence) -> str:
-        lines = [
-            f"- Career Name: {item.title}",
-            f"  Quality/Consensus: Quality {item.quality_score}/100 | Evidence Sources: {item.evidence_count} | Confidence: {item.confidence:.2f}",
-            f"  Future Demand: {item.future_demand or 'High'}",
-        ]
-        if item.matched_required_skills:
-            lines.append(f"  Matched Required Skills: {', '.join(item.matched_required_skills[:10])}")
-        if item.missing_required_skills:
-            lines.append(f"  Missing Required Skills: {', '.join(item.missing_required_skills[:10])}")
-        if item.matched_preferred_skills:
-            lines.append(f"  Matched Preferred Skills: {', '.join(item.matched_preferred_skills[:8])}")
-        if item.missing_preferred_skills:
-            lines.append(f"  Missing Preferred Skills: {', '.join(item.missing_preferred_skills[:8])}")
+        lines = [f"Career:\n{item.title}"]
+        if item.required_skills:
+            lines.append("Required Skills:\n" + "\n".join(item.required_skills[:10]))
+        if item.advanced_skills:
+            lines.append("Preferred Skills:\n" + "\n".join(item.advanced_skills[:8]))
+
+        suitable_items = []
+        if item.suitable_degrees:
+            suitable_items.extend([d.strip() for d in item.suitable_degrees.split(",") if d.strip()])
+        if item.suitable_branches:
+            suitable_items.extend([b.strip() for b in item.suitable_branches.split(",") if b.strip()])
+        if suitable_items:
+            lines.append("Suitable:\n" + "\n".join(suitable_items))
+
         if item.suitable_years:
-            lines.append(f"  Suitable Years: {item.suitable_years}")
-        if item.learning_roadmap:
-            lines.append(f"  Roadmap: {item.learning_roadmap}")
-        return "\n".join(lines)
+            lines.append(f"Years:\n{item.suitable_years}")
+        if item.future_demand:
+            lines.append(f"Demand:\n{item.future_demand}")
+        lines.append(f"Evidence:\n{item.evidence_count} Sources")
+        lines.append(f"Confidence:\n{int(item.confidence)}")
+        return "\n\n".join(lines)
 
     def _evidence_block_len(self, item: Evidence) -> int:
         """Estimate the character length of one rendered evidence block."""
@@ -333,29 +333,26 @@ class PromptBuilder:
     def _output_instruction(self, is_kh: bool) -> str:
         schema = (
             '{"strategy":"...","recommended_paths":['
-            '{"career":"...","category":"...","confidence":0-100,'
-            '"why_for_you":"...","career_stage":"Emerging|Growing|Established",'
-            '"future_demand":"Very High|High|Moderate","industry":"...",'
-            '"skills":["..."],"sources":["..."]}]}'
+            '{"career":"...","why_for_you":"..."}]}'
         )
         if is_kh:
-            return f"Return ONLY JSON: {schema}"
+            return (
+                "RULE: For each Career in the templates above, provide a personalized explanation why it is suitable in 'why_for_you' (max 2 sentences).\n"
+                "Also provide overall placement strategy in 'strategy'.\n"
+                "Return ONLY JSON: " + schema
+            )
         return (
             "## Output Format\n"
+            "RULE: For each Career in the templates above, provide a personalized explanation why it is suitable in 'why_for_you' (max 2 sentences).\n"
+            "Also provide overall placement strategy in 'strategy' based on the student's graduation timeline.\n"
+            "Do NOT include other fields. Do NOT invent new careers. Do NOT include URLs.\n"
             "Return ONLY JSON:\n"
             "{\n"
             '  "strategy": "strategic advice based on graduation timeline",\n'
             '  "recommended_paths": [\n'
             "    {\n"
-            '      "career": "job title",\n'
-            '      "category": "industry category",\n'
-            '      "confidence": 0-100,\n'
-            '      "why_for_you": "explanation (max 2 sentences)",\n'
-            '      "career_stage": "Emerging|Growing|Established",\n'
-            '      "future_demand": "Very High|High|Moderate",\n'
-            '      "industry": "industry name",\n'
-            '      "skills": ["skill"],\n'
-            '      "sources": ["url or doc id"]\n'
+            '      "career": "exact job title from Evidence Career Templates",\n'
+            '      "why_for_you": "explanation why this career suits the student (max 2 sentences)"\n'
             "    }\n"
             "  ]\n"
             "}"

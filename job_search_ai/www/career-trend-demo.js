@@ -1,19 +1,19 @@
 document.addEventListener("DOMContentLoaded", function () {
-	const form            = document.getElementById("profile-form");
-	const submitBtn       = document.getElementById("submit-btn");
-	const welcomeCard     = document.getElementById("welcome-card");
-	const loadingCard     = document.getElementById("loading-card");
-	const resultsContainer= document.getElementById("results-container");
-	const errorContainer  = document.getElementById("error-container");
-	const errorMessage    = document.getElementById("error-message");
+	const form = document.getElementById("profile-form");
+	const submitBtn = document.getElementById("submit-btn");
+	const welcomeCard = document.getElementById("welcome-card");
+	const loadingCard = document.getElementById("loading-card");
+	const resultsContainer = document.getElementById("results-container");
+	const errorContainer = document.getElementById("error-container");
+	const errorMessage = document.getElementById("error-message");
 
 	const STEPS = [
 		{ id: "step-profile", delay: 0 },
 		{ id: "step-queries", delay: 1500 },
-		{ id: "step-trends",  delay: 3500 },
-		{ id: "step-filter",  delay: 8000 },
-		{ id: "step-llm",     delay: 12000 },
-		{ id: "step-done",    delay: 18000 },
+		{ id: "step-trends", delay: 3500 },
+		{ id: "step-filter", delay: 8000 },
+		{ id: "step-llm", delay: 12000 },
+		{ id: "step-done", delay: 18000 },
 	];
 
 	let timers = [];
@@ -71,12 +71,12 @@ document.addEventListener("DOMContentLoaded", function () {
 		startPipelineAnimation();
 
 		const params = new URLSearchParams({
-			degree:    document.getElementById("degree").value,
-			branch:    document.getElementById("branch").value,
-			year:      document.getElementById("year").value,
-			country:   document.getElementById("country").value,
+			degree: document.getElementById("degree").value,
+			branch: document.getElementById("branch").value,
+			year: document.getElementById("year").value,
+			country: document.getElementById("country").value,
 			interests: document.getElementById("interests").value,
-			skills:    document.getElementById("skills").value,
+			skills: document.getElementById("skills").value,
 		});
 
 		fetch("/api/method/job_search_ai.api.career_trends.get_career_trends", {
@@ -87,35 +87,35 @@ document.addEventListener("DOMContentLoaded", function () {
 			},
 			body: params,
 		})
-		.then(r => {
-			if (!r.ok) {
-				return r.json().then(err => {
-					let msg = "Server Error";
-					try { msg = JSON.parse(err._server_messages)[0].message || msg; } catch(e) {}
-					throw new Error(msg);
-				}).catch(() => { throw new Error("HTTP " + r.status); });
-			}
-			return r.json();
-		})
-		.then(data => {
-			completePipeline();
-			setTimeout(() => {
+			.then(r => {
+				if (!r.ok) {
+					return r.json().then(err => {
+						let msg = "Server Error";
+						try { msg = JSON.parse(err._server_messages)[0].message || msg; } catch (e) { }
+						throw new Error(msg);
+					}).catch(() => { throw new Error("HTTP " + r.status); });
+				}
+				return r.json();
+			})
+			.then(data => {
+				completePipeline();
+				setTimeout(() => {
+					loadingCard.classList.add("d-none");
+					renderResults(data.message);
+					resultsContainer.classList.remove("d-none");
+					resetBtn();
+				}, 600);
+			})
+			.catch(err => {
+				timers.forEach(clearTimeout);
 				loadingCard.classList.add("d-none");
-				renderResults(data.message);
-				resultsContainer.classList.remove("d-none");
-				resetBtn();
-			}, 600);
-		})
-		.catch(err => {
-			timers.forEach(clearTimeout);
-			loadingCard.classList.add("d-none");
-			welcomeCard.classList.remove("d-none");
+				welcomeCard.classList.remove("d-none");
 
-			let msg = String(err.message || "An unexpected error occurred.");
-			errorMessage.innerText = msg;
-			errorContainer.classList.remove("d-none");
-			resetBtn();
-		});
+				let msg = String(err.message || "An unexpected error occurred.");
+				errorMessage.innerText = msg;
+				errorContainer.classList.remove("d-none");
+				resetBtn();
+			});
 	}
 
 	function resetBtn() {
@@ -126,26 +126,26 @@ document.addEventListener("DOMContentLoaded", function () {
 	/* ── Helpers ── */
 	function hostname(url) {
 		try { return new URL(url).hostname.replace("www.", ""); }
-		catch(e) { return url.length > 40 ? url.slice(0, 40) + "…" : url; }
+		catch (e) { return url.length > 40 ? url.slice(0, 40) + "…" : url; }
 	}
 
 	function isUrl(s) {
-		try { new URL(s); return true; } catch(e) { return false; }
+		try { new URL(s); return true; } catch (e) { return false; }
 	}
 
 	function demandClass(d) {
 		const v = String(d).toLowerCase();
 		if (v.includes("very high")) return "badge-demand-vhigh";
-		if (v.includes("high"))      return "badge-demand-high";
-		if (v.includes("moderate"))  return "badge-demand-mod";
+		if (v.includes("high")) return "badge-demand-high";
+		if (v.includes("moderate")) return "badge-demand-mod";
 		return "badge-demand-low";
 	}
 
 	function stageClass(s) {
 		const v = String(s).toLowerCase();
-		if (v.includes("emerging"))   return "badge-emerging";
-		if (v.includes("growing"))    return "badge-growing";
-		if (v.includes("established"))return "badge-established";
+		if (v.includes("emerging")) return "badge-emerging";
+		if (v.includes("growing")) return "badge-growing";
+		if (v.includes("established")) return "badge-established";
 		return "badge-established";
 	}
 

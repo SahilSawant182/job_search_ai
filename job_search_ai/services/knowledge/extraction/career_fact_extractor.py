@@ -12,17 +12,7 @@ from job_search_ai.services.knowledge.constants import STAGE_TO_YEARS
 
 logger = logging.getLogger(__name__)
 
-_SALARY_RE = re.compile(
-    r'(?:salary|package|ctc|lpa|lakh|pay|compensation)\D{0,20}'
-    r'(?P<min>[\d,]+(?:\.\d+)?)\s*'
-    r'(?:to|-|–|—)\s*(?P<max>[\d,]+(?:\.\d+)?)',
-    re.IGNORECASE,
-)
-_SALARY_SINGLE_RE = re.compile(
-    r'(?:salary|package|ctc|lpa|lakh|pay)\D{0,15}'
-    r'(?P<amount>[\d,]+(?:\.\d+)?)',
-    re.IGNORECASE,
-)
+# Removed salary regexes as they are no longer needed for career recommendation template.
 
 
 class CareerFactExtractor:
@@ -70,16 +60,12 @@ class CareerFactExtractor:
                 return []
 
         full_text_lower = cleaned_text.lower()
-        industry  = CareerFactExtractor._extract_industry(full_text_lower)
-        category  = CareerFactExtractor._extract_category(full_text_lower)
         demand    = CareerFactExtractor._extract_demand(full_text_lower)
         stage     = CareerFactExtractor._extract_stage(full_text_lower)
-        salaries  = CareerFactExtractor._extract_salary(full_text_lower, country)
 
         # Per-source skill extraction — returns {raw_token: source_count}
         skill_freq = CareerFactExtractor._extract_skills_per_source(sources)
 
-        companies = CareerFactExtractor._extract_companies(cleaned_text)
         evidence_count = len(paragraphs)
         suitable_years = STAGE_TO_YEARS.get(stage or "Growing", "2,3,4")
 
@@ -88,8 +74,8 @@ class CareerFactExtractor:
         suitable_degrees = ", ".join(degrees_list)
         suitable_branches = ", ".join(branches_list)
 
-        complete_fields = sum([bool(industry), bool(category), bool(demand), bool(skill_freq)])
-        completeness = int((complete_fields / 4) * 100)
+        complete_fields = sum([bool(demand), bool(skill_freq)])
+        completeness = int((complete_fields / 2) * 100)
         confidence = min(100, int(source_reliability * 0.55 + completeness * 0.45))
 
         results = []
@@ -97,22 +83,13 @@ class CareerFactExtractor:
             if not career_name or not career_name.strip():
                 continue
 
-            career_industry = CareerFactExtractor._extract_industry(
-                career_name.lower() + " " + full_text_lower
-            )
-            if not career_industry or career_industry == "General":
-                career_industry = industry
-
-            career_category = CareerFactExtractor._extract_category(
-                career_name.lower() + " " + full_text_lower
-            )
-            if not career_category or career_category == "Professional":
-                career_category = category
+            industry = CareerFactExtractor._extract_industry(career_name, full_text_lower)
+            category = CareerFactExtractor._extract_category(career_name, full_text_lower)
 
             results.append({
                 "career_name":    career_name.strip(),
-                "industry":       career_industry or "General",
-                "category":       career_category or "Professional",
+                "industry":       industry,
+                "category":       category,
                 "demand":         demand or "Medium",
                 "stage":          stage or "Growing",
                 "summary":        "",
@@ -120,12 +97,12 @@ class CareerFactExtractor:
                 "suitable_branches": suitable_branches,
                 "applicable_branches": suitable_branches,  # compat
                 "suitable_years": suitable_years,
-                "min_salary":     salaries.get("min"),
-                "max_salary":     salaries.get("max"),
-                "currency":       salaries.get("currency", "INR" if "india" in full_text_lower else "USD"),
+                "min_salary":     None,
+                "max_salary":     None,
+                "currency":       "",
                 "skill_freq":     skill_freq,      # {raw_token: source_count} for SkillNormalizer
                 "skills":         list(skill_freq.keys()),  # raw tokens for backward compat
-                "companies":      companies,
+                "companies":      [],
                 "evidence_count": max(1, evidence_count),
                 "confidence":     confidence,
                 "source_count":   len(sources),
@@ -191,28 +168,182 @@ class CareerFactExtractor:
         return candidates
 
     @staticmethod
-    def _extract_industry(text_lower: str) -> str:
-        broad_industries = [
-            "technology", "finance", "healthcare", "education", "manufacturing",
-            "logistics", "retail", "consulting", "government", "media",
-            "agriculture", "aerospace", "energy", "legal", "real estate", "hospitality"
-        ]
-        for ind in broad_industries:
-            if re.search(r'\b' + re.escape(ind) + r'\b', text_lower):
-                return ind.capitalize()
-        return "General"
+    def _extract_industry(career_name: str, text_lower: str) -> str:
+        """
+        Infer the industry from the career name and the full text.
+        Priority: career name signal first (exact + substring), then text-level signals.
+        Returns a clean, short industry string (2-4 words max).
+        """
+        name_l = career_name.strip().lower()
+
+        # ── Exact single-word / acronym matches (highest priority) ──────
+        _exact_ai      = {"ai", "ml", "llm", "nlp", "gpt"}
+        _exact_cloud   = {"aws", "gcp", "azure", "devops", "sre", "devsecops"}
+        _exact_data    = {"bi", "olap", "etl"}
+        _exact_iot     = {"iot", "rtos", "plc", "scada"}
+        _exact_cyber   = {"soc", "siem", "ciso"}
+        _exact_finance = {"cfa", "ca", "actuary"}
+        _exact_qa      = {"qa", "qe", "sdet"}
+
+        if name_l in _exact_ai:
+            return "Artificial Intelligence"
+        if name_l in _exact_cloud:
+            return "Cloud & DevOps"
+        if name_l in _exact_data:
+            return "Data & Analytics"
+        if name_l in _exact_iot:
+            return "Robotics & Automation"
+        if name_l in _exact_cyber:
+            return "Cybersecurity"
+        if name_l in _exact_finance:
+            return "Finance & Banking"
+        if name_l in _exact_qa:
+            return "Quality Assurance"
+
+        # ── Substring matches on career name ─────────────────────────────
+        if any(k in name_l for k in ["artificial intelligence", "machine learning", "deep learning",
+                                      "computer vision", "generative ai", "gen ai",
+                                      "ai engineer", "ml engineer", "ai developer"]):
+            return "Artificial Intelligence"
+        # Catch "... AI" suffix or "AI ..." prefix in multi-word titles
+        if name_l.startswith("ai ") or name_l.endswith(" ai"):
+            return "Artificial Intelligence"
+        if any(k in name_l for k in ["data scientist", "data analyst", "data engineer",
+                                      "analytics", "business intelligence"]):
+            return "Data & Analytics"
+        if any(k in name_l for k in ["cloud", "aws", "azure", "gcp", "devops",
+                                      "site reliability", "infrastructure", "platform engineer"]):
+            return "Cloud & DevOps"
+        if any(k in name_l for k in ["cyber", "security", "penetration", "ethical hack",
+                                      "soc analyst", "infosec"]):
+            return "Cybersecurity"
+        if any(k in name_l for k in ["frontend", "front-end", "react developer", "angular", "vue",
+                                      "ui developer", "web developer", "ux", "ui/ux"]):
+            return "Software Engineering"
+        if any(k in name_l for k in ["backend", "back-end", "api developer", "java developer",
+                                      "python developer", "node developer", "golang", "spring"]):
+            return "Software Engineering"
+        if any(k in name_l for k in ["full stack", "fullstack", "software engineer",
+                                      "software developer", "sde"]):
+            return "Software Engineering"
+        if any(k in name_l for k in ["mobile", "android", "ios developer", "flutter", "react native"]):
+            return "Mobile Development"
+        if any(k in name_l for k in ["robotics", "autonomous", "embedded", "firmware", "iot developer",
+                                      "plc", "scada", "automation engineer"]):
+            return "Robotics & Automation"
+        if any(k in name_l for k in ["mechanical", "cad", "solidworks", "autocad", "product design"]):
+            return "Mechanical Engineering"
+        if any(k in name_l for k in ["civil", "structural", "bim", "gis", "construction"]):
+            return "Civil Engineering"
+        if any(k in name_l for k in ["electrical", "power", "vlsi", "circuit"]):
+            return "Electrical Engineering"
+        if any(k in name_l for k in ["biomedical", "bioinformatics", "genomics", "clinical"]):
+            return "Biomedical Engineering"
+        if any(k in name_l for k in ["finance", "investment", "banking", "quant", "fintech", "actuar"]):
+            return "Finance & Banking"
+        if any(k in name_l for k in ["business analyst", "product manager", "project manager", "strategy"]):
+            return "Business & Management"
+        if any(k in name_l for k in ["marketing", "seo", "content creator", "social media", "digital marketing"]):
+            return "Marketing"
+        if any(k in name_l for k in ["quality assurance", "test engineer", "tester", "qa engineer"]):
+            return "Quality Assurance"
+        if any(k in name_l for k in ["blockchain", "web3", "solidity", "crypto"]):
+            return "Blockchain"
+        if any(k in name_l for k in ["game developer", "game designer", "unity", "unreal"]):
+            return "Game Development"
+
+        # ── Fall back to full text signals ────────────────────────────────
+        if "artificial intelligence" in text_lower or "machine learning" in text_lower:
+            return "Artificial Intelligence"
+        if "cloud" in text_lower and ("aws" in text_lower or "azure" in text_lower or "gcp" in text_lower):
+            return "Cloud & DevOps"
+        if "cybersecurity" in text_lower or "cyber security" in text_lower:
+            return "Cybersecurity"
+        if "data" in text_lower and ("analytics" in text_lower or "analysis" in text_lower):
+            return "Data & Analytics"
+        if "software" in text_lower or "programming" in text_lower:
+            return "Software Engineering"
+
+        return "Technology"
 
     @staticmethod
-    def _extract_category(text_lower: str) -> str:
-        broad_categories = [
-            "developer", "engineer", "analyst", "scientist", "architect", "manager",
-            "designer", "consultant", "specialist", "administrator", "officer",
-            "advisor", "technician", "practitioner", "professional"
-        ]
-        for cat in broad_categories:
-            if re.search(r'\b' + re.escape(cat) + r'\b', text_lower):
-                return cat.capitalize()
-        return "Professional"
+    def _extract_category(career_name: str, text_lower: str) -> str:
+        """
+        Infer a high-level category (domain) from the career name.
+        Intended for broad grouping: AI, Software, Data, Robotics, Cloud, Cyber,
+        Finance, Design, etc.
+        """
+        name_l = career_name.strip().lower()
+
+        # ── Exact single-word / acronym matches ──────────────────────────
+        _exact_ai     = {"ai", "ml", "llm", "nlp", "gpt"}
+        _exact_cloud  = {"aws", "gcp", "azure", "devops", "sre"}
+        _exact_data   = {"bi", "etl", "olap"}
+        _exact_iot    = {"iot", "plc", "scada", "rtos"}
+        _exact_cyber  = {"soc", "siem"}
+        _exact_qa     = {"qa", "qe", "sdet"}
+
+        if name_l in _exact_ai:
+            return "AI"
+        if name_l in _exact_cloud:
+            return "Cloud"
+        if name_l in _exact_data:
+            return "Data"
+        if name_l in _exact_iot:
+            return "Robotics"
+        if name_l in _exact_cyber:
+            return "Cybersecurity"
+        if name_l in _exact_qa:
+            return "QA"
+
+        # ── Substring / prefix/suffix matches ────────────────────────────
+        if any(k in name_l for k in ["artificial intelligence", "machine learning", "deep learning",
+                                      "computer vision", "generative ai", "ai engineer", "ml engineer"]):
+            return "AI"
+        if name_l.startswith("ai ") or name_l.endswith(" ai"):
+            return "AI"
+        if any(k in name_l for k in ["data scientist", "data analyst", "data engineer",
+                                      "analytics", "business intelligence"]):
+            return "Data"
+        if any(k in name_l for k in ["cloud", "devops", "sre", "platform engineer", "infrastructure"]):
+            return "Cloud"
+        if any(k in name_l for k in ["cyber", "security", "penetration", "infosec", "soc analyst"]):
+            return "Cybersecurity"
+        if any(k in name_l for k in ["frontend", "front-end", "backend", "back-end", "full stack",
+                                      "fullstack", "software engineer", "software developer",
+                                      "web developer", "mobile", "android", "ios developer",
+                                      "flutter", "api developer", "sde"]):
+            return "Software"
+        if any(k in name_l for k in ["robotics", "autonomous", "embedded", "firmware",
+                                      "iot developer", "plc", "automation"]):
+            return "Robotics"
+        if any(k in name_l for k in ["blockchain", "web3", "solidity"]):
+            return "Blockchain"
+        if any(k in name_l for k in ["game developer", "game designer", "unity", "unreal"]):
+            return "Game Development"
+        if any(k in name_l for k in ["ux", "ui designer", "product design", "figma"]):
+            return "Design"
+        if any(k in name_l for k in ["finance", "banking", "quant", "investment", "fintech", "actuar"]):
+            return "Finance"
+        if any(k in name_l for k in ["business analyst", "product manager", "project manager"]):
+            return "Management"
+        if any(k in name_l for k in ["marketing", "seo", "digital marketing"]):
+            return "Marketing"
+        if any(k in name_l for k in ["mechanical", "cad", "civil", "structural", "bim",
+                                      "electrical", "biomedical"]):
+            return "Engineering"
+        if any(k in name_l for k in ["quality assurance", "test engineer", "tester", "qa engineer"]):
+            return "QA"
+
+        # ── Fall back to text signals ─────────────────────────────────────
+        if "machine learning" in text_lower or "artificial intelligence" in text_lower:
+            return "AI"
+        if "software" in text_lower or "programming" in text_lower:
+            return "Software"
+        if "data" in text_lower:
+            return "Data"
+
+        return "Technology"
 
     @staticmethod
     def _extract_demand(text_lower: str) -> str:
@@ -279,57 +410,7 @@ class CareerFactExtractor:
                 token_source_counts[tok] = token_source_counts.get(tok, 0) + 1
         return token_source_counts
 
-    @staticmethod
-    def _extract_salary(text_lower: str, country: str) -> dict:
-        result: dict = {}
-        m = _SALARY_RE.search(text_lower)
-        if m:
-            try:
-                minsal = float(m.group("min").replace(",", ""))
-                maxsal = float(m.group("max").replace(",", ""))
-                if not (2020 <= minsal <= 2030 and 2020 <= maxsal <= 2030):
-                    result["min"] = minsal
-                    result["max"] = maxsal
-            except (ValueError, AttributeError):
-                pass
-        if "min" not in result:
-            m2 = _SALARY_SINGLE_RE.search(text_lower)
-            if m2:
-                try:
-                    amount = float(m2.group("amount").replace(",", ""))
-                    if not (2020 <= amount <= 2030):
-                        result["min"] = amount
-                except (ValueError, AttributeError):
-                    pass
-        if "inr" in text_lower or "lakh" in text_lower or "lpa" in text_lower or "india" in text_lower:
-            result["currency"] = "INR"
-        elif "usd" in text_lower or "dollar" in text_lower:
-            result["currency"] = "USD"
-        elif "gbp" in text_lower or "pound" in text_lower:
-            result["currency"] = "GBP"
-        elif country and "india" in country.lower():
-            result["currency"] = "INR"
-        else:
-            result["currency"] = "USD"
-        return result
-
-    @staticmethod
-    def _extract_companies(text: str) -> list[str]:
-        found_companies = set()
-        patterns = [
-            r'\b(?:hiring|recruit|employ|work|jobs?|career?s?)\s+(?:at|by|in|with|for|include)\s+([A-Z][a-zA-Z0-9]+(?:\s+[A-Z][a-zA-Z0-9]+){0,2})',
-            r'\b(?:employers|recruiters|companies)\s+(?:are|like|include)\s+([A-Z][a-zA-Z0-9]+(?:\s+[A-Z][a-zA-Z0-9]+){0,2})'
-        ]
-        for pat in patterns:
-            for m in re.finditer(pat, text):
-                comp = m.group(1).strip()
-                comp_lower = comp.lower()
-                if not any(w in comp_lower for w in ["the", "this", "our", "your", "hiring", "jobs", "career", "salary", "skills", "learn", "become"]):
-                    from job_search_ai.services.knowledge.extraction.company_extractor import CompanyExtractor
-                    cleaned = CompanyExtractor.extract_and_filter([comp])
-                    if cleaned:
-                        found_companies.add(cleaned[0])
-        return sorted(list(found_companies))
+    # Removed _extract_salary and _extract_companies as they are no longer needed.
 
     @staticmethod
     def _extract_degrees_and_branches(text_lower: str) -> tuple[list[str], list[str]]:

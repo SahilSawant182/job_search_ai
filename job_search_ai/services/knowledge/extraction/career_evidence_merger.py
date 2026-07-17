@@ -10,10 +10,8 @@ from collections import Counter
 from typing import Optional
 
 from job_search_ai.services.knowledge.extraction.career_canonicalizer import CareerCanonicalizer
-from job_search_ai.services.knowledge.extraction.company_extractor import CompanyExtractor
 from job_search_ai.services.knowledge.extraction.skill_normalizer import SkillNormalizer
 from job_search_ai.services.knowledge.constants import (
-    STAGE_TO_YEARS,
     SKILL_TIER_REQUIRED_THRESHOLD,
     SKILL_TIER_PREFERRED_THRESHOLD,
 )
@@ -130,13 +128,13 @@ class CareerEvidenceMerger:
             return final_min, final_max
 
         # ── Field-level consensus ─────────────────────────────────────────
-        industry  = _weighted_vote("industry", "General")
-        category  = _weighted_vote("category", "Professional")
+        industry  = _weighted_vote("industry", "Technology")
+        category  = _weighted_vote("category", "Technology")
         demand    = _weighted_vote("demand",   "Medium")
         stage     = _weighted_vote("stage",    "Growing")
-        currency  = _weighted_vote("currency", "INR")
+        currency  = ""
 
-        final_min, final_max = _weighted_avg("min_salary", "max_salary")
+        final_min, final_max = 0.0, 0.0
 
         # Summary is cleared per career-centric template specification
         summary = ""
@@ -168,7 +166,8 @@ class CareerEvidenceMerger:
                 elif proportion >= SKILL_TIER_PREFERRED_THRESHOLD:
                     tier = "Preferred"
                 else:
-                    tier = "Nice To Have"
+                    # Omit Nice To Have skills
+                    continue
 
                 ns["skill_type"] = tier
                 ns["importance"] = round(proportion, 2)
@@ -176,17 +175,14 @@ class CareerEvidenceMerger:
 
         final_skills.sort(key=lambda x: x["importance"], reverse=True)
 
-        # ── Company synthesis ─────────────────────────────────────────────
-        all_companies: list[str] = []
-        for f in facts:
-            all_companies.extend(f.get("companies") or [])
-        companies = CompanyExtractor.extract_and_filter(all_companies)
+        # ── Company synthesis (omitted) ───────────────────────────────────
+        companies = []
 
-        # ── Source deduplication (disabled for pure career profile model) ─────────────────
+        # ── Source deduplication (omitted) ────────────────────────────────
         merged_sources: list[dict] = []
 
-        # ── Suitable years from consensus stage ───────────────────────────
-        suitable_years = STAGE_TO_YEARS.get(stage, "2,3,4")
+        # ── Suitable years from consensus ─────────────────────────────────
+        suitable_years = _weighted_vote("suitable_years", "2,3,4")
 
         # ── Suitable degrees & branches union ─────────────────────────────
         degrees_set = set()
@@ -203,11 +199,8 @@ class CareerEvidenceMerger:
         suitable_degrees = ", ".join(sorted(list(degrees_set)))
         suitable_branches = ", ".join(sorted(list(branches_set)))
 
-        # ── Learning roadmap from skill tiers ─────────────────────────────
-        req_names  = [s["skill_name"] for s in final_skills if s["skill_type"] == "Required"][:5]
-        pref_names = [s["skill_name"] for s in final_skills if s["skill_type"] in ("Preferred", "Advanced")][:4]
-        nice_names = [s["skill_name"] for s in final_skills if s["skill_type"] == "Nice To Have"][:3]
-        roadmap    = " → ".join(req_names + pref_names + nice_names)
+        # ── Learning roadmap (omitted) ────────────────────────────────────
+        roadmap    = ""
 
         # ── Confidence — weighted average across cluster ───────────────────
         conf_vals = [f.get("confidence") for f in facts if f.get("confidence")]

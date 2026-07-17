@@ -1,5 +1,37 @@
 # -*- coding: utf-8 -*-
 # job_search_ai/services/knowledge/knowledge_builder.py
+"""
+KnowledgeBuilder — orchestrates Career Knowledge persistence.
+
+Pipeline (MISS path)
+--------------------
+  filtered_results  (list of SearchResult-like objects from Tavily)
+        │
+        ▼  Stage 1: Concatenate + clean all source texts
+        │
+        ▼  Stage 2: CareerLLMExtractor.extract()
+        │           Returns up to 3 validated career dicts.
+        │           Each dict has: career_name, required_skills, preferred_skills,
+        │           suitable_degrees, suitable_branches, suitable_years,
+        │           future_demand, confidence.
+        │
+        ▼  Stage 3: KnowledgeValidator.validate()  (soft quality gate)
+        │
+        ▼  Stage 4: _save_to_mariadb()  (upsert)
+        │
+        ▼  Stage 5: _build_embed_text() → embed → Qdrant upsert
+        │           Payload: career_name, required_skills, preferred_skills,
+        │                    degree, branch, years, future_demand, doc_name
+        │
+        ▼  MergedCareerProfile  (returned to agent — no second DB read)
+
+Key invariants
+--------------
+- One document = one career role.
+- Qdrant payload contains ONLY retrieval-relevant fields — no marketing text.
+- Embed text is minimal: name, skills, degree, branch, years, demand.
+- industry, category, summary, salary, companies, sources are NOT stored.
+"""
 
 from __future__ import annotations
 
@@ -14,12 +46,7 @@ import frappe.utils
 from job_search_ai.services.knowledge.extraction import (
     TrustedSourceAnalyzer,
     ContentCleaner,
-    CareerFactExtractor,
     KnowledgeValidator,
-)
-from job_search_ai.services.knowledge.constants import (
-    SKILL_TIER_REQUIRED_THRESHOLD,
-    SKILL_TIER_PREFERRED_THRESHOLD,
 )
 
 logger = logging.getLogger(__name__)
@@ -50,7 +77,7 @@ class BuiltKnowledge:
         embedding_dim: int,
         is_new: bool,
         timings: dict,
-        profiles: list,          # list[MergedCareerProfile]
+        profiles: list,
     ):
         self.career_name   = career_name
         self.doc_name      = doc_name
@@ -58,7 +85,7 @@ class BuiltKnowledge:
         self.embedding_dim = embedding_dim
         self.is_new        = is_new
         self.timings       = timings
-        self.profiles      = profiles   # structured, ready for PromptBuilder
+        self.profiles      = profiles
 
     def __repr__(self):
         action = "created" if self.is_new else "updated"
@@ -94,51 +121,45 @@ class MergedCareerProfile:
         self.doc_name       = doc_name
         self.similarity     = 1.0   # freshly built — maximum relevance
         self.hybrid_score   = 1.0
-        self.retrieval_method = "built"  # produced by KnowledgeBuilder MISS path
+        self.retrieval_method = "built"
 
         self.career_name    = facts["career_name"]
-        self.industry       = facts.get("industry", "")
-        self.category       = facts.get("category", "")
+        self.industry       = ""
+        self.category       = ""
         self.country        = country or ""
         self.summary        = ""
-        self.future_demand  = facts.get("demand", "")
-        self.career_stage   = facts.get("stage", "")
+        self.future_demand  = facts.get("future_demand", "High")
+        self.career_stage   = facts.get("stage", "Growing")
         self.confidence     = float(facts.get("confidence", 70))
-        self.suitable_years = facts.get("suitable_years", "")
-        self.learning_roadmap = facts.get("learning_roadmap", "")
+        self.suitable_years = facts.get("suitable_years_str", "")
+        self.learning_roadmap = ""
         self.needs_refresh  = False
-        self.min_salary     = facts.get("min_salary")
-        self.max_salary     = facts.get("max_salary")
-        self.suitable_degrees = facts.get("suitable_degrees", "")
-        self.suitable_branches = facts.get("suitable_branches", "")
+        self.min_salary     = None
+        self.max_salary     = None
+        self.suitable_degrees  = facts.get("suitable_degrees_str", "")
+        self.suitable_branches = facts.get("suitable_branches_str", "")
         self.quality_score  = int(facts.get("quality_score", 70))
-        self.evidence_count = max(1, int(facts.get("evidence_count", 1)))
+        self.evidence_count = 1
 
-        # Split skills by tier for PromptBuilder consumption
-        all_skills      = facts.get("skills", [])
-        self.skills         = [s["skill_name"] for s in all_skills]
-        self.required_skills = [
-            s["skill_name"] for s in all_skills if s.get("skill_type") == "Required"
-        ]
-        self.preferred_skills = [
-            s["skill_name"] for s in all_skills if s.get("skill_type") in ("Preferred", "Advanced")
-        ]
-        self.advanced_skills = self.preferred_skills
-        self.nice_skills = [
-            s["skill_name"] for s in all_skills if s.get("skill_type") == "Nice To Have"
-        ]
-        self.companies  = facts.get("companies", [])
+        # Skills
+        req  = facts.get("required_skills",  [])
+        pref = facts.get("preferred_skills", [])
+        self.required_skills  = req
+        self.preferred_skills = pref
+        self.advanced_skills  = pref
+        self.nice_skills      = []
+        self.skills           = req + pref
+        self.companies        = []
 
-        # Skill coverage fields — computed to zero on MISS path.
-        # KnowledgeRetriever computes real values on the HIT path.
+        # Skill coverage — starts at zero; RecommendationEngine will compute
         self.skill_coverage_score    = 0.0
         self.required_match_pct      = 0.0
         self.preferred_match_pct     = 0.0
         self.nice_match_pct          = 0.0
         self.matched_required_skills  = []
-        self.missing_required_skills  = self.required_skills[:]
+        self.missing_required_skills  = req[:]
         self.matched_preferred_skills = []
-        self.missing_preferred_skills = self.preferred_skills[:]
+        self.missing_preferred_skills = pref[:]
 
 
 class KnowledgeBuilderError(Exception):
@@ -151,16 +172,11 @@ class KnowledgeBuilderError(Exception):
 
 class KnowledgeBuilder:
     """
-    Thin orchestrator for the Career Intelligence extraction pipeline.
+    Orchestrates the Career Intelligence extraction pipeline.
 
-    Phase 10 changes
-    ----------------
-    - build() returns BuiltKnowledge.profiles — structured MergedCareerProfile
-      objects ready for PromptBuilder.  Callers never need to re-fetch from
-      MariaDB or Qdrant after a MISS-path build.
-    - Embedding text contains only semantic career identifiers (no article text).
-    - Skill merging on update is preserved.
-    - Duplicate loops and hash checks are kept minimal.
+    Accepts a list of Tavily search results and a career_name hint,
+    extracts up to 3 structured career profiles via CareerLLMExtractor,
+    persists them to MariaDB, and indexes them in Qdrant.
     """
 
     def __init__(
@@ -192,11 +208,10 @@ class KnowledgeBuilder:
 
     def build(self, results: list) -> BuiltKnowledge:
         """
-        Run the full extraction → merge → validate → persist pipeline.
+        Run the full extraction → validate → persist → embed pipeline.
 
         Returns a BuiltKnowledge whose .profiles list contains one
-        MergedCareerProfile per valid career extracted.  The agent uses
-        these profiles directly for the PromptBuilder — no second DB read.
+        MergedCareerProfile per valid career extracted.
         """
         if not results:
             raise KnowledgeBuilderError(
@@ -204,76 +219,57 @@ class KnowledgeBuilder:
             )
 
         logger.info(
-            "KnowledgeBuilder starting: career=%r  country=%r  results=%d",
+            "KnowledgeBuilder starting: career_focus=%r  country=%r  results=%d",
             self._career_name, self._country, len(results),
         )
         timings: dict[str, float] = {}
 
-        # ── Stage 1: Extract raw facts from each source ───────────────
+        # ── Stage 1: Collect and clean all source texts ─────────────────
         t = time.perf_counter()
-        all_extracted_facts: list[dict] = []
-        reliability_scores: list[int]   = []
-        cleaned_source_texts: list[str] = []
+        cleaned_texts: list[str] = []
+        reliability_scores: list[int] = []
 
-        # First collect all cleaned source texts
-        for r in results:
-            content = getattr(r, "content", "") or ""
-            cleaned = ContentCleaner.clean(content)
-            if cleaned.strip():
-                cleaned_source_texts.append(cleaned)
-
-        # Now extract facts per source
-        for r in results:
+        # Only process up to the top 3 Tavily results to keep extraction fast and focused
+        for r in results[:3]:
             content = getattr(r, "content", "") or ""
             cleaned = ContentCleaner.clean(content)
             if not cleaned.strip():
                 continue
-
-            title  = getattr(r, "title",  "") or ""
+            # Truncate each result's clean text to 800 chars to focus on primary content/skills
+            truncated_clean = cleaned[:800].strip()
+            if not truncated_clean:
+                continue
             url    = getattr(r, "url",    "") or ""
             source = getattr(r, "source", "") or ""
-
             analysis = TrustedSourceAnalyzer.analyze(url, source)
             reliability_scores.append(analysis["reliability_score"])
+            cleaned_texts.append(truncated_clean)
 
-            page_facts = CareerFactExtractor.extract_list(
-                cleaned,
-                source_reliability=analysis["reliability_score"],
-                country=self._country or "India",
-                source_texts=cleaned_source_texts,
-                default_career_name=self._career_name,
-            )
-            for fact in page_facts:
-                fact["sources"] = [{
-                    "source_title": title,
-                    "source_url":   url,
-                    "publisher":    source,
-                    "published_on": None,
-                }]
-                all_extracted_facts.append(fact)
+        timings["cleaning"] = time.perf_counter() - t
 
-        timings["extraction"] = time.perf_counter() - t
-
-        if not all_extracted_facts:
+        if not cleaned_texts:
             raise KnowledgeBuilderError(
-                "KnowledgeBuilder: no career facts could be extracted from search results."
+                "KnowledgeBuilder: all search results were empty after cleaning."
             )
 
-        # ── Stage 2: Cluster and merge evidence per canonical career ──
-        t_merge = time.perf_counter()
-        from job_search_ai.services.knowledge.extraction.career_evidence_merger import (
-            CareerEvidenceMerger,
-        )
-        merged_facts = CareerEvidenceMerger.merge(
-            all_extracted_facts,
-            total_sources=len(cleaned_source_texts) or 1,
-            source_texts=cleaned_source_texts,
-        )
-        timings["evidence_merging"] = time.perf_counter() - t_merge
+        # Combine and cap at 2500 chars to match MAX_INPUT_CHARS in CareerLLMExtractor
+        combined_text = "\n\n---\n\n".join(cleaned_texts)[:2500]
 
-        if not merged_facts:
+        # ── Stage 2: LLM Career Extraction ─────────────────────────────
+        t = time.perf_counter()
+        from job_search_ai.services.knowledge.extraction.career_llm_extractor import (
+            CareerLLMExtractor,
+        )
+        extracted_careers = CareerLLMExtractor.extract(
+            search_text=combined_text,
+            career_focus=self._career_name,
+        )
+        timings["llm_extraction"] = time.perf_counter() - t
+
+        if not extracted_careers:
             raise KnowledgeBuilderError(
-                "KnowledgeBuilder: all career candidates were filtered out."
+                f"KnowledgeBuilder: CareerLLMExtractor returned no valid careers "
+                f"for focus={self._career_name!r}."
             )
 
         avg_reliability = (
@@ -281,29 +277,42 @@ class KnowledgeBuilder:
             if reliability_scores else 50
         )
 
-        # ── Stage 3–5: Validate → persist → embed per career ─────────
+        # ── Stage 3–5: Validate → persist → embed per career ──────────
         built_profiles: list[MergedCareerProfile] = []
         first_doc_name  = None
         first_is_new    = True
         first_embed_dim = 768
 
-        for idx, facts in enumerate(merged_facts):
-            career_name = facts.get("career_name")
+        for idx, career in enumerate(extracted_careers):
+            career_name = career.get("career_name", "").strip()
             if not career_name:
                 continue
 
-            # Force pure career profile metadata defaults & clear SEO junk
-            facts["industry"] = facts.get("industry") or "General"
-            facts["category"] = facts.get("category") or "Professional"
-            facts["demand"] = facts.get("demand") or "Medium"
-            facts["stage"] = facts.get("stage") or "Growing"
-            facts["summary"] = ""
-            facts["sources"] = []
+            # Normalise degree/branch lists to comma-separated strings for DB
+            degrees_list  = career.get("suitable_degrees",  [])
+            branches_list = career.get("suitable_branches", [])
+            years_list    = career.get("suitable_years",    [])
 
-            # Validate
+            career["suitable_degrees_str"]  = ", ".join(degrees_list)
+            career["suitable_branches_str"] = ", ".join(branches_list)
+            career["suitable_years_str"]    = ",".join(str(y) for y in years_list)
+
+            # Stage 3: Validate
             t_val = time.perf_counter()
-            validation = KnowledgeValidator.validate(facts, avg_reliability)
-            facts["quality_score"] = validation["quality_score"]
+            validation_facts = {
+                "career_name":       career_name,
+                "demand":            career.get("future_demand", "High"),
+                "suitable_degrees":  career["suitable_degrees_str"],
+                "suitable_branches": career["suitable_branches_str"],
+                "suitable_years":    career["suitable_years_str"],
+                "confidence":        career.get("confidence", 70),
+                "skills": (
+                    [{"skill_name": s, "skill_type": "Required"} for s in career.get("required_skills", [])] +
+                    [{"skill_name": s, "skill_type": "Preferred"} for s in career.get("preferred_skills", [])]
+                ),
+            }
+            validation = KnowledgeValidator.validate(validation_facts, avg_reliability)
+            career["quality_score"] = validation["quality_score"]
             timings[f"validation_{idx}"] = time.perf_counter() - t_val
 
             logger.info(
@@ -313,29 +322,35 @@ class KnowledgeBuilder:
             if not validation["is_valid"]:
                 continue
 
-            # Persist to MariaDB
+            # Stage 4: Persist to MariaDB
             t_db = time.perf_counter()
-            doc_name, is_new, existing_hash = self._save_to_mariadb(facts)
+            doc_name, is_new, existing_hash = self._save_to_mariadb(career)
             timings[f"db_save_{idx}"] = time.perf_counter() - t_db
 
-            # Embed and index (skip if content hash unchanged)
-            embed_text = _build_embed_text(facts)
+            # Stage 5: Embed and index
+            embed_text = _build_embed_text(career)
             new_hash   = hashlib.md5(embed_text.encode()).hexdigest()[:16]
 
             if existing_hash == new_hash:
                 embed_dim = 768
             else:
-                t_emb = time.perf_counter()
+                t_emb  = time.perf_counter()
                 vector    = self._embed(embed_text)
                 embed_dim = len(vector)
                 timings[f"embed_{idx}"] = time.perf_counter() - t_emb
 
-                self._index(doc_name, vector, {
-                    "career_name": facts["career_name"],
-                    "country":     self._country or "",
-                    "industry":    facts.get("industry", ""),
-                    "doc_name":    doc_name,
-                })
+                # Rich Qdrant payload — contains all retrieval-relevant fields
+                qdrant_payload = {
+                    "career_name":     career_name,
+                    "required_skills": career.get("required_skills",  []),
+                    "preferred_skills": career.get("preferred_skills", []),
+                    "degree":          degrees_list,
+                    "branch":          branches_list,
+                    "years":           years_list,
+                    "future_demand":   career.get("future_demand", "High"),
+                    "doc_name":        doc_name,
+                }
+                self._index(doc_name, vector, qdrant_payload)
                 frappe.db.set_value(
                     "Career Knowledge", doc_name, "embedding_hash",
                     new_hash, update_modified=False,
@@ -347,13 +362,12 @@ class KnowledgeBuilder:
                 first_is_new    = is_new
                 first_embed_dim = embed_dim
 
-            # Build structured profile — no second DB read required
-            profile = MergedCareerProfile(doc_name, facts, self._country)
+            profile = MergedCareerProfile(doc_name, career, self._country)
             built_profiles.append(profile)
 
         if not built_profiles:
             raise KnowledgeBuilderError(
-                "KnowledgeBuilder: all merged career profiles failed validation."
+                "KnowledgeBuilder: all extracted career profiles failed validation."
             )
 
         total_t = sum(timings.values())
@@ -377,28 +391,22 @@ class KnowledgeBuilder:
     # MariaDB persistence
     # ------------------------------------------------------------------
 
-    def _save_to_mariadb(self, facts: dict) -> tuple[str, bool, str | None]:
+    def _save_to_mariadb(self, career: dict) -> tuple[str, bool, str | None]:
         try:
-            career_name   = facts["career_name"]
-            existing_name = self._find_existing_doc(
-                career_name, self._country, facts.get("industry")
-            )
+            career_name   = career["career_name"]
+            existing_name = self._find_existing_doc(career_name, self._country)
             if existing_name:
-                doc_name, existing_hash = self._update_doc(existing_name, facts)
+                doc_name, existing_hash = self._update_doc(existing_name, career)
                 return doc_name, False, existing_hash
-            doc_name = self._create_doc(facts)
+            doc_name = self._create_doc(career)
             return doc_name, True, None
         except Exception as exc:
             raise KnowledgeBuilderError(
                 f"KnowledgeBuilder: MariaDB save failed: {exc}"
             ) from exc
 
-    def _find_existing_doc(
-        self, career_name: str, country: str | None, industry: str | None
-    ) -> str | None:
-        filters: dict = {
-            "career_name": career_name,
-        }
+    def _find_existing_doc(self, career_name: str, country: str | None) -> str | None:
+        filters: dict = {"career_name": career_name}
         if country:
             filters["country"] = country
         rows = frappe.get_all(
@@ -406,117 +414,116 @@ class KnowledgeBuilder:
         )
         return rows[0]["name"] if rows else None
 
-    def _create_doc(self, facts: dict) -> str:
-        facts["applicable_branches"] = facts.get("suitable_branches") or ""
-        # Ensure skills undergo consensus-based re-tiering even on creation
-        facts["skills"] = _merge_skills([], facts.get("skills", []))
+    def _create_doc(self, career: dict) -> str:
         doc = frappe.new_doc("Career Knowledge")
-        self._populate_doc(doc, facts)
+        self._populate_doc(doc, career)
         doc.insert(ignore_permissions=True)
         frappe.db.commit()
         logger.info("KnowledgeBuilder: created %r", doc.name)
         return doc.name
 
-    def _update_doc(self, doc_name: str, facts: dict) -> tuple[str, str | None]:
+    def _update_doc(self, doc_name: str, career: dict) -> tuple[str, str | None]:
         doc = frappe.get_doc("Career Knowledge", doc_name)
         old_hash = getattr(doc, "embedding_hash", None)
 
-        # Merge applicable branches (append without duplicating)
-        existing_branches = [
-            b.strip()
-            for b in (doc.applicable_branches or "").split(",")
-            if b.strip()
-        ]
-        new_brs = [b.strip() for b in (facts.get("suitable_branches") or "").split(",") if b.strip()]
-        for b in new_brs:
-            if b not in existing_branches:
-                existing_branches.append(b)
-        facts["applicable_branches"] = ", ".join(existing_branches)
-
-        # Merge suitability fields (degrees, branches, years)
+        # Merge suitable_degrees / suitable_branches (union, no duplicates)
         existing_degs = {d.strip() for d in (doc.suitable_degrees or "").split(",") if d.strip()}
-        new_degs = {d.strip() for d in (facts.get("suitable_degrees") or "").split(",") if d.strip()}
-        facts["suitable_degrees"] = ", ".join(sorted(list(existing_degs | new_degs)))
+        new_degs      = {d.strip() for d in career.get("suitable_degrees_str", "").split(",") if d.strip()}
+        career["suitable_degrees_str"] = ", ".join(sorted(existing_degs | new_degs))
 
         existing_brs = {b.strip() for b in (doc.suitable_branches or "").split(",") if b.strip()}
-        new_brs = {b.strip() for b in (facts.get("suitable_branches") or "").split(",") if b.strip()}
-        facts["suitable_branches"] = ", ".join(sorted(list(existing_brs | new_brs)))
+        new_brs      = {b.strip() for b in career.get("suitable_branches_str", "").split(",") if b.strip()}
+        career["suitable_branches_str"] = ", ".join(sorted(existing_brs | new_brs))
 
+        # Merge suitable_years (union)
         existing_yrs = {y.strip() for y in (doc.suitable_years or "").split(",") if y.strip()}
-        new_yrs = {y.strip() for y in (facts.get("suitable_years") or "").split(",") if y.strip()}
-        facts["suitable_years"] = ",".join(sorted(list(existing_yrs | new_yrs), key=int)) if (existing_yrs | new_yrs) else ""
+        new_yrs      = {y.strip() for y in career.get("suitable_years_str", "").split(",") if y.strip()}
+        try:
+            merged_yrs = sorted(existing_yrs | new_yrs, key=int)
+        except ValueError:
+            merged_yrs = sorted(existing_yrs | new_yrs)
+        career["suitable_years_str"] = ",".join(merged_yrs)
 
-        # Merge skills instead of overwriting — union by name, accumulate evidence
-        existing_skills = [
-            {
-                "skill_name":    row.get("skill_name"),
-                "skill_type":    row.get("skill_type") or "Required",
-                "importance":    float(row.get("importance") or 0),
-                "frequency":     int(row.get("frequency") or 1),
-                "evidence_count": int(row.get("evidence_count") or 1),
-            }
-            for row in (doc.skills or [])
-        ]
-        facts["skills"] = _merge_skills(existing_skills, facts.get("skills", []))
+        # Merge skills (union by name, keep best tier)
+        existing_skill_map: dict[str, str] = {}
+        for row in (doc.skills or []):
+            sname = (row.get("skill_name") or "").strip()
+            if sname:
+                existing_skill_map[sname.lower()] = row.get("skill_type", "Required")
 
-        # Preserve existing roadmap — only rebuild from skills if it is absent
-        existing_roadmap = (doc.learning_roadmap or "").strip()
-        if existing_roadmap:
-            facts["learning_roadmap"] = existing_roadmap
-        else:
-            final_skills = facts["skills"]
-            req_names  = [s["skill_name"] for s in final_skills if s["skill_type"] == "Required"][:5]
-            pref_names = [s["skill_name"] for s in final_skills if s["skill_type"] in ("Preferred", "Advanced")][:4]
-            nice_names = [s["skill_name"] for s in final_skills if s["skill_type"] == "Nice To Have"][:3]
-            facts["learning_roadmap"] = " → ".join(req_names + pref_names + nice_names)
+        new_required  = career.get("required_skills",  [])
+        new_preferred = career.get("preferred_skills", [])
+        for s in new_required:
+            k = s.strip().lower()
+            if k not in existing_skill_map:
+                existing_skill_map[k] = "Required"
+        for s in new_preferred:
+            k = s.strip().lower()
+            if k not in existing_skill_map:
+                existing_skill_map[k] = "Preferred"
 
-        # Merge companies — union, preserve order
-        existing_companies = [row.get("company_name") for row in (doc.companies or [])]
-        facts["companies"] = _merge_companies(existing_companies, facts.get("companies", []))
+        # Rebuild canonical skill lists from merged map
+        career["required_skills"]  = [k for k, v in existing_skill_map.items() if v == "Required"]
+        career["preferred_skills"] = [k for k, v in existing_skill_map.items() if v == "Preferred"]
 
-        self._populate_doc(doc, facts)
+        self._populate_doc(doc, career)
         doc.knowledge_version = (doc.knowledge_version or 1) + 1
         doc.save(ignore_permissions=True)
         frappe.db.commit()
         logger.info("KnowledgeBuilder: updated %r (v%d)", doc.name, doc.knowledge_version)
         return doc.name, old_hash
 
-    def _populate_doc(self, doc: Any, facts: dict) -> None:
+    def _populate_doc(self, doc: Any, career: dict) -> None:
         from job_search_ai.services.knowledge.knowledge_lifecycle import KnowledgeLifecycle
 
-        doc.career_name      = facts["career_name"]
-        doc.industry         = facts["industry"]
-        doc.category         = facts["category"]
-        doc.summary          = ""  # DO NOT store summary/SEO text
-        doc.future_demand    = facts["demand"]
-        doc.career_stage     = facts["stage"]
-        doc.confidence       = facts["confidence"]
-        doc.quality_score    = facts["quality_score"]
-        doc.minimum_salary   = facts.get("min_salary")
-        doc.maximum_salary   = facts.get("max_salary")
-        doc.currency         = facts.get("currency") or "INR"
-        doc.applicable_branches = facts.get("applicable_branches") or ""
-        doc.suitable_degrees = facts.get("suitable_degrees") or ""
-        doc.suitable_branches = facts.get("suitable_branches") or ""
-        doc.suitable_years   = facts.get("suitable_years") or ""
-        doc.learning_roadmap = facts.get("learning_roadmap") or ""
+        doc.career_name      = career["career_name"]
+        # Deliberately cleared fields — not stored in V3
+        doc.industry         = ""
+        doc.category         = ""
+        doc.summary          = ""
+        doc.minimum_salary   = None
+        doc.maximum_salary   = None
+        doc.currency         = ""
+        doc.learning_roadmap = ""
+        doc.source_count     = 0
+
+        doc.future_demand    = career.get("future_demand", "High")
+        doc.career_stage     = career.get("stage", "Growing")
+        doc.confidence       = career.get("confidence", 70)
+        doc.quality_score    = career.get("quality_score", 70)
+        doc.suitable_degrees  = career.get("suitable_degrees_str", "")
+        doc.suitable_branches = career.get("suitable_branches_str", "")
+        doc.applicable_branches = career.get("suitable_branches_str", "")
+        doc.suitable_years   = career.get("suitable_years_str", "")
         doc.active           = 1
         if self._country:
             doc.country = self._country
         KnowledgeLifecycle.mark_refreshed(doc)
 
-        doc.set("skills", [
-            {
-                "skill_name":    s["skill_name"],
-                "skill_type":    s.get("skill_type") or "Required",
-                "importance":    s["importance"],
-                "frequency":     s["frequency"],
-                "evidence_count": s["evidence_count"],
-            }
-            for s in facts.get("skills", [])
-        ])
-        doc.set("companies", [{"company_name": c} for c in facts.get("companies", [])])
-        doc.source_count = 0
+        # Skills child table — Required + Preferred only
+        req_skills  = career.get("required_skills",  [])
+        pref_skills = career.get("preferred_skills", [])
+        skill_rows = []
+        for s in req_skills:
+            if s and s.strip():
+                skill_rows.append({
+                    "skill_name":     s.strip(),
+                    "skill_type":     "Required",
+                    "importance":     1.0,
+                    "frequency":      1,
+                    "evidence_count": 1,
+                })
+        for s in pref_skills:
+            if s and s.strip():
+                skill_rows.append({
+                    "skill_name":     s.strip(),
+                    "skill_type":     "Preferred",
+                    "importance":     0.5,
+                    "frequency":      1,
+                    "evidence_count": 1,
+                })
+        doc.set("skills", skill_rows)
+        doc.set("companies", [])
         doc.set("sources", [])
 
     # ------------------------------------------------------------------
@@ -541,96 +548,75 @@ class KnowledgeBuilder:
 
 
 # ---------------------------------------------------------------------------
-# Module-level pure helpers (no self — easy to unit-test)
+# Module-level helpers
 # ---------------------------------------------------------------------------
 
-def _build_embed_text(facts: dict) -> str:
+def _build_embed_text(career: dict) -> str:
     """
-    Build the embedding text for a career profile.
+    Build minimal, clean embedding text for a career profile.
 
-    Contains ONLY semantic career identifiers: career name, industry,
-    Required/Preferred skills, suitable degrees/branches, suitable years, demand, roadmap.
-    No summaries, article text, or marketing noise.
+    Contains ONLY semantic career identifiers:
+      career name, required skills, preferred skills,
+      suitable degrees, suitable branches, suitable years, demand.
+
+    NO JSON.  NO markdown.  NO summaries.  NO company names.  NO article text.
+    NO salary.  NO roadmap.
+
+    Why? The embedding should represent "what does this career look like"
+    so that when a student's profile is embedded and compared, Qdrant
+    finds the correct career — not a blog article that happens to mention
+    the same keywords.
     """
-    career    = facts["career_name"]
-    industry  = facts.get("industry", "")
-    req_deg   = facts.get("suitable_degrees", "")
-    req_br    = facts.get("suitable_branches", "")
-    years     = facts.get("suitable_years", "") or facts.get("applicable_branches", "")
-    demand    = facts.get("demand") or facts.get("future_demand", "Medium")
-    roadmap   = facts.get("learning_roadmap", "")
+    lines = [f"Career: {career['career_name']}"]
 
-    skills = facts.get("skills", [])
-    req  = [s["skill_name"] for s in skills if s.get("skill_type") == "Required"][:10]
-    pref = [s["skill_name"] for s in skills if s.get("skill_type") in ("Preferred", "Advanced")][:8]
-
-    lines = [f"Career: {career}"]
-    if industry:
-        lines.append(f"Industry: {industry}")
+    req  = career.get("required_skills",  [])
+    pref = career.get("preferred_skills", [])
     if req:
-        lines.append(f"Required Skills: {', '.join(req)}")
+        lines.append("Required Skills:\n" + "\n".join(req[:10]))
     if pref:
-        lines.append(f"Preferred Skills: {', '.join(pref)}")
-    if req_deg:
-        lines.append(f"Suitable Degrees: {req_deg}")
-    if req_br:
-        lines.append(f"Suitable Branches: {req_br}")
-    if years:
-        lines.append(f"Suitable Years: {years}")
+        lines.append("Preferred Skills:\n" + "\n".join(pref[:6]))
+
+    degrees_str  = career.get("suitable_degrees_str",  "")
+    branches_str = career.get("suitable_branches_str", "")
+    years_str    = career.get("suitable_years_str",    "")
+    demand       = career.get("future_demand", "High")
+
+    if degrees_str:
+        lines.append(f"Degree:\n{degrees_str}")
+    if branches_str:
+        lines.append(f"Branch:\n{branches_str}")
+    if years_str:
+        lines.append(f"Years:\n{years_str}")
     if demand:
-        lines.append(f"Demand: {demand}")
-    if roadmap:
-        lines.append(f"Roadmap: {roadmap}")
-    return "\n".join(lines)
+        lines.append(f"Demand:\n{demand}")
+
+    return "\n\n".join(lines)
 
 
-def _merge_skills(existing: list[dict], new: list[dict]) -> list[dict]:
-    """Union by skill_name, accumulate evidence counts, and re-classify tiers dynamically based on overall evidence proportion."""
-    merged: dict[str, dict] = {s["skill_name"]: s.copy() for s in existing}
-    for s in new:
-        name = s["skill_name"]
-        if not name:
+def normalize_academic_fields(value: str, is_degree: bool = False) -> str:
+    """Kept for compatibility with any external callers."""
+    if not value:
+        return ""
+    import re
+    parts = re.split(r'[,;]', value)
+    cleaned = []
+    for p in parts:
+        p = " ".join(p.strip().split())
+        if not p or len(p) < 2:
             continue
-        stype = s["skill_type"]
-        if stype == "Advanced":
-            stype = "Preferred"
-
-        if name in merged:
-            prev = merged[name]
-            merged[name] = {
-                "skill_name":     name,
-                "importance":     max(prev["importance"], s["importance"]),
-                "frequency":      prev["frequency"] + s["frequency"],
-                "evidence_count": prev["evidence_count"] + s["evidence_count"],
-                "skill_type":     stype,
+        p_lower = p.lower()
+        if is_degree:
+            mapping = {
+                "btech": "B.Tech", "b.tech": "B.Tech",
+                "mtech": "M.Tech", "m.tech": "M.Tech",
+                "bca": "BCA", "mca": "MCA",
+                "bsc": "B.Sc", "b.sc": "B.Sc",
+                "msc": "M.Sc", "m.sc": "M.Sc",
+                "phd": "PhD",
             }
+            p = mapping.get(p_lower, p.title())
         else:
-            s_copy = s.copy()
-            if s_copy["skill_type"] == "Advanced":
-                s_copy["skill_type"] = "Preferred"
-            merged[name] = s_copy
-
-    if merged:
-        max_evidence = max(s["evidence_count"] for s in merged.values())
-        for name, s in merged.items():
-            prop = s["evidence_count"] / max(1, max_evidence)
-            if prop >= SKILL_TIER_REQUIRED_THRESHOLD:
-                s["skill_type"] = "Required"
-            elif prop >= SKILL_TIER_PREFERRED_THRESHOLD:
-                s["skill_type"] = "Preferred"
-            else:
-                s["skill_type"] = "Nice To Have"
-            s["importance"] = round(prop, 2)
-
-    return sorted(merged.values(), key=lambda x: x["importance"], reverse=True)
-
-
-def _merge_companies(existing: list[str], new: list[str]) -> list[str]:
-    """Union while preserving insertion order."""
-    seen   = set(existing)
-    result = list(existing)
-    for c in new:
-        if c and c not in seen:
-            seen.add(c)
-            result.append(c)
-    return result
+            p = p.title()
+        if p not in cleaned:
+            cleaned.append(p)
+    return ", ".join(sorted(cleaned))

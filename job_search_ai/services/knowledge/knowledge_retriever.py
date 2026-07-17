@@ -172,17 +172,17 @@ class KnowledgeRetriever:
             records = self._load_from_mariadb(vector_hits, student)
             timings["db_fetch"] = time.perf_counter() - t
 
-        avg_similarity = sum(r.similarity for r in records) / len(records) if records else 0.0
+        max_similarity = max(r.similarity for r in records) if records else 0.0
         threshold = float(self._settings.similarity_threshold)
 
-        if not records or avg_similarity < threshold:
+        if not records or max_similarity < threshold:
             fallback_records = self._fallback_name_match(student, threshold)
             if fallback_records:
                 logger.info("KnowledgeRetriever: direct name match fallback found %d record(s)", len(fallback_records))
                 return fallback_records
 
-        logger.info("KnowledgeRetriever: loaded=%d  avg_sim=%.4f  total=%.3fs",
-                    len(records), avg_similarity, sum(timings.values()))
+        logger.info("KnowledgeRetriever: loaded=%d  max_sim=%.4f  total=%.3fs",
+                    len(records), max_similarity, sum(timings.values()))
         return records
 
     def _fallback_name_match(self, student: "StudentProfile", threshold: float) -> list[RetrievedKnowledge]:
@@ -287,7 +287,7 @@ class KnowledgeRetriever:
             r.retrieval_method = "metadata"
 
         # Return records that clear the threshold after hybrid scoring
-        return [r for r in records if r.hybrid_score >= threshold]
+        return [r for r in records if r.hybrid_score >= max(0.40, threshold - 0.20)]
 
     @staticmethod
     def _build_search_text(student: "StudentProfile") -> str:
@@ -314,7 +314,7 @@ class KnowledgeRetriever:
             vector_threshold = max(0.40, base_threshold - 0.20)
             return self._vector_index.search(
                 query_vector    = vector,
-                limit           = self._settings.max_retrieved_knowledge * 2,
+                limit           = 25,
                 score_threshold = vector_threshold,
             )
         except Exception as exc:
@@ -359,52 +359,76 @@ class KnowledgeRetriever:
             # ── Hybrid Score ────────────────────────────────────────────
             embedding_sim = similarity
 
-            # 1. Academic match (Branch & Degree)
+            # 1. Academic match (Branch & Degree) with robust synonym/umbrella mapping
             branch_score = 0.5
             applicable_branches = getattr(doc, "suitable_branches", None) or getattr(doc, "applicable_branches", None)
             if applicable_branches:
                 branches = [b.strip().lower() for b in applicable_branches.split(",") if b.strip()]
                 sb_lower = student.branch.strip().lower()
+
                 if sb_lower in branches:
                     branch_score = 1.0
                 else:
-                    # check for substring/keyword overlap
-                    student_words = set(re.findall(r'\w+', sb_lower)) - {"and", "engineering", "technology", "science"}
+                    # CS/IT umbrella match
+                    cs_it_umbrella = {"computer", "cs", "cse", "it", "information", "software", "web", "systems", "network", "programming", "development"}
+                    student_is_cs = any(kw in sb_lower for kw in cs_it_umbrella)
+
+                    # Business/Marketing umbrella match
+                    biz_marketing_umbrella = {"marketing", "business", "administration", "strategy", "management", "mba", "finance", "sales"}
+                    student_is_biz = any(kw in sb_lower for kw in biz_marketing_umbrella)
+
                     matched = False
                     for b in branches:
+                        if student_is_cs and any(kw in b for kw in cs_it_umbrella):
+                            matched = True
+                            break
+                        if student_is_biz and any(kw in b for kw in biz_marketing_umbrella):
+                            matched = True
+                            break
                         b_words = set(re.findall(r'\w+', b)) - {"and", "engineering", "technology", "science"}
+                        student_words = set(re.findall(r'\w+', sb_lower)) - {"and", "engineering", "technology", "science"}
                         if student_words & b_words:
                             matched = True
                             break
-                    if matched:
-                        branch_score = 0.8
-                    elif branches:
-                        branch_score = 0.0
+
+                    branch_score = 0.8 if matched else (0.0 if branches else 0.5)
 
             degree_score = 0.5
             suitable_degrees = getattr(doc, "suitable_degrees", None)
             if suitable_degrees:
                 degrees = [d.strip().lower() for d in suitable_degrees.split(",") if d.strip()]
                 sd_lower = student.degree.strip().lower()
+
                 if sd_lower in degrees:
                     degree_score = 1.0
                 else:
-                    # check for substring/keyword overlap
-                    student_words = set(re.findall(r'\w+', sd_lower)) - {"and", "degree", "of", "science", "arts"}
+                    # Check for engineering synonyms
+                    eng_synonyms = {"engineering", "technology", "tech", "b.tech", "btech", "m.tech", "mtech", "b.e", "b.e.", "m.e", "m.e."}
+                    student_is_eng = any(kw in sd_lower for kw in eng_synonyms)
+
+                    # Check for general computer science / tech degrees
+                    comp_keywords = {"computer", "cs", "it", "information", "mca", "science"}
+                    student_is_comp = any(kw in sd_lower for kw in comp_keywords)
+
                     matched = False
                     for d in degrees:
-                        d_words = set(re.findall(r'\w+', d)) - {"and", "degree", "of", "science", "arts"}
+                        if student_is_eng and any(kw in d for kw in eng_synonyms):
+                            matched = True
+                            break
+                        if student_is_comp and any(kw in d for kw in comp_keywords):
+                            matched = True
+                            break
+                        d_words = set(re.findall(r'\w+', d)) - {"and", "degree", "of", "science", "arts", "bachelor", "master"}
+                        student_words = set(re.findall(r'\w+', sd_lower)) - {"and", "degree", "of", "science", "arts", "bachelor", "master"}
                         if student_words & d_words:
                             matched = True
                             break
-                    if matched:
-                        degree_score = 0.8
-                    elif degrees:
-                        degree_score = 0.0
+
+                    degree_score = 0.8 if matched else (0.0 if degrees else 0.5)
 
             academic_match_score = (branch_score + degree_score) / 2.0
 
-            # 2. Skill coverage score (weighted compliance) — single source of truth
+            # 2. Skill coverage score (weighted compliance) with substring/variation matching
             required_coverage = 0.0
             preferred_coverage = 0.0
             nice_coverage = 0.0
@@ -417,15 +441,27 @@ class KnowledgeRetriever:
             if student.skills:
                 student_lower = {s.strip().lower() for s in student.skills}
 
-                matched_req  = [s for s in required_skills  if s.lower() in student_lower]
-                missing_req  = [s for s in required_skills  if s.lower() not in student_lower]
-                matched_pref = [s for s in preferred_skills if s.lower() in student_lower]
-                missing_pref = [s for s in preferred_skills if s.lower() not in student_lower]
+                # Helper function for substring skill matching
+                def is_skill_match(skill_name: str) -> bool:
+                    s_low = skill_name.strip().lower()
+                    for stu in student_lower:
+                        if len(stu) <= 2:
+                            if stu == s_low:
+                                return True
+                        else:
+                            if stu in s_low or s_low in stu:
+                                return True
+                    return False
+
+                matched_req  = [s for s in required_skills  if is_skill_match(s)]
+                missing_req  = [s for s in required_skills  if not is_skill_match(s)]
+                matched_pref = [s for s in preferred_skills if is_skill_match(s)]
+                missing_pref = [s for s in preferred_skills if not is_skill_match(s)]
 
                 required_coverage  = len(matched_req)  / len(required_skills)  if required_skills  else 1.0
                 preferred_coverage = len(matched_pref) / len(preferred_skills) if preferred_skills else 1.0
                 nice_set = {s.lower() for s in nice_skills}
-                nice_coverage = sum(1 for s in student_lower if s in nice_set) / len(nice_skills) if nice_skills else 1.0
+                nice_coverage = sum(1 for s in nice_skills if is_skill_match(s)) / len(nice_skills) if nice_skills else 1.0
 
                 skill_coverage_score = 0.7 * required_coverage + 0.2 * preferred_coverage + 0.1 * nice_coverage
 
@@ -434,8 +470,6 @@ class KnowledgeRetriever:
             if student.interests:
                 interests_lower = [i.strip().lower() for i in student.interests]
                 career_lower    = (doc.career_name or "").lower()
-                industry_lower  = (doc.industry    or "").lower()
-                category_lower  = (doc.category    or "").lower()
 
                 expanded = set(interests_lower)
                 # Dynamic word-level tokenisation to find matches naturally without hardcoding
@@ -443,7 +477,7 @@ class KnowledgeRetriever:
                     words = [w for w in re.findall(r'\w+', interest) if len(w) > 2]
                     expanded.update(words)
 
-                matches = sum(1 for i in expanded if i in career_lower or i in industry_lower or i in category_lower)
+                matches = sum(1 for i in expanded if i in career_lower)
                 interest_score = min(1.0, matches / max(1, len(interests_lower)))
 
             # 4. Year–stage match (Phase 9 NEW)
@@ -460,29 +494,17 @@ class KnowledgeRetriever:
             db_evidence_count = max(1, int(getattr(doc, "source_count", None) or 1))
             quality_score = min(1.0, db_quality_score / 100.0)
 
-            # 7. Freshness score
-            freshness_score = 1.0
-            doc_modified = getattr(doc, "modified", None)
-            if doc_modified:
-                try:
-                    from datetime import datetime
-                    delta = datetime.now() - frappe.utils.to_datetime(doc_modified)
-                    freshness_score = max(0.5, 1.0 - (max(0, delta.days) / 90.0))
-                except Exception:
-                    pass
-
             hybrid_similarity = round(
-                RetrievalWeights.VECTOR * embedding_sim +
-                RetrievalWeights.ACADEMIC * academic_match_score +
-                RetrievalWeights.SKILL * skill_coverage_score +
+                RetrievalWeights.VECTOR   * embedding_sim +
                 RetrievalWeights.INTEREST * interest_score +
-                RetrievalWeights.YEAR * year_stage_score +
-                RetrievalWeights.COUNTRY * country_score +
-                RetrievalWeights.QUALITY * quality_score +
-                RetrievalWeights.FRESH * freshness_score,
+                RetrievalWeights.SKILL    * skill_coverage_score +
+                RetrievalWeights.ACADEMIC * academic_match_score +
+                RetrievalWeights.YEAR     * year_stage_score +
+                RetrievalWeights.COUNTRY  * country_score +
+                RetrievalWeights.QUALITY  * quality_score,
                 4,
             )
-            if hybrid_similarity >= self._settings.similarity_threshold:
+            if hybrid_similarity >= max(0.40, float(self._settings.similarity_threshold) - 0.20):
                 records.append(RetrievedKnowledge(
                     doc_name         = doc.name,
                     similarity       = hybrid_similarity,
