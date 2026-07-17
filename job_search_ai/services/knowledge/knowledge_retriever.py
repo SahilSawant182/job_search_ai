@@ -556,7 +556,8 @@ class KnowledgeRetriever:
         stage = career_stage.strip() if career_stage else ""
         if student_year >= 4:
             return {"Immediate Placement": 1.0, "Growing": 0.5, "Future": 0.0}.get(stage, 0.5)
-        elif student_year == 1:
+        elif student_year == 1:    
             return {"Future": 1.0, "Growing": 0.7, "Immediate Placement": 0.4}.get(stage, 0.6)
         else:  # Year 2-3
             return {"Growing": 1.0, "Immediate Placement": 0.7, "Future": 0.5}.get(stage, 0.7)
+      
