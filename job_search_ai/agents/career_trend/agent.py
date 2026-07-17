@@ -122,22 +122,22 @@ class CareerTrendAgent:
             # Stage 2 — QueryBuilder (one set of queries covers all interests)
             queries = self._build_queries(student)
 
-            # Stage 3 — Tavily search
-            t = time.perf_counter()
+            # Stage 3 — Tavily search 
+            t = time.perf_counter()   
             raw_results = self._search(queries)
             t_search    = time.perf_counter() - t
             tavily_used = True
 
-            # Stage 4 — ResultFilter
+            # Stage 4 — ResultFilter  
             t = time.perf_counter()
             filtered_results = self._filter(raw_results)
             t_filter = time.perf_counter() - t
-
+ 
             # Stage 5 — KnowledgeBuilder: one build pass per interest area
             # Each pass extracts up to 3 careers specific to that interest.
             t = time.perf_counter()
             all_built_profiles = self._build_profiles_per_interest(student, filtered_results)
-            t_knowledge_build  = time.perf_counter() - t
+            t_knowledge_build  = time.perf_counter() - t    
 
             if all_built_profiles:
                 knowledge_updated = True
@@ -149,7 +149,7 @@ class CareerTrendAgent:
                 candidate_map = {c.career_name.lower().strip(): c for c in good_careers}
                 for bp in all_built_profiles:
                     key = bp.career_name.lower().strip()
-                    if key in candidate_map:
+                    if key in candidate_map:   
                         if bp.similarity > candidate_map[key].similarity:
                             candidate_map[key] = bp
                     else:
