@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", function () {
 	const errorContainer = document.getElementById("error-container");
 	const errorMessage = document.getElementById("error-message");
 
+	const loadedSkillsCache = {};
+
 	const STEPS = [
 		{ id: "step-profile", delay: 0 },
 		{ id: "step-queries", delay: 1500 },
@@ -251,8 +253,188 @@ document.addEventListener("DOMContentLoaded", function () {
 						${sourcesHtml}
 					</div>
 				` : ""}
+
+				<div class="cc-skills-details d-none"></div>
+				<div class="cc-action">
+					<i class="bi bi-chevron-down"></i>
+					<span class="action-text">Click to load and view required skills (Junior)</span>
+				</div>
 			`;
+
+			card.addEventListener("click", e => {
+				if (e.target.closest("a") || e.target.closest("button")) return;
+				toggleCardSkills(card, path.career);
+			});
+
 			container.appendChild(card);
 		});
+	}
+
+	function toggleCardSkills(card, careerName) {
+		const detailsContainer = card.querySelector(".cc-skills-details");
+		const actionEl = card.querySelector(".cc-action");
+		if (!detailsContainer || !actionEl) return;
+
+		const isActive = card.classList.contains("active");
+
+		if (isActive) {
+			card.classList.remove("active");
+			detailsContainer.classList.add("d-none");
+			actionEl.innerHTML = `<i class="bi bi-chevron-down"></i><span class="action-text">Click to load and view required skills (Junior)</span>`;
+		} else {
+			// Collapse all other cards first
+			document.querySelectorAll(".career-card.active").forEach(otherCard => {
+				if (otherCard !== card) {
+					otherCard.classList.remove("active");
+					const otherDetails = otherCard.querySelector(".cc-skills-details");
+					if (otherDetails) otherDetails.classList.add("d-none");
+					const otherAction = otherCard.querySelector(".cc-action");
+					if (otherAction) {
+						otherAction.innerHTML = `<i class="bi bi-chevron-down"></i><span class="action-text">Click to load and view required skills (Junior)</span>`;
+					}
+				}
+			});
+
+			card.classList.add("active");
+			detailsContainer.classList.remove("d-none");
+			actionEl.innerHTML = `<i class="bi bi-chevron-up"></i><span class="action-text">Click to collapse skills</span>`;
+
+			if (loadedSkillsCache[careerName]) {
+				renderSkillsInContainer(detailsContainer, loadedSkillsCache[careerName], careerName);
+			} else {
+				fetchSkills(careerName, detailsContainer);
+			}
+		}
+	}
+
+	function fetchSkills(careerName, detailsContainer) {
+		const params = new URLSearchParams({
+			role: careerName,
+			seniority: "Junior",
+			save: 1
+		});
+
+		detailsContainer.innerHTML = `
+			<div class="skills-loading">
+				<div class="spinner-border text-primary spinner-border-sm" role="status"></div>
+				<div class="small text-muted fw-semibold">Consulting Skill Agent for Junior-level skills...</div>
+			</div>
+		`;
+
+		fetch("/api/method/job_search_ai.agents.skill_agent.api.generate_skills", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded",
+				"X-Frappe-CSRF-Token": getCookie("sid") || window.csrf_token || "",
+			},
+			body: params,
+		})
+			.then(r => {
+				if (!r.ok) {
+					return r.json().then(err => {
+						let msg = "Server Error";
+						try { msg = JSON.parse(err._server_messages)[0].message || msg; } catch (e) { }
+						throw new Error(msg);
+					}).catch(() => { throw new Error("HTTP " + r.status); });
+				}
+				return r.json();
+			})
+			.then(data => {
+				const res = data.message;
+				loadedSkillsCache[careerName] = res;
+				renderSkillsInContainer(detailsContainer, res, careerName);
+			})
+			.catch(err => {
+				console.error("Failed to generate skills:", err);
+				detailsContainer.innerHTML = `
+					<div class="skills-error">
+						<i class="bi bi-exclamation-circle-fill me-2"></i>Failed to retrieve skills.
+						<div class="small mt-1">${err.message || "Please try again later."}</div>
+						<button class="skills-retry-btn" type="button">Retry</button>
+					</div>
+				`;
+				const retryBtn = detailsContainer.querySelector(".skills-retry-btn");
+				if (retryBtn) {
+					retryBtn.addEventListener("click", e => {
+						e.stopPropagation();
+						fetchSkills(careerName, detailsContainer);
+					});
+				}
+			});
+	}
+
+	function renderSkillsInContainer(detailsContainer, res, careerName) {
+		const foundationTags = (res.foundation_skills || []).map(s => `<span class="skill-badge">${s}</span>`).join("");
+		const coreDomainTags = (res.core_domain_skills || []).map(s => `<span class="skill-badge">${s}</span>`).join("");
+		const industryTags = (res.industry_skills || []).map(s => `<span class="skill-badge">${s}</span>`).join("");
+		const emergingTags = (res.emerging_skills || []).map(s => `<span class="skill-badge">${s}</span>`).join("");
+
+		const sourceLabel = res.source === "cache" ? "Qdrant Cache (Hit)" : "LLM Generated (Live)";
+		const totalTime = res.metrics && res.metrics.total_time ? res.metrics.total_time.toFixed(2) + "s" : "—";
+		const docName = res.doc_name || "";
+
+		detailsContainer.innerHTML = `
+			<div class="skills-detail-container">
+				<div class="skills-detail-title">
+					<i class="bi bi-cpu-fill text-primary"></i> Skill Intelligence Roadmap (Junior Level)
+				</div>
+				<div class="row g-3 mb-3">
+					<div class="col-md-6 col-lg-3">
+						<div class="skill-tier-card foundation-tier">
+							<div class="tier-header">
+								<i class="bi bi-mortarboard-fill text-primary"></i> 1. Foundation Skills
+							</div>
+							<div class="tier-body">
+								${foundationTags || '<span class="text-muted small">None defined</span>'}
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 col-lg-3">
+						<div class="skill-tier-card core-tier">
+							<div class="tier-header">
+								<i class="bi bi-code-slash text-indigo"></i> 2. Core Domain Skills
+							</div>
+							<div class="tier-body">
+								${coreDomainTags || '<span class="text-muted small">None defined</span>'}
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 col-lg-3">
+						<div class="skill-tier-card industry-tier">
+							<div class="tier-header">
+								<i class="bi bi-building text-violet"></i> 3. Industry Skills
+							</div>
+							<div class="tier-body">
+								${industryTags || '<span class="text-muted small">None defined</span>'}
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 col-lg-3">
+						<div class="skill-tier-card emerging-tier">
+							<div class="tier-header">
+								<i class="bi bi-rocket-takeoff-fill text-success"></i> 4. Emerging Skills
+							</div>
+							<div class="tier-body">
+								${emergingTags || '<span class="text-muted small">None defined</span>'}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="skills-meta-info">
+					<div class="skills-meta-left">
+						<span><i class="bi bi-database me-1"></i>Source: <strong>${sourceLabel}</strong></span>
+						<span><i class="bi bi-lightning-charge me-1"></i>Time: <strong>${totalTime}</strong></span>
+					</div>
+					${docName ? `
+						<div>
+							<a href="/app/job-description/${docName}" target="_blank" class="text-primary fw-semibold text-decoration-none">
+								<i class="bi bi-box-arrow-up-right me-1"></i>Open Job Description
+							</a>
+						</div>
+					` : ""}
+				</div>
+			</div>
+		`;
 	}
 });

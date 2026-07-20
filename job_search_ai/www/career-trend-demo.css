@@ -672,3 +672,187 @@ body {
 }
 
 .footer-sep { margin: 0 8px; }
+
+/* ============================================================
+   Skill Agent Integration
+   ============================================================ */
+.career-card {
+	cursor: pointer;
+	transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+	border: 2px solid transparent;
+}
+
+.career-card:hover {
+	transform: translateY(-2px);
+	border-color: #c7d2fe;
+}
+
+.career-card.active {
+	border-color: #4f46e5;
+	box-shadow: 0 10px 25px rgba(79, 70, 229, 0.12), 0 0 0 1px rgba(79, 70, 229, 0.05);
+}
+
+.cc-action {
+	font-size: 0.78rem;
+	font-weight: 600;
+	color: #4f46e5;
+	text-align: center;
+	margin-top: 16px;
+	padding-top: 14px;
+	border-top: 1px dashed #e5e7eb;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	transition: color 0.2s;
+}
+
+.career-card:hover .cc-action {
+	color: #3730a3;
+}
+
+.career-card.active .cc-action {
+	color: #6b7280;
+	border-top-style: solid;
+}
+
+.skills-detail-container {
+	margin-top: 16px;
+	padding-top: 16px;
+	border-top: 1px solid #f1f3f5;
+	animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+	from { opacity: 0; transform: translateY(4px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+.skills-detail-title {
+	font-size: 0.8rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	color: #4b5563;
+	margin-bottom: 12px;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.skill-tier-card {
+	background: #f8fafc;
+	border-radius: 10px;
+	padding: 14px;
+	height: 100%;
+	border: 1px solid #e2e8f0;
+	transition: border-color 0.2s;
+}
+
+.skill-tier-card:hover {
+	border-color: #cbd5e1;
+}
+
+.skill-tier-card .tier-header {
+	font-size: 0.72rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	color: #475569;
+	margin-bottom: 10px;
+	border-bottom: 1px solid #e2e8f0;
+	padding-bottom: 6px;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.skill-tier-card.foundation-tier { border-top: 3px solid #3b82f6; }
+.skill-tier-card.core-tier { border-top: 3px solid #6366f1; }
+.skill-tier-card.industry-tier { border-top: 3px solid #8b5cf6; }
+.skill-tier-card.emerging-tier { border-top: 3px solid #10b981; }
+.skill-tier-card.tools-tier { border-top: 3px solid #f59e0b; }
+.skill-tier-card.certs-tier { border-top: 3px solid #06b6d4; }
+.skill-tier-card.professional-tier { border-top: 3px solid #64748b; }
+
+.skill-tier-card .tier-body {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.skill-badge {
+	background: #fff;
+	border: 1px solid #cbd5e1;
+	border-radius: 20px;
+	font-size: 0.72rem;
+	font-weight: 600;
+	padding: 4px 10px;
+	color: #334155;
+	transition: all 0.15s ease;
+}
+
+.skill-badge:hover {
+	border-color: #94a3b8;
+	background: #f1f5f9;
+	color: #0f172a;
+}
+
+.skills-meta-info {
+	background: #f8fafc;
+	border: 1px solid #e2e8f0;
+	border-radius: 8px;
+	padding: 10px 14px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 10px;
+	font-size: 0.72rem;
+	color: #64748b;
+}
+
+.skills-meta-left {
+	display: flex;
+	gap: 16px;
+	flex-wrap: wrap;
+}
+
+.skills-meta-left strong {
+	color: #334155;
+}
+
+.skills-loading {
+	padding: 24px 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+}
+
+.skills-error {
+	padding: 16px;
+	background: #fef2f2;
+	border: 1px solid #fecaca;
+	border-radius: 8px;
+	color: #991b1b;
+	font-size: 0.8rem;
+	text-align: center;
+}
+
+.skills-retry-btn {
+	background: #fff;
+	border: 1px solid #fca5a5;
+	color: #991b1b;
+	font-size: 0.72rem;
+	font-weight: 600;
+	padding: 4px 12px;
+	border-radius: 6px;
+	margin-top: 8px;
+	cursor: pointer;
+	transition: background 0.15s;
+}
+
+.skills-retry-btn:hover {
+	background: #fff5f5;
+}
