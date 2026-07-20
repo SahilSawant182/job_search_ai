@@ -1,0 +1,87 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-07-17 16:11:36.811175",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_v4pz",
+  "amended_from",
+  "job_profile",
+  "role",
+  "primary_skills",
+  "advanced_skills",
+  "expert_skills"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_v4pz",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Job Description",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "job_profile",
+   "fieldtype": "Link",
+   "label": "Job Profile",
+   "options": "Career Knowledge"
+  },
+  {
+   "fieldname": "primary_skills",
+   "fieldtype": "Data",
+   "label": "Primary Skills"
+  },
+  {
+   "fieldname": "advanced_skills",
+   "fieldtype": "Data",
+   "label": "Advanced Skills"
+  },
+  {
+   "fieldname": "expert_skills",
+   "fieldtype": "Data",
+   "label": "Expert skills"
+  },
+  {
+   "fieldname": "role",
+   "fieldtype": "Data",
+   "label": "Role"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-07-17 17:38:10.247937",
+ "modified_by": "Administrator",
+ "module": "Job Search AI",
+ "name": "Job Description",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
