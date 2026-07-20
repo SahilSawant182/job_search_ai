@@ -175,4 +175,4 @@ class LLMService:
             "core_domain_skills": payload.get("core_domain_skills", []) or [],
             "industry_skills": payload.get("industry_skills", []) or [],
             "emerging_skills": payload.get("emerging_skills", []) or [],
-        }
+        }     
