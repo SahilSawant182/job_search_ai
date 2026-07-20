@@ -61,9 +61,14 @@ class SkillKnowledgeCache:
                 continue
 
             payload = hit.get("payload", {})
-            # If payload only has the old format or contains any of the deleted fields,
-            # skip it to find a newer clean cached profile.
-            if "foundation_skills" not in payload or "professional_skills" in payload or "recommended_tools" in payload:
+            # If payload only has the old format, contains any of the deleted fields,
+            # or is missing the new schema_version, skip it to find a newer clean cached profile.
+            if (
+                "foundation_skills" not in payload
+                or "professional_skills" in payload
+                or "recommended_tools" in payload
+                or payload.get("schema_version") != "v2"
+            ):
                 continue
 
             return SkillProfile(
@@ -99,6 +104,7 @@ class SkillKnowledgeCache:
                 "core_domain_skills": profile.core_domain_skills,
                 "industry_skills": profile.industry_skills,
                 "emerging_skills": profile.emerging_skills,
+                "schema_version": "v2",
             },
         }
         try:
