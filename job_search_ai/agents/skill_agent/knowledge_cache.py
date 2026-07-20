@@ -67,7 +67,7 @@ class SkillKnowledgeCache:
                 "foundation_skills" not in payload
                 or "professional_skills" in payload
                 or "recommended_tools" in payload
-                or payload.get("schema_version") != "v2"
+                or payload.get("schema_version") != "v3"
             ):
                 continue
 
@@ -104,7 +104,7 @@ class SkillKnowledgeCache:
                 "core_domain_skills": profile.core_domain_skills,
                 "industry_skills": profile.industry_skills,
                 "emerging_skills": profile.emerging_skills,
-                "schema_version": "v2",
+                "schema_version": "v3",
             },
         }
         try:
