@@ -183,6 +183,7 @@ class KnowledgeBuilder:
         self,
         career_name: str,
         country: str | None = None,
+        student: Any | None = None,
         embedding_service=None,
         vector_index=None,
     ):
@@ -192,6 +193,7 @@ class KnowledgeBuilder:
             )
         self._career_name = " ".join(str(career_name).split()).strip()
         self._country     = str(country).strip() if country else None
+        self._student     = student
 
         if embedding_service is None:
             from job_search_ai.services.ai.embedding_service import EmbeddingService
@@ -283,9 +285,20 @@ class KnowledgeBuilder:
         first_is_new    = True
         first_embed_dim = 768
 
+        from job_search_ai.agents.career_trend.career_validator import CareerValidationService
+        validator = CareerValidationService()
+
         for idx, career in enumerate(extracted_careers):
             career_name = career.get("career_name", "").strip()
             if not career_name:
+                continue
+
+            # Deterministic Career Validation Gate (Level 1 Title + Level 2 Student Relevance)
+            if not validator.is_valid(career_name, student=self._student):
+                logger.info(
+                    "KnowledgeBuilder: CareerValidationService REJECTED career_name=%r",
+                    career_name,
+                )
                 continue
 
             # Normalise degree/branch lists to comma-separated strings for DB

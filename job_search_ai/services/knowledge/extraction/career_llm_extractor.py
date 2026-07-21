@@ -125,6 +125,7 @@ def _build_prompt(career_focus: str, search_text: str) -> str:
         f"   - suitable_degrees: list of degree types (e.g. {deg_eg}).\n"
         f"   - suitable_branches: list of academic branches (e.g. {branch_eg}).\n"
         "   - suitable_years: list of academic years as integers, e.g. [3, 4] for final-year students.\n"
+        "   - aliases: list of 2-4 alternative title variants/synonyms (e.g. ['Frontend Engineer', 'UI Developer']).\n"
         "   - future_demand: one of 'Very High', 'High', 'Medium', 'Low'.\n"
         "   - confidence: integer 0-100 reflecting how well the role matches the search topic.\n"
         "4. If you cannot find any real job roles, return {\"careers\": []}.\n"
@@ -134,8 +135,11 @@ def _build_prompt(career_focus: str, search_text: str) -> str:
         '  "careers": [\n'
         "    {\n"
         '      "career_name": "exact job title",\n'
-        '      "required_skills": ["skill1", "skill2"],\n'
-        '      "preferred_skills": ["skill3"],\n'
+        '      "aliases": ["Frontend Engineer", "UI Developer"],\n'
+        '      "career_name": "exact job title",\n'
+        '      "aliases": ["Frontend Engineer", "UI Developer"],\n'
+        '      "required_skills": ["JavaScript", "HTML"],\n'
+        '      "preferred_skills": ["React"],\n'
         f'      "suitable_degrees": {deg_eg},\n'
         f'      "suitable_branches": {branch_eg},\n'
         '      "suitable_years": [3, 4],\n'
@@ -177,12 +181,17 @@ def _validate_career(raw: dict) -> dict | None:
         logger.info("CareerLLMExtractor: rejected over-long title %r", career_name)
         return None
 
+    DUMMY_SKILL_RE = re.compile(r"^(skill\d+|unknown|n/a|placeholder|none)$", re.IGNORECASE)
+
     def _to_str_list(val, default=None) -> list[str]:
+        items = []
         if isinstance(val, list):
-            return [str(v).strip() for v in val if str(v).strip()]
-        if isinstance(val, str) and val.strip():
-            return [v.strip() for v in re.split(r"[,;]", val) if v.strip()]
-        return default or []
+            items = [str(v).strip() for v in val if str(v).strip()]
+        elif isinstance(val, str) and val.strip():
+            items = [v.strip() for v in re.split(r"[,;]", val) if v.strip()]
+        else:
+            items = default or []
+        return [i for i in items if not DUMMY_SKILL_RE.match(i)]
 
     def _to_int_list(val) -> list[int]:
         if isinstance(val, list):
@@ -195,6 +204,7 @@ def _validate_career(raw: dict) -> dict | None:
             return result
         return []
 
+    aliases          = _to_str_list(raw.get("aliases"))
     required_skills  = _to_str_list(raw.get("required_skills"))
     preferred_skills = _to_str_list(raw.get("preferred_skills"))
     suitable_degrees = _to_str_list(raw.get("suitable_degrees"))
@@ -222,6 +232,7 @@ def _validate_career(raw: dict) -> dict | None:
 
     return {
         "career_name":       career_name,
+        "aliases":           aliases,
         "required_skills":   required_skills,
         "preferred_skills":  preferred_skills,
         "suitable_degrees":  suitable_degrees,

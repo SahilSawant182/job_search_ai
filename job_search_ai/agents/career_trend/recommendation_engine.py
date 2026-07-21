@@ -40,7 +40,7 @@ MIN_FINAL_SCORE = 0.20
 
 
 class ScoredCareer:
-    """Carries a candidate career record along with its computed scores."""
+    """Carries a candidate career record along with its computed scores and reason codes."""
 
     def __init__(
         self,
@@ -51,6 +51,7 @@ class ScoredCareer:
         missing_required_skills: list[str],
         matched_preferred_skills: list[str],
         missing_preferred_skills: list[str],
+        reason_codes: list[str] | None = None,
     ) -> None:
         self.candidate = candidate
         self.final_score = final_score
@@ -59,6 +60,7 @@ class ScoredCareer:
         self.missing_required_skills = missing_required_skills
         self.matched_preferred_skills = matched_preferred_skills
         self.missing_preferred_skills = missing_preferred_skills
+        self.reason_codes = reason_codes or []
 
 
 class RecommendationEngine:
@@ -67,7 +69,7 @@ class RecommendationEngine:
 
     The engine runs in two phases:
       1. Hard eligibility gate  — immediately rejects clearly unsuitable careers.
-      2. Multi-dimensional score — ranks the remaining eligible careers.
+      2. Multi-dimensional score — ranks remaining eligible careers with dynamic weight normalization.
     """
 
     def rank(
@@ -76,10 +78,7 @@ class RecommendationEngine:
         candidates: list[Any],
     ) -> list[ScoredCareer]:
         """
-        Score and rank candidate careers.
-
-        Returns scored careers sorted by final_score descending,
-        with candidates below MIN_FINAL_SCORE excluded.
+        Score and rank candidate careers with dynamic weight normalization and reason codes.
         """
         logger.info(
             "RecommendationEngine: ranking %d candidates", len(candidates)
@@ -99,35 +98,66 @@ class RecommendationEngine:
             # ── Phase 2: Multi-dimensional scoring ────────────────────
             skill_score, skill_details = self._score_skills(student, candidate)
             interest_score = self._score_interests(student, candidate)
+            keyword_score  = self._score_keywords(student, candidate)
             degree_score   = self._score_degree(student, candidate)
             branch_score   = self._score_branch(student, candidate)
             year_score     = self._score_year_suitability(student, candidate)
-            demand_score   = self._score_demand(candidate)
 
-            w = RECOMMENDATION_WEIGHTS
+            # Dynamic Weight Normalization
+            # If candidate/student has no degree constraint, unconstrain degree/branch weights
+            w = dict(RECOMMENDATION_WEIGHTS)
+            suitable_degrees = (getattr(candidate, "suitable_degrees", "") or "").strip()
+            if not suitable_degrees:
+                # Re-distribute degree weight onto skills & interests
+                w["degree_match"] = 0.0
+                w["branch_match"] = 0.0
+
+            total_weight = sum(w.values())
+            if total_weight > 0:
+                norm_w = {k: v / total_weight for k, v in w.items()}
+            else:
+                norm_w = w
+
             final_score = (
-                w["skill_match"]      * skill_score
-                + w["interest_match"] * interest_score
-                + w["degree_match"]   * degree_score
-                + w["branch_match"]   * branch_score
-                + w["year_suitability"] * year_score
-                + w["market_demand"]  * demand_score
+                norm_w["skill_match"]      * skill_score
+                + norm_w["interest_match"] * interest_score
+                + norm_w["keyword_match"]  * keyword_score
+                + norm_w["degree_match"]   * degree_score
+                + norm_w["branch_match"]   * branch_score
+                + norm_w["year_suitability"] * year_score
             )
+
+            # Generate structured reason codes for transparency
+            reason_codes: list[str] = []
+            career_name = getattr(candidate, "career_name", "") or ""
+
+            if interest_score > 0.0:
+                reason_codes.append(f"✓ Interest matched student focus/shorthand ({int(interest_score * 100)}%)")
+            if skill_details["matched_req"]:
+                reason_codes.append(f"✓ Matched required skills: {', '.join(skill_details['matched_req'])}")
+            if skill_details["matched_pref"]:
+                reason_codes.append(f"✓ Matched preferred skills: {', '.join(skill_details['matched_pref'])}")
+            if keyword_score > 0.0:
+                reason_codes.append(f"✓ Domain keyword overlap ({int(keyword_score * 100)}%)")
+            if degree_score >= 0.8:
+                reason_codes.append(f"✓ Academic degree compatible ({student.degree})")
+            if branch_score >= 0.8:
+                reason_codes.append(f"✓ Branch domain aligned ({student.branch})")
 
             if final_score < MIN_FINAL_SCORE:
                 logger.info(
                     "RecommendationEngine: DROPPED %r — score=%.4f < %.2f",
-                    getattr(candidate, "career_name", "?"), final_score, MIN_FINAL_SCORE,
+                    career_name, final_score, MIN_FINAL_SCORE,
                 )
                 continue
 
             scores = {
-                "skill_match":    skill_score,
-                "interest_match": interest_score,
-                "degree_match":   degree_score,
-                "branch_match":   branch_score,
-                "year_suitability": year_score,
-                "market_demand":  demand_score,
+                "skill_match":      round(skill_score, 4),
+                "interest_match":   round(interest_score, 4),
+                "keyword_match":    round(keyword_score, 4),
+                "degree_match":     round(degree_score, 4),
+                "branch_match":     round(branch_score, 4),
+                "year_suitability": round(year_score, 4),
             }
 
             scored_candidates.append(
@@ -139,6 +169,7 @@ class RecommendationEngine:
                     missing_required_skills=skill_details["missing_req"],
                     matched_preferred_skills=skill_details["matched_pref"],
                     missing_preferred_skills=skill_details["missing_pref"],
+                    reason_codes=reason_codes,
                 )
             )
 
@@ -161,33 +192,20 @@ class RecommendationEngine:
         Hard eligibility gate.
 
         Returns False if the career is *clearly* unsuitable for the
-        student's degree.  A candidate is ineligible if:
-
-          - The career has explicit suitable_degrees AND the student's
-            degree has zero overlap with any of them.
-
-        Branch-only mismatch is NOT a hard rejection (branch is softer
-        than degree — many careers span multiple branches).
-
-        Examples
-        --------
-        - Student: MBA | Career: Backend Developer (Engineering only) → REJECTED
-        - Student: B.Tech CS | Career: Digital Marketing (BBA/MBA only) → REJECTED
-        - Student: B.Tech CS | Career: Data Scientist (Engineering + Science) → ELIGIBLE
+        student's degree, or has zero interest + skill + keyword overlap.
         """
         suitable_degrees = (getattr(candidate, "suitable_degrees", "") or "").strip()
-        if not suitable_degrees:
-            # Career has no degree constraint — anyone is eligible
-            return True
+        if suitable_degrees:
+            degree_score = self._score_degree(student, candidate)
+            if degree_score == 0.0:
+                return False  # Zero degree overlap — hard reject
 
-        degree_score = self._score_degree(student, candidate)
-        if degree_score == 0.0:
-            return False  # Zero degree overlap — hard reject
-
-        # Reject careers with absolutely zero interest match and zero skill match
+        # Reject careers with absolutely zero interest match, zero skill match, and zero keyword match
         interest_score = self._score_interests(student, candidate)
         skill_score, _ = self._score_skills(student, candidate)
-        if interest_score == 0.0 and skill_score == 0.0:
+        keyword_score  = self._score_keywords(student, candidate)
+
+        if interest_score == 0.0 and skill_score == 0.0 and keyword_score == 0.0:
             return False
 
         return True
@@ -200,14 +218,19 @@ class RecommendationEngine:
         """
         Skill match score.
         Weights required skills at 0.70, preferred at 0.30.
-        If the career has no skills stored, returns neutral 0.5
-        (so no-skill careers don't dominate or be excluded).
+        If no student skills or no candidate skills, returns 0.0.
         """
+        if not student.skills:
+            return 0.0, {
+                "matched_req": [], "missing_req": [],
+                "matched_pref": [], "missing_pref": [],
+            }
+
         required_skills  = getattr(candidate, "required_skills",  []) or []
         preferred_skills = getattr(candidate, "preferred_skills", []) or []
 
         if not required_skills and not preferred_skills:
-            return 0.5, {
+            return 0.0, {
                 "matched_req": [], "missing_req": [],
                 "matched_pref": [], "missing_pref": [],
             }
@@ -219,10 +242,17 @@ class RecommendationEngine:
         matched_pref = [s for s in preferred_skills if s.strip().lower() in student_lower]
         missing_pref = [s for s in preferred_skills if s.strip().lower() not in student_lower]
 
-        req_coverage  = len(matched_req)  / len(required_skills)  if required_skills  else 1.0
-        pref_coverage = len(matched_pref) / len(preferred_skills) if preferred_skills else 1.0
+        req_coverage  = len(matched_req)  / len(required_skills)  if required_skills  else 0.0
+        pref_coverage = len(matched_pref) / len(preferred_skills) if preferred_skills else 0.0
 
         skill_score = 0.70 * req_coverage + 0.30 * pref_coverage
+
+        # Apply configurable missing critical skill penalty if required skills exist
+        from job_search_ai.services.knowledge.constants import CRITICAL_SKILL_PENALTY_WEIGHT
+        if required_skills and len(missing_req) > 0:
+            missing_ratio = len(missing_req) / len(required_skills)
+            skill_score = max(0.0, skill_score - (CRITICAL_SKILL_PENALTY_WEIGHT * missing_ratio))
+
         return skill_score, {
             "matched_req": matched_req, "missing_req": missing_req,
             "matched_pref": matched_pref, "missing_pref": missing_pref,
@@ -230,28 +260,29 @@ class RecommendationEngine:
 
     def _score_interests(self, student: StudentProfile, candidate: Any) -> float:
         """
-        Interest match using word-level tokenisation against the career name.
-
-        Example
-        -------
-        Student interests: ["Digital Marketing", "Business Strategy"]
-        Career name: "Digital Marketing Manager"
-          → tokens from interests: {"digital", "marketing", "business", "strategy"}
-          → tokens in career name: "digital", "marketing"
-          → score = 2/2 = 1.0
+        Interest match using word-level tokenisation against career name and aliases.
         """
         if not student.interests:
             return 0.0
 
-        career_lower = (getattr(candidate, "career_name", "") or "").lower()
-        if not career_lower:
+        career_name = (getattr(candidate, "career_name", "") or "").lower()
+        raw_aliases = getattr(candidate, "aliases", []) or []
+        if isinstance(raw_aliases, str):
+            aliases = [a.strip().lower() for a in raw_aliases.split(",") if a.strip()]
+        else:
+            aliases = [str(a).strip().lower() for a in raw_aliases if a]
+
+        target_texts = [career_name] + aliases
+        full_target_str = " ".join(target_texts)
+
+        if not full_target_str.strip():
             return 0.0
 
         interests_lower = [i.strip().lower() for i in student.interests]
 
         # Full-phrase check first (highest signal)
         for interest in interests_lower:
-            if interest and interest in career_lower:
+            if interest and interest in full_target_str:
                 return 1.0
 
         # Word-level tokenisation
@@ -260,8 +291,32 @@ class RecommendationEngine:
             words = [w for w in re.findall(r'\w+', interest) if len(w) > 2]
             expanded.update(words)
 
-        matches = sum(1 for token in expanded if token in career_lower)
-        return min(1.0, matches / max(1, len(student.interests)))
+        if not expanded:
+            return 0.0
+
+        matches = sum(1 for token in expanded if token in full_target_str)
+        return min(1.0, matches / max(1, len(expanded)))
+
+    def _score_keywords(self, student: StudentProfile, candidate: Any) -> float:
+        """
+        Keyword match score between normalized student keywords and candidate profile text.
+        """
+        from job_search_ai.agents.career_trend.input_normalizer import InputNormalizer
+        student_kws = InputNormalizer().extract_keywords(student)
+
+        if not student_kws:
+            return 0.0
+
+        career_name = (getattr(candidate, "career_name", "") or "").lower()
+        req_skills  = " ".join(getattr(candidate, "required_skills", []) or []).lower()
+        pref_skills = " ".join(getattr(candidate, "preferred_skills", []) or []).lower()
+        raw_aliases = getattr(candidate, "aliases", []) or []
+        aliases_str = " ".join(raw_aliases).lower() if isinstance(raw_aliases, list) else str(raw_aliases).lower()
+
+        candidate_corpus = f"{career_name} {aliases_str} {req_skills} {pref_skills}"
+
+        matches = sum(1 for kw in student_kws if kw in candidate_corpus)
+        return min(1.0, matches / max(1, len(student_kws)))
 
     def _score_degree(self, student: StudentProfile, candidate: Any) -> float:
         """

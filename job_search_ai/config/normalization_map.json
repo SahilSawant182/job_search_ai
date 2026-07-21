@@ -1,0 +1,66 @@
+{
+  "mern": {
+    "interests": ["web development", "full stack development", "software engineering"],
+    "skills": ["mongodb", "express", "react", "node.js"]
+  },
+  "mern stack": {
+    "interests": ["web development", "full stack development", "software engineering"],
+    "skills": ["mongodb", "express", "react", "node.js", "javascript"]
+  },
+  "mean": {
+    "interests": ["web development", "full stack development"],
+    "skills": ["mongodb", "express", "angular", "node.js"]
+  },
+  "mean stack": {
+    "interests": ["web development", "full stack development"],
+    "skills": ["mongodb", "express", "angular", "node.js", "typescript"]
+  },
+  "ai": {
+    "interests": ["artificial intelligence", "machine learning", "data science"],
+    "skills": ["python", "deep learning", "llm", "generative ai", "nlp"]
+  },
+  "gen ai": {
+    "interests": ["artificial intelligence", "generative ai"],
+    "skills": ["llm", "nlp", "generative ai", "deep learning", "prompt engineering"]
+  },
+  "generative ai": {
+    "interests": ["artificial intelligence", "generative ai"],
+    "skills": ["llm", "nlp", "generative ai", "deep learning", "langchain"]
+  },
+  "ml": {
+    "interests": ["machine learning", "artificial intelligence", "data science"],
+    "skills": ["python", "scikit-learn", "tensorflow", "pandas", "numpy"]
+  },
+  "machine learning": {
+    "interests": ["machine learning", "artificial intelligence", "data science"],
+    "skills": ["python", "numpy", "pandas", "tensorflow", "scikit-learn", "deep learning"]
+  },
+  "java": {
+    "interests": ["backend development", "software engineering"],
+    "skills": ["java", "spring boot", "jvm", "rest api"]
+  },
+  "springboot": {
+    "interests": ["backend development", "software engineering"],
+    "skills": ["java", "spring boot", "microservices"]
+  },
+  "spring boot": {
+    "interests": ["backend development", "software engineering"],
+    "skills": ["java", "spring boot", "microservices"]
+  },
+  "automotive": {
+    "interests": ["mechanical engineering", "automotive engineering"],
+    "skills": ["cad", "solidworks", "thermodynamics", "automotive systems", "hvac"]
+  },
+  "hvac": {
+    "interests": ["thermal engineering", "building services"],
+    "skills": ["hvac design", "thermodynamics", "thermal systems", "fluid mechanics"]
+  },
+  "devops": {
+    "interests": ["cloud engineering", "infrastructure", "devops"],
+    "skills": ["docker", "kubernetes", "ci/cd", "terraform", "aws", "linux"]
+  },
+  "cloud": {
+    "interests": ["cloud architecture", "cloud computing"],
+    "skills": ["aws", "azure", "gcp", "docker", "kubernetes"]
+  }
+}

@@ -293,13 +293,20 @@ class KnowledgeRetriever:
     def _build_search_text(student: "StudentProfile") -> str:
         parts: list[str] = []
         if student.interests:
-            parts.append(", ".join(student.interests[:3]))
+            parts.append("interests: " + ", ".join(student.interests))
         if student.skills:
-            parts.append("skills: " + ", ".join(student.skills[:8]))
+            parts.append("skills: " + ", ".join(student.skills))
         if student.branch:
-            parts.append(student.branch)
+            parts.append("branch: " + student.branch)
         if student.country:
-            parts.append(student.country)
+            parts.append("country: " + student.country)
+
+        # Include extracted keywords from InputNormalizer if available
+        from job_search_ai.agents.career_trend.input_normalizer import InputNormalizer
+        keywords = InputNormalizer().extract_keywords(student)
+        if keywords:
+            parts.append("keywords: " + ", ".join(keywords[:10]))
+
         return " | ".join(parts) if parts else student.branch
 
     def _embed(self, text: str) -> list[float]:
@@ -310,12 +317,10 @@ class KnowledgeRetriever:
 
     def _search_vector_index(self, vector: list[float]) -> list:
         try:
-            base_threshold = float(self._settings.similarity_threshold)
-            vector_threshold = max(0.40, base_threshold - 0.20)
             return self._vector_index.search(
                 query_vector    = vector,
                 limit           = 25,
-                score_threshold = vector_threshold,
+                score_threshold = 0.30,  # Return Top-K vector candidates for business logic ranking
             )
         except Exception as exc:
             raise KnowledgeRetrieverError(f"Vector search failed: {exc}") from exc
@@ -330,7 +335,11 @@ class KnowledgeRetriever:
             try:
                 doc = frappe.get_doc("Career Knowledge", doc_name)
             except frappe.DoesNotExistError:
-                logger.warning("KnowledgeRetriever: doc %r not in MariaDB (stale) — skipping", doc_name)
+                logger.warning("KnowledgeRetriever: doc %r not in MariaDB (stale) — purging from Qdrant", doc_name)
+                try:
+                    self._vector_index.delete(doc_name)
+                except Exception as del_exc:
+                    logger.warning("KnowledgeRetriever: failed to purge stale Qdrant point %r: %s", doc_name, del_exc)
                 continue
             except Exception as exc:
                 raise KnowledgeRetrieverError(f"Failed to load {doc_name!r}: {exc}") from exc

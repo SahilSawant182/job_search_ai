@@ -19,7 +19,7 @@ class LLMServiceError(Exception):
     pass
 
 
-class LLMService:
+class LLMService:    
 
     def __init__(self):
         from job_search_ai.services.settings_service import SettingsService
@@ -75,7 +75,7 @@ class LLMService:
             "Every career belongs to a different industry. Adapt automatically.\n"
             "Examples:\n"
             "- Software Engineering: Generate programming languages, frameworks, databases, cloud platforms, software architecture, testing, deployment, and related competencies.\n"
-            "- Marketing: Generate digital marketing, branding, SEO, SEM, analytics, content strategy, campaign management, CRM, customer acquisition, and related competencies.\n"
+            "- Marketing: Generate digital marketing, branding, SEO, SEM, analytics, con`tent strategy, campaign management, CRM, customer acquisition, and related competencies.\n"
             "- Finance: Generate accounting, taxation, auditing, financial analysis, investment, corporate finance, risk management, and related competencies.\n"
             "- Civil Engineering: Generate surveying, structural analysis, RCC design, quantity estimation, AutoCAD, BIM, construction planning, and related competencies.\n"
             "- Human Resources: Generate recruitment, payroll, employee engagement, labour laws, HR analytics, HRMS, compliance, and related competencies.\n"
@@ -169,7 +169,7 @@ class LLMService:
                 },
                 timeout=self.timeout,
             )
-            resp.raise_for_status()
+            resp.raise_for_status()    
             data = resp.json()
             return data["choices"][0]["message"]["content"]
 

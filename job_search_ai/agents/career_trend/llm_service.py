@@ -3,7 +3,7 @@ LLMService — Integration with LLM provider (OmniRoute or Ollama/Qwen).
 
 Architecture:
     job_search_ai -> LLMService -> [OmniRoute (OpenAI SDK) OR Ollama (urllib)]
-
+    
 Responsibility:
     Accept a prompt string, call the configured model via the active provider,
     parse the JSON output, and return a CareerTrendResponse.

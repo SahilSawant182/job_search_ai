@@ -119,6 +119,12 @@ class SkillAgent:
             return None
 
     def _generate(self, request: SkillRequest) -> SkillProfile:
+        import re
+        DUMMY_SKILL_RE = re.compile(r"^(skill\d+|unknown|n/a|placeholder|none)$", re.IGNORECASE)
+
+        def sanitize(skill_list: list[str]) -> list[str]:
+            return [s for s in skill_list if s and not DUMMY_SKILL_RE.match(s.strip())]
+
         try:
             llm = LLMService()
             skills = llm.generate_skills(request.role, request.seniority)
@@ -127,10 +133,10 @@ class SkillAgent:
 
         return SkillProfile(
             role_name=request.role,
-            foundation_skills=skills["foundation_skills"],
-            core_domain_skills=skills["core_domain_skills"],
-            industry_skills=skills["industry_skills"],
-            emerging_skills=skills["emerging_skills"],
+            foundation_skills=sanitize(skills["foundation_skills"]),
+            core_domain_skills=sanitize(skills["core_domain_skills"]),
+            industry_skills=sanitize(skills["industry_skills"]),
+            emerging_skills=sanitize(skills["emerging_skills"]),
             similarity=1.0,
             source="llm",
         )

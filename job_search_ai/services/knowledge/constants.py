@@ -31,13 +31,17 @@ class RetrievalWeights:
 
 # Recommendation Engine scoring weights (must sum to 1.0)
 RECOMMENDATION_WEIGHTS = {
-    "skill_match":      0.40,
-    "interest_match":   0.25,
-    "year_suitability": 0.15,
+    "skill_match":      0.30,
+    "interest_match":   0.30,
+    "keyword_match":    0.20,
     "degree_match":     0.10,
     "branch_match":     0.05,
-    "market_demand":    0.05,
+    "year_suitability": 0.05,
 }
+# Configurable penalty weight applied when critical required skills are missing
+CRITICAL_SKILL_PENALTY_WEIGHT = 0.35
+
+MIN_FINAL_SCORE = 0.50
 
 
 YEAR_STAGE_POLICY = {

@@ -1,0 +1,12 @@
+{
+  "computer engineering": ["technology", "software", "it", "cs", "computer", "developer", "engineer", "data", "web", "cloud", "security", "ai"],
+  "computer science": ["technology", "software", "it", "cs", "computer", "developer", "engineer", "data", "web", "cloud", "security", "ai"],
+  "information technology": ["technology", "software", "it", "cs", "computer", "developer", "engineer", "data", "web", "cloud", "security", "ai"],
+  "mechanical engineering": ["mechanical", "thermal", "hvac", "manufacturing", "automotive", "cad", "cam", "robotics", "automation", "mechatronics", "engineer", "designer"],
+  "electrical engineering": ["electrical", "power", "electronics", "circuit", "control", "embedded", "automation", "engineer", "energy"],
+  "electronics engineering": ["electronics", "vlsi", "embedded", "telecom", "circuit", "hardware", "signal", "engineer"],
+  "civil engineering": ["civil", "structural", "construction", "surveying", "geotechnical", "infrastructure", "engineer"],
+  "chemical engineering": ["chemical", "process", "petrochemical", "materials", "bioprocess", "engineer"],
+  "agriculture": ["agriculture", "agronomy", "farming", "crop", "soil", "botany", "agricultural"],
+  "business administration": ["business", "management", "marketing", "finance", "sales", "hr", "operations", "strategy", "consultant", "analyst", "manager"]
+}
