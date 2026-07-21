@@ -69,9 +69,13 @@ class CareerTrendAgent:
         Execute the Knowledge-First career trend analysis for a student.
         """
         logger.info(
-            "CareerTrendAgent V3 starting — branch=%r  country=%r  interests=%r",
-            student.branch, student.country, student.interests,
+            "CareerTrendAgent starting analysis for student: degree=%r, branch=%r, country=%r",
+            student.degree, student.branch, student.country,
         )
+
+        # Normalize student profile shorthands & interests
+        from job_search_ai.agents.career_trend.input_normalizer import InputNormalizer
+        student = InputNormalizer().normalize(student)
 
         t_total = time.perf_counter()
 
@@ -82,17 +86,15 @@ class CareerTrendAgent:
         settings = SettingsService.get()
 
         # ------------------------------------------------------------------
-        # Stage 1 — KnowledgeRetriever (Knowledge-First)
+        # Stage 1 — KnowledgeRetriever (Top-K) + Recommendation Scorer Check
         # ------------------------------------------------------------------
+        from job_search_ai.agents.career_trend.recommendation_engine import RecommendationEngine
+        from job_search_ai.services.knowledge.constants import MIN_FINAL_SCORE
+        engine = RecommendationEngine()
+
         t = time.perf_counter()
         retrieved, avg_similarity = self._retrieve_knowledge_list(student, settings)
         t_retrieval = time.perf_counter() - t
-
-        # Use 0.75 as the minimum similarity for a "good" cache hit
-        threshold   = max(0.75, float(settings.similarity_threshold))
-        min_results = int(getattr(settings, "minimum_knowledge_results", 3) or 3)
-
-        good_careers = [r for r in retrieved if r.similarity >= threshold]
 
         tavily_used        = False
         knowledge_updated  = False
@@ -101,22 +103,26 @@ class CareerTrendAgent:
         raw_results:       list = []
         t_search = t_filter = t_knowledge_build = 0.0
 
-        if len(good_careers) >= 1:
+        # Score top-K retrieved candidates using RecommendationEngine
+        scored_retrieved = engine.rank(student, retrieved) if retrieved else []
+        best_retrieved_score = max((sc.final_score for sc in scored_retrieved), default=0.0)
+
+        # Recommendation-driven knowledge HIT check:
+        # A knowledge HIT occurs when local candidates exist and the top candidate clears MIN_FINAL_SCORE
+        if scored_retrieved and best_retrieved_score >= MIN_FINAL_SCORE:
             # ── Knowledge HIT ──────────────────────────────────────────
             logger.info(
-                "CareerTrendAgent: Knowledge HIT — %d records ≥ %.2f — skipping Tavily",
-                len(good_careers), threshold,
+                "CareerTrendAgent: Knowledge HIT — %d scored candidates, best_score=%.4f (min=%.2f) — skipping Tavily",
+                len(scored_retrieved), best_retrieved_score, MIN_FINAL_SCORE,
             )
-            candidates    = retrieved
-            knowledge_hit = True
-
+            scored_careers = scored_retrieved
+            knowledge_hit  = True
         else:
             # ── Knowledge MISS / SPARSE ────────────────────────────────
             knowledge_hit = False
             logger.info(
-                "CareerTrendAgent: Knowledge MISS/SPARSE — good=%d, threshold=%.2f — "
-                "running Tavily pipeline",
-                len(good_careers), threshold,
+                "CareerTrendAgent: Knowledge MISS/SPARSE — scored=%d, best_score=%.4f (min=%.2f) — running Tavily pipeline",
+                len(scored_retrieved), best_retrieved_score, MIN_FINAL_SCORE,
             )
 
             # Stage 2 — QueryBuilder (one set of queries covers all interests)
@@ -132,61 +138,28 @@ class CareerTrendAgent:
             t = time.perf_counter()
             filtered_results = self._filter(raw_results)
             t_filter = time.perf_counter() - t
- 
+
             # Stage 5 — KnowledgeBuilder: one build pass per interest area
-            # Each pass extracts up to 3 careers specific to that interest.
             t = time.perf_counter()
             all_built_profiles = self._build_profiles_per_interest(student, filtered_results)
             t_knowledge_build  = time.perf_counter() - t    
 
             if all_built_profiles:
                 knowledge_updated = True
-                # MISS path: use ONLY the newly built profiles as candidates.
-                # DO NOT merge with below-threshold cached records — those records
-                # are for a different career domain (e.g. ML careers when the
-                # current student wants Web Development) and would contaminate
-                # the ranking.  Only above-threshold good_careers can supplement.
-                candidate_map = {c.career_name.lower().strip(): c for c in good_careers}
-                for bp in all_built_profiles:
-                    key = bp.career_name.lower().strip()
-                    if key in candidate_map:   
-                        if bp.similarity > candidate_map[key].similarity:
-                            candidate_map[key] = bp
-                    else:
-                        candidate_map[key] = bp
-                candidates = list(candidate_map.values())
+                candidates = all_built_profiles
             else:
-                # Nothing was built — use whatever the retriever found, even if below threshold
-                if retrieved:
-                    logger.warning(
-                        "CareerTrendAgent: KnowledgeBuilder produced no profiles — "
-                        "falling back to %d retrieved cache records",
-                        len(retrieved),
-                    )
-                    candidates = retrieved
-                else:
-                    # Absolute last resort — return a graceful empty response
-                    logger.error(
-                        "CareerTrendAgent: no candidates available — "
-                        "returning empty recommendation"
-                    )
-                    return self._empty_response(student)
+                # Fall back to retrieved candidates if available
+                candidates = retrieved
 
-        # ------------------------------------------------------------------
-        # Stage 5.5 — Python Recommendation Scorer (eligibility gate + ranking)
-        # ------------------------------------------------------------------
-        from job_search_ai.agents.career_trend.recommendation_engine import RecommendationEngine
-        engine = RecommendationEngine()
-        scored_careers = engine.rank(student, candidates)
+            if not candidates:
+                logger.error("CareerTrendAgent: no candidates available — returning empty recommendation")
+                return self._empty_response(student)
+
+            scored_careers = engine.rank(student, candidates)
 
         if not scored_careers:
-            # All candidates were rejected by the eligibility gate.
-            # This means the cache/built profiles are for a completely different
-            # profile type.  Fall back to an empty response with a helpful message.
             logger.warning(
-                "CareerTrendAgent: all %d candidates rejected by eligibility gate — "
-                "returning empty response",
-                len(candidates),
+                "CareerTrendAgent: all candidates rejected by eligibility gate — returning empty response"
             )
             return self._empty_response(student)
 
@@ -210,11 +183,14 @@ class CareerTrendAgent:
 
         recommendations: list[CareerRecommendation] = []
         for sc in scored_careers[:20]:
+            confidence_val = int(sc.final_score * 100)
+            if confidence_val <= 50:  # Strictly require > 50% AI Match Confidence
+                continue
             cand_skills = list(sc.candidate.skills or [])
             rec = CareerRecommendation(
                 career=sc.candidate.career_name,
                 category=getattr(sc.candidate, "category", "") or "General",
-                confidence=int(sc.final_score * 100),
+                confidence=confidence_val,
                 why_for_you="",
                 career_stage=map_career_stage(getattr(sc.candidate, "career_stage", "")),
                 future_demand=map_future_demand(getattr(sc.candidate, "future_demand", "")),
@@ -223,8 +199,14 @@ class CareerTrendAgent:
             )
             recommendations.append(rec)
 
+        if not recommendations:
+            logger.warning(
+                "CareerTrendAgent: no candidates cleared the > 50%% confidence threshold — returning empty response"
+            )
+            return self._empty_response(student)
+
         # Top 5 python-ranked candidates feed the LLM prompt
-        top_candidates = [sc.candidate for sc in scored_careers[:5]]
+        top_candidates = [sc.candidate for sc in scored_careers[:5] if int(sc.final_score * 100) > 50]
         evidence = Evidence.from_knowledge(top_candidates)
 
         # ------------------------------------------------------------------
@@ -414,6 +396,7 @@ class CareerTrendAgent:
                 builder = KnowledgeBuilder(
                     career_name=interest,
                     country=student.country,
+                    student=student,
                 )
                 result = builder.build(filtered_results)
                 logger.info(
