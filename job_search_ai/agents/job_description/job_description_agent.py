@@ -3,7 +3,7 @@ JobDescriptionAgent — single public entry point for job description generation
 
 Execution flow
 --------------
-
+     
   Role
     │
     ▼  Stage 1 — JDKnowledgeRetriever  (vector search → Qdrant, dedicated
