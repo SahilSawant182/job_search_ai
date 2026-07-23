@@ -13,7 +13,7 @@ class SkillRelationship(Document):
     def on_trash(self):
         self._invalidate_cache()
 
-    def _invalidate_cache(self):
+    def _invalidate_cache(self):   
         try:
             from job_search_ai.services.skill_gap.relationship import invalidate_relationship_cache
             invalidate_relationship_cache()
