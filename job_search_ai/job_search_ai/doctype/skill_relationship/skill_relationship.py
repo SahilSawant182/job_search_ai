@@ -19,3 +19,4 @@ class SkillRelationship(Document):
             invalidate_relationship_cache()
         except Exception:
             pass
+    
