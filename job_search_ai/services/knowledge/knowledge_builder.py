@@ -21,7 +21,7 @@ Pipeline (MISS path)
         │
         ▼  Stage 5: _build_embed_text() → embed → Qdrant upsert
         │           Payload: career_name, required_skills, preferred_skills,
-        │                    degree, branch, years, future_demand, doc_name
+        │                    degree, branch, years, future_demand, doc_name     
         │
         ▼  MergedCareerProfile  (returned to agent — no second DB read)
 
