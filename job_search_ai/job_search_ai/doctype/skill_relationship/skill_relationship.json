@@ -1,0 +1,114 @@
+{
+ "actions": [],
+ "autoname": "SR-.#####",
+ "creation": "2026-07-23 12:00:00",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "from_skill",
+  "relation_type",
+  "to_skill",
+  "confidence",
+  "source_type",
+  "source_name",
+  "is_trusted_source",
+  "status",
+  "active"
+ ],
+ "fields": [
+  {
+   "fieldname": "from_skill",
+   "fieldtype": "Link",
+   "label": "From Skill",
+   "options": "Skill Master",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "default": "Contains",
+   "fieldname": "relation_type",
+   "fieldtype": "Select",
+   "label": "Relation Type",
+   "options": "Alias\nContains\nRelated\nPrerequisite",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "to_skill",
+   "fieldtype": "Link",
+   "label": "To Skill",
+   "options": "Skill Master",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "default": "1.0",
+   "fieldname": "confidence",
+   "fieldtype": "Float",
+   "label": "Confidence"
+  },
+  {
+   "default": "Manual",
+   "fieldname": "source_type",
+   "fieldtype": "Select",
+   "label": "Source Type",
+   "options": "Manual\nImported\nLLM\nSystem",
+   "reqd": 1,
+   "description": "Manual = admin-entered. Imported = ESCO/O*NET/Lightcast etc. LLM = AI-suggested. System = migration/API."
+  },
+  {
+   "fieldname": "source_name",
+   "fieldtype": "Data",
+   "label": "Source Name",
+   "description": "Optional. e.g. ESCO, O*NET, Lightcast, GPT-4. Only relevant for Imported and LLM source types."
+  },
+  {
+   "default": "1",
+   "fieldname": "is_trusted_source",
+   "fieldtype": "Check",
+   "label": "Trusted Source",
+   "description": "If checked, this relationship is always loaded into the cache regardless of confidence score. Enable for curated imports (ESCO, O*NET) and admin-entered data. Disable for raw LLM suggestions."
+  },
+  {
+   "default": "Approved",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending\nApproved\nRejected",
+   "reqd": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "active",
+   "fieldtype": "Check",
+   "label": "Active"
+  }
+ ],
+ "naming_rule": "Expression (old style)",
+ "links": [],
+ "modified": "2026-07-23 16:00:00",
+ "modified_by": "Administrator",
+ "module": "Job Search AI",
+ "name": "Skill Relationship",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

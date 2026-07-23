@@ -137,12 +137,13 @@ class VectorIndex:
         "Euclid": Distance.EUCLID,
     }
 
-    def __init__(self, settings: "SettingsService | None" = None) -> None:
+    def __init__(self, settings: "SettingsService | None" = None, collection_name: str | None = None) -> None:
         if settings is None:
             from job_search_ai.services.settings_service import SettingsService
             settings = SettingsService.get()
 
         self._settings = settings
+        self._collection_name = collection_name
         self._client: QdrantClient | None = None
 
     # ------------------------------------------------------------------
@@ -163,7 +164,7 @@ class VectorIndex:
 
     def _collection(self) -> str:
         """Return the configured collection name."""
-        return self._settings.qdrant_collection_name
+        return self._collection_name or self._settings.qdrant_collection_name
 
     def _distance(self) -> Distance:
         """Map the configured distance string to a Qdrant Distance enum."""

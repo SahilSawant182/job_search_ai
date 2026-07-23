@@ -120,10 +120,13 @@ class SkillAgent:
 
     def _generate(self, request: SkillRequest) -> SkillProfile:
         import re
+        from job_search_ai.services.skill_gap.normalizer import parse_skill_string
+
         DUMMY_SKILL_RE = re.compile(r"^(skill\d+|unknown|n/a|placeholder|none)$", re.IGNORECASE)
 
         def sanitize(skill_list: list[str]) -> list[str]:
-            return [s for s in skill_list if s and not DUMMY_SKILL_RE.match(s.strip())]
+            raw_filtered = [s for s in skill_list if s and not DUMMY_SKILL_RE.match(s.strip())]
+            return parse_skill_string(raw_filtered)
 
         try:
             llm = LLMService()

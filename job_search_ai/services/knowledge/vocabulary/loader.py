@@ -154,44 +154,176 @@ DEFAULT_SKILLS = [
         "domain": "Engineering",
         "description": "A proprietary multi-paradigm programming language and numeric computing environment.",
         "aliases": ["matlab script", "simulink"]
+    },
+    {
+        "skill_name": "Algorithms",
+        "category": "Tech Skill",
+        "domain": "Software Engineering",
+        "description": "A set of rules or instructions step-by-step to solve a problem.",
+        "aliases": ["algo", "algorithms list"]
     }
 ]
 
 def seed_skills():
-    """Seed the default skills and their aliases into the database if the Skill Master table is empty.
+    """Seed the default skills and their aliases into the database.
+    Migrates static mappings in DEFAULT_CANONICAL_ALIASES to DB.
 
-    Returns the number of skills inserted.
+    Returns the number of new skills inserted.
     """
-    existing_count = frappe.db.count("Skill Master")
-    if existing_count > 0:
-        return 0
-
-    print(f"Seeding {len(DEFAULT_SKILLS)} default skills into Skill Master...")
+    from job_search_ai.services.skill_gap.normalizer import DEFAULT_CANONICAL_ALIASES, get_skill_key
+    print(f"Seeding default skills and aliases into database...")
     count = 0
-    for s_info in DEFAULT_SKILLS:
-        try:
-            # Create Skill Master doc (insert first so link validation passes)
-            doc = frappe.new_doc("Skill Master")
-            doc.skill_name = s_info["skill_name"]
-            doc.category = s_info["category"]
-            doc.domain = s_info["domain"]
-            doc.description = s_info["description"]
-            doc.active = 1
-            doc.last_updated = datetime.now()
-            doc.insert(ignore_permissions=True)
 
-            # Now add aliases and save
+    # 1. Seed DEFAULT_SKILLS
+    for s_info in DEFAULT_SKILLS:
+        skill_name = s_info["skill_name"]
+        try:
+            if not frappe.db.exists("Skill Master", skill_name):
+                doc = frappe.new_doc("Skill Master")
+                doc.skill_name = skill_name
+                doc.category = s_info["category"]
+                doc.domain = s_info["domain"]
+                doc.description = s_info["description"]
+                doc.active = 1
+                doc.last_updated = datetime.now()
+                doc.insert(ignore_permissions=True)
+                count += 1
+            else:
+                doc = frappe.get_doc("Skill Master", skill_name)
+
+            # Ensure aliases exist
+            updated = False
             for alias in s_info.get("aliases", []):
-                doc.append("aliases", {
-                    "alias": alias,
-                    "canonical_skill": s_info["skill_name"]
-                })
-            
-            doc.save(ignore_permissions=True)
-            count += 1
+                if not alias or alias.lower().strip() == skill_name.lower().strip():
+                    continue
+                # Check if alias is already present
+                alias_exists = False
+                for row in getattr(doc, "aliases", []):
+                    if row.alias.lower().strip() == alias.lower().strip():
+                        alias_exists = True
+                        break
+                if not alias_exists:
+                    doc.append("aliases", {
+                        "alias": alias,
+                        "canonical_skill": skill_name
+                    })
+                    updated = True
+            if updated:
+                doc.save(ignore_permissions=True)
         except Exception as exc:
-            print(f"Failed to seed skill {s_info['skill_name']}: {exc}")
+            print(f"Failed to seed skill {skill_name}: {exc}")
+
+    # 2. Seed DEFAULT_CANONICAL_ALIASES from normalizer
+    for alias, canonical in DEFAULT_CANONICAL_ALIASES.items():
+        if not alias or not canonical:
+            continue
+        try:
+            # Ensure canonical skill exists in Skill Master
+            if not frappe.db.exists("Skill Master", canonical):
+                doc = frappe.new_doc("Skill Master")
+                doc.skill_name = canonical
+                doc.category = "Tech Skill"
+                doc.domain = "Software Engineering"
+                doc.active = 1
+                doc.last_updated = datetime.now()
+                doc.insert(ignore_permissions=True)
+                count += 1
+            else:
+                doc = frappe.get_doc("Skill Master", canonical)
+
+            if alias.lower().strip() != canonical.lower().strip():
+                # Check if alias exists in parent aliases
+                alias_exists = False
+                for row in getattr(doc, "aliases", []):
+                    if row.alias.lower().strip() == alias.lower().strip():
+                        alias_exists = True
+                        break
+                if not alias_exists:
+                    doc.append("aliases", {
+                        "alias": alias,
+                        "canonical_skill": canonical
+                    })
+                    doc.save(ignore_permissions=True)
+        except Exception as exc:
+            print(f"Failed to seed alias mapping {alias} -> {canonical}: {exc}")
+
+    # 3. Seed DEFAULT_RELATIONSHIPS
+    DEFAULT_RELATIONSHIPS = [
+        {
+            "from_skill": "DSA",
+            "relation_type": "Contains",
+            "to_skill": "Data Structures",
+            "confidence": 1.0,
+            "source_type": "Manual",
+            "is_trusted_source": 1,
+            "status": "Approved",
+            "active": 1
+        },
+        {
+            "from_skill": "DSA",
+            "relation_type": "Contains",
+            "to_skill": "Algorithms",
+            "confidence": 1.0,
+            "source_type": "Manual",
+            "is_trusted_source": 1,
+            "status": "Approved",
+            "active": 1
+        },
+        {
+            "from_skill": "GitHub",
+            "relation_type": "Contains",
+            "to_skill": "Git",
+            "confidence": 1.0,
+            "source_type": "Manual",
+            "is_trusted_source": 1,
+            "status": "Approved",
+            "active": 1
+        },
+        {
+            "from_skill": "Probability Theory",
+            "relation_type": "Alias",
+            "to_skill": "Probability",
+            "confidence": 1.0,
+            "source_type": "Manual",
+            "is_trusted_source": 1,
+            "status": "Approved",
+            "active": 1
+        }
+    ]
+
+    for rel in DEFAULT_RELATIONSHIPS:
+        try:
+            # Ensure both skill masters exist first
+            for sk in [rel["from_skill"], rel["to_skill"]]:
+                if not frappe.db.exists("Skill Master", sk):
+                    # We can create a simple skill master
+                    doc_sm = frappe.new_doc("Skill Master")
+                    doc_sm.skill_name = sk
+                    doc_sm.category = "Tech Skill"
+                    doc_sm.domain = "Software Engineering"
+                    doc_sm.active = 1
+                    doc_sm.insert(ignore_permissions=True)
+            
+            # Check if relationship already exists
+            if not frappe.db.exists("Skill Relationship", {"from_skill": rel["from_skill"], "to_skill": rel["to_skill"], "relation_type": rel["relation_type"]}):
+                doc_rel = frappe.new_doc("Skill Relationship")
+                doc_rel.update(rel)
+                doc_rel.insert(ignore_permissions=True)
+        except Exception as exc:
+            print(f"Failed to seed relationship {rel['from_skill']} -> {rel['to_skill']}: {exc}")
 
     frappe.db.commit()
-    print(f"Successfully seeded {count} skills.")
+    # Invalidate caches to ensure new seed is loaded
+    try:
+        from job_search_ai.services.skill_gap.normalizer import invalidate_normalization_cache
+        invalidate_normalization_cache()
+    except Exception:
+        pass
+    try:
+        from job_search_ai.services.skill_gap.relationship import invalidate_relationship_cache
+        invalidate_relationship_cache()
+    except Exception:
+        pass
+
+    print(f"Successfully seeded/migrated skills/aliases.")
     return count

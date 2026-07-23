@@ -1,0 +1,118 @@
+{
+ "actions": [],
+ "autoname": "hash",
+ "creation": "2026-07-22 00:00:00",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "skill_name",
+  "normalized_skill",
+  "normalized_key",
+  "status",
+  "fallback_reason",
+  "occurrence_count",
+  "first_seen",
+  "last_seen",
+  "review_section",
+  "merge_into_skill",
+  "review_notes",
+  "top_candidates_json"
+ ],
+ "fields": [
+  {
+   "fieldname": "skill_name",
+   "fieldtype": "Data",
+   "label": "Skill Name",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "normalized_skill",
+   "fieldtype": "Data",
+   "label": "Normalized Skill"
+  },
+  {
+   "fieldname": "normalized_key",
+   "fieldtype": "Data",
+   "label": "Normalized Key",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending Review\nApproved\nMerged\nRejected",
+   "default": "Pending Review",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "fallback_reason",
+   "fieldtype": "Data",
+   "label": "Fallback Reason"
+  },
+  {
+   "fieldname": "occurrence_count",
+   "fieldtype": "Int",
+   "label": "Occurrence Count",
+   "default": "1"
+  },
+  {
+   "fieldname": "first_seen",
+   "fieldtype": "Datetime",
+   "label": "First Seen"
+  },
+  {
+   "fieldname": "last_seen",
+   "fieldtype": "Datetime",
+   "label": "Last Seen"
+  },
+  {
+   "fieldname": "review_section",
+   "fieldtype": "Section Break",
+   "label": "Review"
+  },
+  {
+   "fieldname": "merge_into_skill",
+   "fieldtype": "Link",
+   "label": "Merge Into Skill",
+   "options": "Skill Master"
+  },
+  {
+   "fieldname": "review_notes",
+   "fieldtype": "Small Text",
+   "label": "Review Notes"
+  },
+  {
+   "fieldname": "top_candidates_json",
+   "fieldtype": "Long Text",
+   "label": "Top Candidates JSON",
+   "hidden": 1
+  }
+ ],
+ "links": [],
+ "modified": "2026-07-22 00:00:00",
+ "modified_by": "Administrator",
+ "module": "Job Search AI",
+ "name": "Skill Candidate",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "skill_name",
+ "track_changes": 1
+}

@@ -221,6 +221,49 @@ class SettingsService:
 			)
 		return f
 
+	# ------------------------------------------------------------------
+	# Skill Embedding Index
+	# ------------------------------------------------------------------
+
+	@property
+	def skill_embedding_collection_name(self) -> str:
+		val = self._get_value("skill_embedding_collection_name", "SKILL_EMBEDDING_COLLECTION", "skill_embeddings")
+		return str(val or "skill_embeddings").strip()
+
+	@property
+	def skill_match_top_k(self) -> int:
+		val = self._get_value("skill_match_top_k", "SKILL_MATCH_TOP_K", 5)
+		try:
+			n = int(val)
+		except (ValueError, TypeError):
+			n = 5
+		return n if n > 0 else 5
+
+	@property
+	def skill_match_auto_threshold(self) -> float:
+		return self._get_float_between_zero_and_one("skill_match_auto_threshold", "SKILL_MATCH_AUTO_THRESHOLD", 0.90)
+
+	@property
+	def skill_match_uncertain_threshold(self) -> float:
+		return self._get_float_between_zero_and_one("skill_match_uncertain_threshold", "SKILL_MATCH_UNCERTAIN_THRESHOLD", 0.75)
+
+	@property
+	def skill_match_confidence_gap(self) -> float:
+		return self._get_float_between_zero_and_one("skill_match_confidence_gap", "SKILL_MATCH_CONFIDENCE_GAP", 0.05)
+
+	@property
+	def skill_embedding_version(self) -> str:
+		val = self._get_value("skill_embedding_version", "SKILL_EMBEDDING_VERSION", "skill-v1")
+		return str(val or "skill-v1").strip()
+
+	def _get_float_between_zero_and_one(self, fieldname: str, env_var: str, default_val: float) -> float:
+		val = self._get_value(fieldname, env_var, default_val)
+		try:
+			f = float(val)
+		except (ValueError, TypeError):
+			return default_val
+		return f if 0.0 <= f <= 1.0 else default_val
+
 	@property
 	def max_retrieved_knowledge(self) -> int:
 		"""Maximum number of Career Knowledge records returned per retrieval query."""

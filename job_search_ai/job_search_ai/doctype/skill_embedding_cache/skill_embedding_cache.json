@@ -1,0 +1,93 @@
+{
+ "actions": [],
+ "autoname": "field:skill_key",
+ "creation": "2026-07-22 00:00:00",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "skill_key",
+  "skill_text",
+  "embedding_model",
+  "embedding_version",
+  "text_hash",
+  "source",
+  "last_updated",
+  "embedding_json"
+ ],
+ "fields": [
+  {
+   "fieldname": "skill_key",
+   "fieldtype": "Data",
+   "label": "Skill Key",
+   "reqd": 1,
+   "unique": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "skill_text",
+   "fieldtype": "Small Text",
+   "label": "Skill Text"
+  },
+  {
+   "fieldname": "embedding_model",
+   "fieldtype": "Data",
+   "label": "Embedding Model",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "embedding_version",
+   "fieldtype": "Data",
+   "label": "Embedding Version",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "text_hash",
+   "fieldtype": "Data",
+   "label": "Text Hash"
+  },
+  {
+   "fieldname": "source",
+   "fieldtype": "Select",
+   "label": "Source",
+   "options": "runtime\nskill_master",
+   "default": "runtime"
+  },
+  {
+   "fieldname": "last_updated",
+   "fieldtype": "Datetime",
+   "label": "Last Updated"
+  },
+  {
+   "fieldname": "embedding_json",
+   "fieldtype": "Long Text",
+   "label": "Embedding JSON",
+   "hidden": 1
+  }
+ ],
+ "links": [],
+ "modified": "2026-07-22 00:00:00",
+ "modified_by": "Administrator",
+ "module": "Job Search AI",
+ "name": "Skill Embedding Cache",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "skill_key",
+ "track_changes": 1
+}

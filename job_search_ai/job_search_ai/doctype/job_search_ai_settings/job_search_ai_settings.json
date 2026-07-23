@@ -42,6 +42,16 @@
   "cb_refresh",
   "maximum_refresh_per_run",
   "enable_automatic_refresh",
+  "skill_gap_section",
+  "skill_readiness_threshold",
+  "skill_learning_confidence_threshold",
+  "skill_embedding_section",
+  "skill_embedding_collection_name",
+  "skill_match_top_k",
+  "skill_match_auto_threshold",
+  "skill_match_uncertain_threshold",
+  "skill_match_confidence_gap",
+  "skill_embedding_version",
   "future_integrations_section",
   "firecrawl_api_key",
   "serper_api_key",
@@ -217,7 +227,7 @@
   },
   {
    "default": "0.75",
-   "description": "Minimum cosine similarity score for a vector result to be included. Range: 0.0–1.0.",
+   "description": "Minimum cosine similarity score for a vector result to be included. Range: 0.0\u20131.0.",
    "fieldname": "similarity_threshold",
    "fieldtype": "Float",
    "label": "Similarity Threshold"
@@ -269,6 +279,72 @@
    "fieldname": "enable_automatic_refresh",
    "fieldtype": "Check",
    "label": "Enable Automatic Refresh"
+  },
+  {
+   "fieldname": "skill_gap_section",
+   "fieldtype": "Section Break",
+   "label": "Skill Gap Configuration"
+  },
+  {
+   "default": "70.0",
+   "description": "Minimum readiness percentage score for a student to be marked ready_for_job.",
+   "fieldname": "skill_readiness_threshold",
+   "fieldtype": "Float",
+   "label": "Skill Readiness Threshold (%)"
+  },
+  {
+   "default": "0.85",
+   "description": "Confidence threshold above which new skills and their aliases/relationships are automatically learned.",
+   "fieldname": "skill_learning_confidence_threshold",
+   "fieldtype": "Float",
+   "label": "Skill Learning Confidence Threshold"
+  },
+  {
+   "fieldname": "skill_embedding_section",
+   "fieldtype": "Section Break",
+   "label": "Skill Embedding Index"
+  },
+  {
+   "default": "skill_embeddings",
+   "description": "Dedicated Qdrant collection for canonical Skill Master embeddings.",
+   "fieldname": "skill_embedding_collection_name",
+   "fieldtype": "Data",
+   "label": "Skill Embedding Collection"
+  },
+  {
+   "default": "5",
+   "description": "Number of canonical skill candidates returned during semantic matching.",
+   "fieldname": "skill_match_top_k",
+   "fieldtype": "Int",
+   "label": "Skill Match Top K"
+  },
+  {
+   "default": "0.90",
+   "description": "Similarity score required to automatically resolve to a canonical skill.",
+   "fieldname": "skill_match_auto_threshold",
+   "fieldtype": "Float",
+   "label": "Skill Auto Match Threshold"
+  },
+  {
+   "default": "0.75",
+   "description": "Minimum similarity score for uncertain matches that may use LLM fallback or review.",
+   "fieldname": "skill_match_uncertain_threshold",
+   "fieldtype": "Float",
+   "label": "Skill Uncertain Threshold"
+  },
+  {
+   "default": "0.05",
+   "description": "Minimum score gap between top candidate and runner-up for automatic resolution.",
+   "fieldname": "skill_match_confidence_gap",
+   "fieldtype": "Float",
+   "label": "Skill Confidence Gap"
+  },
+  {
+   "default": "skill-v1",
+   "description": "Version tag used to invalidate stale skill embeddings when representation changes.",
+   "fieldname": "skill_embedding_version",
+   "fieldtype": "Data",
+   "label": "Skill Embedding Version"
   },
   {
    "fieldname": "future_integrations_section",

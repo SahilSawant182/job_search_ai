@@ -1,0 +1,87 @@
+{
+ "actions": [],
+ "autoname": "field:normalized_key",
+ "creation": "2026-07-23 16:30:00",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "normalized_key",
+  "raw_text",
+  "normalized_text",
+  "source",
+  "confidence",
+  "status",
+  "llm_response"
+ ],
+ "fields": [
+  {
+   "fieldname": "normalized_key",
+   "fieldtype": "Data",
+   "label": "Normalized Key",
+   "reqd": 1,
+   "unique": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "raw_text",
+   "fieldtype": "Data",
+   "label": "Raw Text",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "normalized_text",
+   "fieldtype": "Data",
+   "label": "Normalized Text"
+  },
+  {
+   "fieldname": "source",
+   "fieldtype": "Data",
+   "label": "Source",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "confidence",
+   "fieldtype": "Float",
+   "label": "Confidence",
+   "default": "0.0",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending\nLearned\nMerged\nRejected\nError",
+   "default": "Pending",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "llm_response",
+   "fieldtype": "Long Text",
+   "label": "LLM Response"
+  }
+ ],
+ "links": [],
+ "modified": "2026-07-23 16:30:00",
+ "modified_by": "Administrator",
+ "module": "Job Search AI",
+ "name": "Unknown Skill",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
