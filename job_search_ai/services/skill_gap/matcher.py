@@ -81,9 +81,10 @@ class CanonicalSkillInputs:
     """Canonicalized inputs passed into the deterministic analyzer."""
 
     student_skills: List[StudentSkillItem]
-    primary_skills: List[str]
-    advanced_skills: List[str]
-    expert_skills: List[str]
+    foundation_skills: List[str]
+    core_domain_skills: List[str]
+    industry_skills: List[str]
+    emerging_skills: List[str]
     matches: List[SkillMatch]
 
 
@@ -117,12 +118,13 @@ class SemanticSkillMatcher:
     def canonicalize_inputs(
         self,
         student_skills: Sequence[StudentSkillItem],
-        primary_skills: Sequence[str],
-        advanced_skills: Sequence[str],
-        expert_skills: Sequence[str],
+        foundation_skills: Sequence[str],
+        core_domain_skills: Sequence[str],
+        industry_skills: Sequence[str],
+        emerging_skills: Sequence[str],
     ) -> CanonicalSkillInputs:
         """Return canonical skill lists ready for deterministic comparison."""
-        required_skills = self._dedupe_skills([*primary_skills, *advanced_skills, *expert_skills])
+        required_skills = self._dedupe_skills([*foundation_skills, *core_domain_skills, *industry_skills, *emerging_skills])
         student_canonical = self._canonicalize_student_skills(student_skills)
         expanded_student_skills = self._expand_student_skills(student_canonical)
         matches = self.match_skills([item.skill for item in expanded_student_skills], required_skills)
@@ -135,9 +137,10 @@ class SemanticSkillMatcher:
 
         return CanonicalSkillInputs(
             student_skills=canonical_students,
-            primary_skills=self._canonicalize_required_list(primary_skills, canonical_by_required_key),
-            advanced_skills=self._canonicalize_required_list(advanced_skills, canonical_by_required_key),
-            expert_skills=self._canonicalize_required_list(expert_skills, canonical_by_required_key),
+            foundation_skills=self._canonicalize_required_list(foundation_skills, canonical_by_required_key),
+            core_domain_skills=self._canonicalize_required_list(core_domain_skills, canonical_by_required_key),
+            industry_skills=self._canonicalize_required_list(industry_skills, canonical_by_required_key),
+            emerging_skills=self._canonicalize_required_list(emerging_skills, canonical_by_required_key),
             matches=matches,
         )
 

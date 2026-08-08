@@ -307,3 +307,4 @@ def parse_skill_string(skills_input: Union[str, List[str], None]) -> List[str]:
                 result.append(normalize_skill(piece))
 
     return result
+ 

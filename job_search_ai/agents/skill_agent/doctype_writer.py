@@ -62,12 +62,12 @@ def save_job_description(profile: SkillProfile) -> str:
             CAREER_KNOWLEDGE_DOCTYPE, profile.role_name,
         )
 
-    # Map the simplified categories back to the simple doctype fields
-    primary = profile.foundation_skills
-    advanced = profile.core_domain_skills
-    expert = profile.industry_skills + profile.emerging_skills
+    foundation = profile.foundation_skills
+    core_domain = profile.core_domain_skills
+    industry = profile.industry_skills
+    emerging = profile.emerging_skills
 
-    def _safe_join(skills: list[str], max_len: int = 140) -> str:
+    def _safe_join(skills: list[str], max_len: int = 1000) -> str:
         parts = []
         for s in skills:
             candidate = ", ".join(parts + [s])
@@ -78,16 +78,29 @@ def save_job_description(profile: SkillProfile) -> str:
             return skills[0][:max_len]
         return ", ".join(parts)
 
-    doc = frappe.get_doc({
-        "doctype": "Job Description",
-        "job_profile": job_profile,
-        "role": profile.role_name,
-        "primary_skills": _safe_join(primary),
-        "advanced_skills": _safe_join(advanced),
-        "expert_skills": _safe_join(expert),
-    })
-    doc.insert(ignore_permissions=False)
-    frappe.db.commit()
+    existing_name = frappe.db.get_value("Job Description", {"role": profile.role_name}, "name")
+    if existing_name:
+        doc = frappe.get_doc("Job Description", existing_name)
+        doc.job_profile = job_profile
+        doc.foundation_skills = _safe_join(foundation)
+        doc.core_domain_skills = _safe_join(core_domain)
+        doc.industry_skills = _safe_join(industry)
+        doc.emerging_skills = _safe_join(emerging)
+        doc.save(ignore_permissions=False)
+        logger.info("SkillAgent: updated Job Description %r for role=%r", doc.name, profile.role_name)
+    else:
+        doc = frappe.get_doc({
+            "doctype": "Job Description",
+            "name": profile.role_name,
+            "job_profile": job_profile,
+            "role": profile.role_name,
+            "foundation_skills": _safe_join(foundation),
+            "core_domain_skills": _safe_join(core_domain),
+            "industry_skills": _safe_join(industry),
+            "emerging_skills": _safe_join(emerging),
+        })
+        doc.insert(ignore_permissions=False)
+        logger.info("SkillAgent: created Job Description %r for role=%r", doc.name, profile.role_name)
 
-    logger.info("SkillAgent: saved Job Description %r for role=%r", doc.name, profile.role_name)
+    frappe.db.commit()
     return doc.name

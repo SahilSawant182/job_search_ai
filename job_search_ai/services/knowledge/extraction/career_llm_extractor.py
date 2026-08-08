@@ -91,7 +91,7 @@ def _clean_json(text: str) -> str:
     return text.strip()
 
 
-def _build_prompt(career_focus: str, search_text: str) -> str:
+def _build_prompt(career_focus: str, search_text: str, student: Any | None = None) -> str:
     """
     Build the extraction prompt.
 
@@ -100,16 +100,46 @@ def _build_prompt(career_focus: str, search_text: str) -> str:
     """
     truncated = search_text[:MAX_INPUT_CHARS]
 
-    # Dynamically select example based on whether the career focus is technical
-    focus_lower = career_focus.lower()
-    is_tech = any(kw in focus_lower for kw in ["machine", "web", "dev", "program", "code", "software", "data", "engineer", "tech", "computer", "ml", "ai"])
+    if student and getattr(student, "degree", None) and getattr(student, "branch", None):
+        degree = student.degree.strip()
+        branch = student.branch.strip()
 
-    if is_tech:
-        deg_eg = '["B.Tech", "B.Sc", "MCA"]'
-        branch_eg = '["Computer Science", "Information Technology"]'
+        is_tech_student = any(kw in (degree + " " + branch).lower() for kw in ["eng", "tech", "science", "comp", "mca", "math", "phys"])
+
+        if is_tech_student:
+            deg_candidates = ["B.Tech", "B.Sc", "MCA", "M.Tech", "B.E."]
+            branch_candidates = ["Computer Science", "Information Technology", "Software Engineering", "Data Science", "Electronics Engineering"]
+        else:
+            deg_candidates = ["MBA", "BBA", "B.Com", "B.A.", "M.A."]
+            branch_candidates = ["Marketing", "Business Administration", "Finance", "Human Resources", "Operations"]
+
+        degs = [degree]
+        for d in deg_candidates:
+            if d.lower() != degree.lower():
+                degs.append(d)
+                if len(degs) >= 3:
+                    break
+        deg_eg = json.dumps(degs)
+
+        branches = [branch]
+        for b in branch_candidates:
+            if b.lower() != branch.lower():
+                branches.append(b)
+                if len(branches) >= 3:
+                    break
+        branch_eg = json.dumps(branches)
     else:
-        deg_eg = '["MBA", "BBA", "B.Com"]'
-        branch_eg = '["Marketing", "Business Administration"]'
+        # Dynamically select example based on whether the career focus is technical
+        focus_lower = career_focus.lower()
+        is_tech = any(kw in focus_lower for kw in ["machine", "web", "dev", "program", "code", "software", "data", "engineer", "tech", "computer", "ml", "ai"])
+
+        if is_tech:
+            deg_eg = '["B.Tech", "B.Sc", "MCA"]'
+            branch_eg = '["Computer Science", "Information Technology"]'
+        else:
+            deg_eg = '["MBA", "BBA", "B.Com"]'
+            branch_eg = '["Marketing", "Business Administration"]'
+
 
     return (
         "You are a career data extractor.  Your ONLY job is to read the text below and "
@@ -276,6 +306,7 @@ class CareerLLMExtractor:
         career_focus: str,
         endpoint: str | None = None,
         model: str | None = None,
+        student: Any | None = None,
     ) -> list[dict]:
         """
         Extract structured career profiles from search text.
@@ -286,6 +317,7 @@ class CareerLLMExtractor:
         career_focus : The career area being searched (used to focus the LLM).
         endpoint     : Ollama endpoint URL (read from SettingsService if None).
         model        : LLM model name (read from SettingsService if None).
+        student      : Optional student profile context.
 
         Returns
         -------
@@ -308,7 +340,8 @@ class CareerLLMExtractor:
             else:
                 model = settings.default_llm_model
 
-        prompt = _build_prompt(career_focus, search_text)
+        prompt = _build_prompt(career_focus, search_text, student=student)
+
 
         try:
             if provider == "omniroute":

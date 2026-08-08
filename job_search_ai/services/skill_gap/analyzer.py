@@ -37,18 +37,20 @@ class SkillGapAnalyzer:
     Deterministic skill gap analysis and readiness scoring.
     """
 
-    PRIMARY_WEIGHT: float = 0.40
-    ADVANCED_WEIGHT: float = 0.40
-    EXPERT_WEIGHT: float = 0.20
+    FOUNDATION_WEIGHT: float = 0.30
+    CORE_DOMAIN_WEIGHT: float = 0.40
+    INDUSTRY_WEIGHT: float = 0.20
+    EMERGING_WEIGHT: float = 0.10
 
     def analyze(
         self,
         student_identifier: str,
         career_title: str,
         student_skills: List[StudentSkillItem],
-        primary_skills: List[str],
-        advanced_skills: List[str],
-        expert_skills: List[str],
+        foundation_skills: List[str],
+        core_domain_skills: List[str],
+        industry_skills: List[str],
+        emerging_skills: List[str],
         readiness_threshold: float = 70.0,
         default_required_level: str = "Intermediate",
     ) -> SkillGapReport:
@@ -59,9 +61,10 @@ class SkillGapAnalyzer:
             student_identifier: Student ID or email string.
             career_title: Target career/role title.
             student_skills: List of verified StudentSkillItem objects.
-            primary_skills: Required primary skills list.
-            advanced_skills: Required advanced skills list.
-            expert_skills: Required expert skills list.
+            foundation_skills: Required foundation skills list.
+            core_domain_skills: Required core domain skills list.
+            industry_skills: Required industry skills list.
+            emerging_skills: Required emerging skills list.
             readiness_threshold: Benchmark percentage score for job readiness.
             default_required_level: Default baseline level required for job skills.
 
@@ -77,77 +80,94 @@ class SkillGapAnalyzer:
 
         student_keys: Set[str] = set(student_key_map.keys())
 
-        # Category 1: Primary Skills
-        matched_primary: List[str] = []
-        missing_primary: List[str] = []
-        primary_score_sum: float = 0.0
+        # Category 1: Foundation Skills
+        matched_foundation: List[str] = []
+        missing_foundation: List[str] = []
+        foundation_score_sum: float = 0.0
 
-        for skill in primary_skills:
+        for skill in foundation_skills:
             key = get_skill_key(skill)
             display_name = normalize_skill(skill)
             if key in student_keys:
-                matched_primary.append(display_name)
+                matched_foundation.append(display_name)
                 match_val = self._evaluate_match_quality(
                     student_key_map[key].current_level, default_required_level
                 )
-                primary_score_sum += match_val
+                foundation_score_sum += match_val
             else:
-                missing_primary.append(display_name)
+                missing_foundation.append(display_name)
 
-        # Category 2: Advanced Skills
-        matched_advanced: List[str] = []
-        missing_advanced: List[str] = []
-        advanced_score_sum: float = 0.0
+        # Category 2: Core Domain Skills
+        matched_core_domain: List[str] = []
+        missing_core_domain: List[str] = []
+        core_domain_score_sum: float = 0.0
 
-        for skill in advanced_skills:
+        for skill in core_domain_skills:
             key = get_skill_key(skill)
             display_name = normalize_skill(skill)
             if key in student_keys:
-                matched_advanced.append(display_name)
+                matched_core_domain.append(display_name)
                 match_val = self._evaluate_match_quality(
                     student_key_map[key].current_level, "Advanced"
                 )
-                advanced_score_sum += match_val
+                core_domain_score_sum += match_val
             else:
-                missing_advanced.append(display_name)
+                missing_core_domain.append(display_name)
 
-        # Category 3: Expert Skills
-        matched_expert: List[str] = []
-        missing_expert: List[str] = []
-        expert_score_sum: float = 0.0
+        # Category 3: Industry Skills
+        matched_industry: List[str] = []
+        missing_industry: List[str] = []
+        industry_score_sum: float = 0.0
 
-        for skill in expert_skills:
+        for skill in industry_skills:
             key = get_skill_key(skill)
             display_name = normalize_skill(skill)
             if key in student_keys:
-                matched_expert.append(display_name)
+                matched_industry.append(display_name)
                 match_val = self._evaluate_match_quality(
                     student_key_map[key].current_level, "Expert"
                 )
-                expert_score_sum += match_val
+                industry_score_sum += match_val
             else:
-                missing_expert.append(display_name)
+                missing_industry.append(display_name)
+
+        # Category 4: Emerging Skills
+        matched_emerging: List[str] = []
+        missing_emerging: List[str] = []
+        emerging_score_sum: float = 0.0
+
+        for skill in emerging_skills:
+            key = get_skill_key(skill)
+            display_name = normalize_skill(skill)
+            if key in student_keys:
+                matched_emerging.append(display_name)
+                match_val = self._evaluate_match_quality(
+                    student_key_map[key].current_level, "Advanced"
+                )
+                emerging_score_sum += match_val
+            else:
+                missing_emerging.append(display_name)
 
         # Deduplicated Matched Skills List
         matched_skills_set: Set[str] = set()
         matched_skills: List[str] = []
-        for skill_name in matched_primary + matched_advanced + matched_expert:
+        for skill_name in matched_foundation + matched_core_domain + matched_industry + matched_emerging:
             if skill_name not in matched_skills_set:
                 matched_skills_set.add(skill_name)
                 matched_skills.append(skill_name)
 
         # Construct Priority Order for Roadmap Agent
-        # Foundational (Missing Primary) -> Intermediate (Missing Advanced) -> Advanced (Missing Expert)
+        # Foundational (Missing Foundation) -> Intermediate (Missing Core Domain) -> Advanced (Missing Industry) -> Emerging
         priority_order_set: Set[str] = set()
         priority_order: List[str] = []
-        for skill_name in missing_primary + missing_advanced + missing_expert:
+        for skill_name in missing_foundation + missing_core_domain + missing_industry + missing_emerging:
             if skill_name not in priority_order_set:
                 priority_order_set.add(skill_name)
                 priority_order.append(skill_name)
 
         # Total Skill Counts
         all_required_keys: Set[str] = set()
-        for skill_list in (primary_skills, advanced_skills, expert_skills):
+        for skill_list in (foundation_skills, core_domain_skills, industry_skills, emerging_skills):
             for skill in skill_list:
                 key = get_skill_key(skill)
                 if key:
@@ -160,12 +180,14 @@ class SkillGapAnalyzer:
 
         # Readiness Score Calculation with Level Support
         readiness_score = self._calculate_readiness_score(
-            primary_score_sum,
-            len(primary_skills),
-            advanced_score_sum,
-            len(advanced_skills),
-            expert_score_sum,
-            len(expert_skills),
+            foundation_score_sum,
+            len(foundation_skills),
+            core_domain_score_sum,
+            len(core_domain_skills),
+            industry_score_sum,
+            len(industry_skills),
+            emerging_score_sum,
+            len(emerging_skills),
         )
 
         ready_for_job = readiness_score >= readiness_threshold
@@ -174,9 +196,10 @@ class SkillGapAnalyzer:
             student=student_identifier,
             career=career_title,
             matched_skills=matched_skills,
-            missing_primary=missing_primary,
-            missing_advanced=missing_advanced,
-            missing_expert=missing_expert,
+            missing_foundation=missing_foundation,
+            missing_core_domain=missing_core_domain,
+            missing_industry=missing_industry,
+            missing_emerging=missing_emerging,
             verified_skill_count=verified_skill_count,
             required_skill_count=required_skill_count,
             matched_skill_count=matched_skill_count,
@@ -205,38 +228,45 @@ class SkillGapAnalyzer:
 
     def _calculate_readiness_score(
         self,
-        primary_score_sum: float,
-        total_primary: int,
-        advanced_score_sum: float,
-        total_advanced: int,
-        expert_score_sum: float,
-        total_expert: int,
+        foundation_score_sum: float,
+        total_foundation: int,
+        core_domain_score_sum: float,
+        total_core_domain: int,
+        industry_score_sum: float,
+        total_industry: int,
+        emerging_score_sum: float,
+        total_emerging: int,
     ) -> float:
         """
         Calculate weighted readiness score.
-        Target weights are: Primary: 40%, Advanced: 40%, Expert: 20%.
+        Target weights are: Foundation: 30%, Core Domain: 40%, Industry: 20%, Emerging: 10%.
         If a category has no required skills, its weight is dynamically redistributed.
         """
-        if total_primary == 0 and total_advanced == 0 and total_expert == 0:
+        if total_foundation == 0 and total_core_domain == 0 and total_industry == 0 and total_emerging == 0:
             return 100.0
 
         total_weight = 0.0
         weighted_score_sum = 0.0
 
-        if total_primary > 0:
-            p_pct = (primary_score_sum / float(total_primary) * 100.0)
-            weighted_score_sum += p_pct * self.PRIMARY_WEIGHT
-            total_weight += self.PRIMARY_WEIGHT
+        if total_foundation > 0:
+            f_pct = (foundation_score_sum / float(total_foundation) * 100.0)
+            weighted_score_sum += f_pct * self.FOUNDATION_WEIGHT
+            total_weight += self.FOUNDATION_WEIGHT
 
-        if total_advanced > 0:
-            a_pct = (advanced_score_sum / float(total_advanced) * 100.0)
-            weighted_score_sum += a_pct * self.ADVANCED_WEIGHT
-            total_weight += self.ADVANCED_WEIGHT
+        if total_core_domain > 0:
+            c_pct = (core_domain_score_sum / float(total_core_domain) * 100.0)
+            weighted_score_sum += c_pct * self.CORE_DOMAIN_WEIGHT
+            total_weight += self.CORE_DOMAIN_WEIGHT
 
-        if total_expert > 0:
-            e_pct = (expert_score_sum / float(total_expert) * 100.0)
-            weighted_score_sum += e_pct * self.EXPERT_WEIGHT
-            total_weight += self.EXPERT_WEIGHT
+        if total_industry > 0:
+            i_pct = (industry_score_sum / float(total_industry) * 100.0)
+            weighted_score_sum += i_pct * self.INDUSTRY_WEIGHT
+            total_weight += self.INDUSTRY_WEIGHT
+
+        if total_emerging > 0:
+            em_pct = (emerging_score_sum / float(total_emerging) * 100.0)
+            weighted_score_sum += em_pct * self.EMERGING_WEIGHT
+            total_weight += self.EMERGING_WEIGHT
 
         score = weighted_score_sum / total_weight if total_weight > 0 else 0.0
         score = max(0.0, min(100.0, score))

@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "prompt",
  "creation": "2026-07-17 16:11:36.811175",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -9,9 +10,10 @@
   "amended_from",
   "job_profile",
   "role",
-  "primary_skills",
-  "advanced_skills",
-  "expert_skills"
+  "foundation_skills",
+  "core_domain_skills",
+  "industry_skills",
+  "emerging_skills"
  ],
  "fields": [
   {
@@ -35,19 +37,28 @@
    "options": "Career Knowledge"
   },
   {
-   "fieldname": "primary_skills",
+   "fieldname": "foundation_skills",
    "fieldtype": "Data",
-   "label": "Primary Skills"
+   "label": "Foundation Skills",
+   "length": 1000
   },
   {
-   "fieldname": "advanced_skills",
+   "fieldname": "core_domain_skills",
    "fieldtype": "Data",
-   "label": "Advanced Skills"
+   "label": "Core Domain Skills",
+   "length": 1000
   },
   {
-   "fieldname": "expert_skills",
+   "fieldname": "industry_skills",
    "fieldtype": "Data",
-   "label": "Expert skills"
+   "label": "Industry Skills",
+   "length": 1000
+  },
+  {
+   "fieldname": "emerging_skills",
+   "fieldtype": "Data",
+   "label": "Emerging Skills",
+   "length": 1000
   },
   {
    "fieldname": "role",
@@ -59,10 +70,11 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-07-17 17:38:10.247937",
+ "modified": "2026-07-27 09:29:52.595540",
  "modified_by": "Administrator",
  "module": "Job Search AI",
  "name": "Job Description",
+ "naming_rule": "Set by user",
  "owner": "Administrator",
  "permissions": [
   {

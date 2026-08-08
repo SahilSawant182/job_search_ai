@@ -856,3 +856,132 @@ body {
 .skills-retry-btn:hover {
 	background: #fff5f5;
 }
+
+/* ============================================================
+   Skill Gap Agent UI Integration
+   ============================================================ */
+.gap-header-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background: #f8fafc;
+	border: 1.5px solid #e2e8f0;
+	border-radius: 12px;
+	padding: 16px 20px;
+	margin-bottom: 20px;
+}
+
+.gap-readiness-box {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+}
+
+.gap-radial-container {
+	position: relative;
+	width: 52px;
+	height: 52px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.gap-radial-bg {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	background: #f1f5f9;
+}
+
+.gap-radial-fg {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	background: conic-gradient(#4f46e5 var(--percent), #e2e8f0 0);
+	mask: radial-gradient(transparent 58%, #fff 60%);
+	-webkit-mask: radial-gradient(transparent 58%, #fff 60%);
+}
+
+.gap-radial-fg.ready {
+	background: conic-gradient(#10b981 var(--percent), #e2e8f0 0);
+}
+
+.gap-radial-fg.warning {
+	background: conic-gradient(#f59e0b var(--percent), #e2e8f0 0);
+}
+
+.gap-radial-fg.danger {
+	background: conic-gradient(#ef4444 var(--percent), #e2e8f0 0);
+}
+
+.gap-radial-text {
+	position: relative;
+	font-size: 0.85rem;
+	font-weight: 800;
+	color: #0f172a;
+}
+
+.gap-status-title {
+	font-size: 0.9rem;
+	font-weight: 700;
+	color: #1e293b;
+	margin-bottom: 2px;
+}
+
+.gap-status-desc {
+	font-size: 0.72rem;
+	color: #64748b;
+}
+
+.gap-badge-status {
+	font-size: 0.72rem;
+	font-weight: 700;
+	padding: 5px 12px;
+	border-radius: 20px;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.gap-badge-status.ready {
+	background: #ecfdf5;
+	color: #047857;
+	border: 1px solid #a7f3d0;
+}
+
+.gap-badge-status.not-ready {
+	background: #fffbeb;
+	color: #b45309;
+	border: 1px solid #fde68a;
+}
+
+.skill-badge.matched-skill {
+	background: #f0fdf4;
+	color: #15803d;
+	border: 1.5px solid #bbf7d0;
+}
+
+.skill-badge.matched-skill:hover {
+	background: #dcfce7;
+	border-color: #86efac;
+}
+
+.skill-badge.missing-skill {
+	background: #f8fafc;
+	color: #475569;
+	border: 1.5px dashed #cbd5e1;
+}
+
+.skill-badge.missing-skill:hover {
+	background: #f1f5f9;
+	border-color: #94a3b8;
+}
+
+.skill-badge-empty {
+	font-size: 0.72rem;
+	color: #94a3b8;
+	font-style: italic;
+	padding: 4px 0;
+}
+

@@ -74,18 +74,20 @@ class SkillGapService:
     def get_skill_gap_report(
         self,
         student: str,
+        career: Optional[str | SkillProfile | dict] = None,
+        readiness_threshold: Optional[float] = None,
         role: Optional[str] = None,
         job_description: Optional[str] = None,
-        readiness_threshold: Optional[float] = None,
     ) -> SkillGapReport:
         """
-        Fetch data from Frappe DB and generate structured Skill Gap Report.
+        Fetch data from Skill Knowledge/SkillAgent and generate structured Skill Gap Report.
 
         Args:
             student: Student email or Student DocName.
-            role: Target role title.
-            job_description: Job Description DocName.
-            readiness_threshold: Benchmark threshold for job readiness (defaults to Job Search AI Settings).
+            career: Target career title, SkillProfile object, or dictionary.
+            readiness_threshold: Benchmark threshold for job readiness.
+            role: Deprecated, backward compatible alias for career.
+            job_description: Deprecated, backward compatible alias for career.
 
         Returns:
             SkillGapReport structured output.
@@ -107,17 +109,53 @@ class SkillGapService:
         # 1. Fetch verified student skills (ai_verified = 1)
         student_skills = self.fetch_verified_student_skills(resolved_student)
 
-        # 2. Fetch required job skills from Job Description DocType
-        career_title, primary, advanced, expert = self.fetch_job_skills(
-            role=role, job_description=job_description
-        )
+        # 2. Resolve skill profile from Skill Agent / Skill Knowledge
+        career_identifier = career or role or job_description
+        if not career_identifier:
+            frappe.throw("Parameter 'career' or 'role' is required.", frappe.ValidationError)
+
+        from job_search_ai.agents.skill_agent.schemas import SkillProfile
+
+        if isinstance(career_identifier, str):
+            # Check if it is a valid career in Career Knowledge DocType to raise DoesNotExistError for unknown roles
+            if not frappe.db.exists("Career Knowledge", {"career_name": career_identifier}) and \
+               not frappe.db.exists("Career Knowledge", {"career_name": ["like", f"%{career_identifier}%"]}):
+                frappe.throw(f"Career '{career_identifier}' not found in Skill Knowledge.", frappe.DoesNotExistError)
+
+            from job_search_ai.agents.skill_agent.skill_agent import SkillAgent
+            from job_search_ai.agents.skill_agent.schemas import SkillRequest
+            
+            agent = SkillAgent()
+            request = SkillRequest(role=career_identifier)
+            # Run without saving to Job Description DocType
+            result = agent.run(request, save_to_doctype=False)
+            skill_profile = result.profile
+        elif isinstance(career_identifier, SkillProfile):
+            skill_profile = career_identifier
+        elif isinstance(career_identifier, dict):
+            skill_profile = SkillProfile(
+                role_name=career_identifier.get("role_name") or career_identifier.get("role") or "",
+                foundation_skills=career_identifier.get("foundation_skills") or [],
+                core_domain_skills=career_identifier.get("core_domain_skills") or [],
+                industry_skills=career_identifier.get("industry_skills") or [],
+                emerging_skills=career_identifier.get("emerging_skills") or [],
+            )
+        else:
+            frappe.throw("Invalid career profile format.", frappe.ValidationError)
+
+        career_title = skill_profile.role_name
+        foundation = skill_profile.foundation_skills
+        core_domain = skill_profile.core_domain_skills
+        industry = skill_profile.industry_skills
+        emerging = skill_profile.emerging_skills
 
         # 3. Canonicalize skill names before deterministic comparison
         canonical_inputs = self.matcher.canonicalize_inputs(
             student_skills=student_skills,
-            primary_skills=primary,
-            advanced_skills=advanced,
-            expert_skills=expert,
+            foundation_skills=foundation,
+            core_domain_skills=core_domain,
+            industry_skills=industry,
+            emerging_skills=emerging,
         )
 
         # 4. Delegate to pure Python analyzer
@@ -125,9 +163,10 @@ class SkillGapService:
             student_identifier=student,
             career_title=career_title,
             student_skills=canonical_inputs.student_skills,
-            primary_skills=canonical_inputs.primary_skills,
-            advanced_skills=canonical_inputs.advanced_skills,
-            expert_skills=canonical_inputs.expert_skills,
+            foundation_skills=canonical_inputs.foundation_skills,
+            core_domain_skills=canonical_inputs.core_domain_skills,
+            industry_skills=canonical_inputs.industry_skills,
+            emerging_skills=canonical_inputs.emerging_skills,
             readiness_threshold=effective_threshold,
         )
 
@@ -202,40 +241,4 @@ class SkillGapService:
 
         return student_identifier
 
-    def fetch_job_skills(
-        self, role: Optional[str] = None, job_description: Optional[str] = None
-    ) -> Tuple[str, List[str], List[str], List[str]]:
-        """
-        Fetch job skills from Job Description DocType.
 
-        Returns:
-            Tuple of (career_title, primary_skills, advanced_skills, expert_skills)
-        """
-        doc = None
-
-        if job_description:
-            if frappe.db.exists("Job Description", job_description):
-                doc = frappe.get_doc("Job Description", job_description)
-            elif not role:
-                frappe.throw(f"Job Description '{job_description}' not found.", frappe.DoesNotExistError)
-
-        if not doc and role:
-            jd_name = frappe.db.get_value("Job Description", {"role": role}, "name")
-            if not jd_name:
-                jd_name = frappe.db.get_value(
-                    "Job Description", {"role": ["like", f"%{role}%"]}, "name"
-                )
-            if jd_name:
-                doc = frappe.get_doc("Job Description", jd_name)
-            else:
-                frappe.throw(f"Job Description for Role '{role}' not found.", frappe.DoesNotExistError)
-
-        if not doc:
-            frappe.throw("Could not resolve Job Description or Role.", frappe.DoesNotExistError)
-
-        career_title = doc.role or role or doc.name
-        primary = parse_skill_string(doc.primary_skills)
-        advanced = parse_skill_string(doc.advanced_skills)
-        expert = parse_skill_string(doc.expert_skills)
-
-        return career_title, primary, advanced, expert

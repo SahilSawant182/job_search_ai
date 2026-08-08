@@ -2,6 +2,9 @@ import os
 import frappe
 from frappe import _
 
+# settings.py
+omniroute_base_url = "http://127.0.0.1:8787/v1"
+
 class ConfigurationError(Exception):
 	"""Raised when a required configuration is missing or invalid."""
 	pass

@@ -40,13 +40,7 @@ def generate_skills(role: str, seniority: str | None = None, save: int = 1):
         frappe.throw(str(exc))
         return  
 
-    # Save only if requested
-    job_description = None
-    # if int(save):
-    #     job_description = save_job_description(
-    #         job_profile=role,   # Replace with the actual Job Profile if available
-    #         result=result
-    #     )
+    
 
     return {
         "role": result.profile.role_name,
@@ -54,30 +48,13 @@ def generate_skills(role: str, seniority: str | None = None, save: int = 1):
         "core_domain_skills": result.profile.core_domain_skills,
         "industry_skills": result.profile.industry_skills,
         "emerging_skills": result.profile.emerging_skills,
+        # DEPRECATED: Use foundation_skills instead
         "primary_skills": result.profile.foundation_skills,
+        # DEPRECATED: Use core_domain_skills instead
         "advanced_skills": result.profile.core_domain_skills,
+        # DEPRECATED: Use industry_skills and emerging_skills instead
         "expert_skills": result.profile.industry_skills + result.profile.emerging_skills,
         "source": result.profile.source,
-        "doc_name": result.doc_name,
-        "job_description": job_description,
-        "metrics": result.metrics,
+        "doc_name": getattr(result, "doc_name", None),
+        "metrics": getattr(result, "metrics", None),
     }
-@frappe.whitelist(allow_guest=True)
-def save_job_description(job_profile, result):
-    # Ignore if role already exists
-    if frappe.db.exists("Job Description", {"role": result.profile.role_name}):
-        return None
-
-    doc = frappe.get_doc({
-        "doctype": "Job Description",
-        "job_profile": job_profile,
-        "role": result.profile.role_name,
-        "primary_skills": ", ".join(result.profile.primary_skills),
-        "advanced_skills": ", ".join(result.profile.advanced_skills),
-        "expert_skills": ", ".join(result.profile.expert_skills),
-    })
-
-    doc.insert(ignore_permissions=True)
-    frappe.db.commit()
-
-    return doc.name

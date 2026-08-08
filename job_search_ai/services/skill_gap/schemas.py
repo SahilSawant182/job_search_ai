@@ -33,9 +33,10 @@ class SkillGapReport:
     student: str
     career: str
     matched_skills: List[str] = field(default_factory=list)
-    missing_primary: List[str] = field(default_factory=list)
-    missing_advanced: List[str] = field(default_factory=list)
-    missing_expert: List[str] = field(default_factory=list)
+    missing_foundation: List[str] = field(default_factory=list)
+    missing_core_domain: List[str] = field(default_factory=list)
+    missing_industry: List[str] = field(default_factory=list)
+    missing_emerging: List[str] = field(default_factory=list)
     verified_skill_count: int = 0
     required_skill_count: int = 0
     matched_skill_count: int = 0

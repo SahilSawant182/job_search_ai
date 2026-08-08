@@ -6,12 +6,13 @@ tiers straight from its own training knowledge, in a single call.
 """
 
 from __future__ import annotations
-
+from headroom import compress
+import frappe
 import json
 import logging
-
+import tiktoken
 import requests
-
+_enc = tiktoken.get_encoding("cl100k_base")
 logger = logging.getLogger(__name__)
 
 
@@ -50,138 +51,127 @@ class LLMService:
                 logger.warning("LLMService.generate_skills attempt %d failed: %s", attempt + 1, exc)
         raise LLMServiceError(f"Skill generation failed after retries: {last_exc}") from last_exc
 
-    def _build_prompt(self, role: str, seniority: str | None) -> str:
-        return (
-            "You are a senior Career Curriculum Designer and Industry Subject Matter Expert.\n"
-            "You have extensive experience designing career curricula, university learning pathways, corporate training programs, and hiring frameworks across multiple industries including engineering, business, management, finance, healthcare, construction, marketing, sales, law, design, and technology.\n"
-            "Your responsibility is to generate the complete professional competency hierarchy required for a given career.\n"
-            "The generated knowledge will later be consumed by:\n"
-            "* Skill Gap Agent\n"
-            "* Roadmap Agent\n"
-            "Therefore accuracy, completeness, consistency, and logical ordering are extremely important.\n\n"
-            "--- \n\n"
-            "## Career\n"
-            f"Role: {role}\n"
-            f"Seniority: {seniority or 'Junior'}\n\n"
-            "--- \n\n"
-            "## Objective\n"
-            f"Given the career title: \"{role}\", generate the professional competencies required to become successful in that profession.\n"
-            "Think like an experienced hiring manager and curriculum designer.\n"
-            "Do NOT think like an encyclopedia.\n"
-            "Do NOT list every technology, software, framework, methodology, or tool you know.\n"
-            "Instead generate one practical, industry-standard learning curriculum that a student could realistically follow.\n\n"
-            "--- \n\n"
-            "# Important\n"
-            "Every career belongs to a different industry. Adapt automatically.\n"
-            "Examples:\n"
-            "- Software Engineering: Generate programming languages, frameworks, databases, cloud platforms, software architecture, testing, deployment, and related competencies.\n"
-            "- Marketing: Generate digital marketing, branding, SEO, SEM, analytics, con`tent strategy, campaign management, CRM, customer acquisition, and related competencies.\n"
-            "- Finance: Generate accounting, taxation, auditing, financial analysis, investment, corporate finance, risk management, and related competencies.\n"
-            "- Civil Engineering: Generate surveying, structural analysis, RCC design, quantity estimation, AutoCAD, BIM, construction planning, and related competencies.\n"
-            "- Human Resources: Generate recruitment, payroll, employee engagement, labour laws, HR analytics, HRMS, compliance, and related competencies.\n"
-            "- Healthcare: Generate clinical competencies, healthcare systems, patient management, medical regulations, documentation, and related competencies.\n"
-            "Every profession has different competencies. Generate only those that are relevant to the requested profession.\n\n"
-            "--- \n\n"
-            "# Critical Rules\n"
-            "## Rule 1\n"
-            "Recommend ONE practical and industry-standard learning path. Do not list every possible specialization. Do not list every competing technology. Choose the most practical path.\n"
-            "## Rule 2\n"
-            "Never mix unrelated domains.\n"
-            "Examples:\n"
-            "- Software Engineering: Do not include AutoCAD, Marketing, Payroll, Medical Coding.\n"
-            "- Civil Engineering: Do not include React, Spring Boot, TensorFlow.\n"
-            "- Marketing: Do not include Docker, Kubernetes, Redis.\n"
-            "Every competency must clearly belong to the requested profession.\n"
-            "## Rule 3\n"
-            "Skills must be ordered exactly as they should be learned (Beginner -> Intermediate -> Advanced). The Roadmap Agent depends on this ordering.\n"
-            "## Rule 4\n"
-            "Avoid duplicate concepts. Do not list both \"Digital Marketing\" and \"Online Marketing\" if they represent the same competency. Prefer one standardized term.\n"
-            "## Rule 5\n"
-            "Do not generate generic workplace skills (e.g., Communication, Leadership, Teamwork, Critical Thinking, Problem Solving, Presentation Skills, Time Management). These are universal skills and are intentionally excluded. Focus only on profession-specific competencies.\n"
-            "## Rule 6\n"
-            "Prefer modern industry practices. Avoid obsolete technologies or outdated methodologies unless they are still widely required by employers.\n"
-            "## Rule 7\n"
-            "Every skill item MUST be a single, atomic canonical skill (e.g. 'HTML', 'CSS', 'Git', 'Docker', 'TensorFlow', 'PyTorch'). Do not generate composite phrases, course titles, or grouped items like 'HTML/CSS Basics' or 'TensorFlow or PyTorch' or 'Cloud Computing (AWS, Azure)'.\n"
-            "## Rule 8\n"
-            "Every generated skill item MUST be a complete, industry-standard, standalone skill name that could exist in a Skill Master database or a student profile. Avoid incomplete concepts, partial words, or vague curriculum fragments (e.g., generate 'Data Structures' instead of 'Structures', 'Supervised Learning' instead of 'Supervised', 'Unsupervised Learning' instead of 'Unsupervised', 'Statistics' instead of 'Statistics Fundamentals').\n\n"
-            "--- \n\n"
-            "# Category Definitions\n"
-            "## foundation_skills\n"
-            "Fundamental knowledge required before entering the profession.\n"
-            "Examples:\n"
-            "- Software: Programming Logic\n"
-            "- Marketing: Marketing Fundamentals\n"
-            "- Civil: Engineering Drawing\n"
-            "- Finance: Accounting Principles\n"
-            "- Healthcare: Medical Fundamentals\n"
-            "## core_domain_skills\n"
-            "The primary competencies used daily by professionals in that career. These define the profession.\n"
-            "## industry_skills\n"
-            "Industry-standard tools, platforms, regulations, methodologies, standards, software, workflows, or practices expected by employers. These vary depending on the profession.\n"
-            "Examples:\n"
-            "- Software: Docker, Git, Testing\n"
-            "- Marketing: Google Analytics, Meta Ads, CRM\n"
-            "- Civil: AutoCAD, STAAD Pro, Revit\n"
-            "- Finance: SAP, Excel, Bloomberg Terminal\n"
-            "- Healthcare: Electronic Medical Records, Medical Coding Standards, Hospital Information Systems\n"
-            "Only include tools or platforms when they are genuinely important for that profession.\n"
-            "## emerging_skills\n"
-            "Modern technologies, practices, trends, or innovations that are becoming valuable within that profession. These should improve future employability.\n"
-            "Examples:\n"
-            "- Software: AI-assisted Development, Serverless\n"
-            "- Marketing: AI Marketing, Marketing Automation\n"
-            "- Finance: AI-driven Financial Analysis\n"
-            "- Civil: Digital Twin, Drone Surveying\n"
-            "- Healthcare: AI-assisted Diagnosis, Telemedicine\n\n"
-            "--- \n\n"
-            "# Quantity Guidelines\n"
-            "- Foundation Skills: 5–8\n"
-            "- Core Domain Skills: 10–15\n"
-            "- Industry Skills: 5–10\n"
-            "- Emerging Skills: 3–6\n"
-            "Quality is more important than quantity. Do not invent skills just to satisfy the numbers.\n\n"
-            "--- \n\n"
-            "# Final Validation\n"
-            "Before returning the response verify that:\n"
-            "✓ Every competency belongs to the requested profession.\n"
-            "✓ No unrelated domain appears.\n"
-            "✓ No duplicate concepts exist.\n"
-            "✓ The learning order is logical.\n"
-            "✓ The curriculum is practical.\n"
-            "✓ The curriculum could realistically prepare a student for an entry-level position.\n"
-            "✓ The knowledge is reusable for Skill Gap analysis.\n"
-            "✓ The knowledge is reusable for Roadmap generation.\n\n"
-            "--- \n\n"
-            "Respond with ONLY a JSON object (no markdown, no preamble) in exactly this shape:\n"
-            "{\n"
-            f'  "role": "{role}",\n'
-            '  "foundation_skills": ["skill1", "skill2", ...],\n'
-            '  "core_domain_skills": ["skill1", "skill2", ...],\n'
-            '  "industry_skills": ["skill1", "skill2", ...],\n'
-            '  "emerging_skills": ["skill1", "skill2", ...]\n'
-            "}"
-        )
+    def _build_prompt(self, role, seniority):
+        return f"""
+        ROLE={role}
+        LEVEL={seniority or "Junior"}
+
+        TASK=Generate industry-specific competency hierarchy.
+        Each skill category must be a flat list of strings (exact skill names only). Do NOT output objects or dicts.
+
+        ROLE-SPECIFICITY RULE:
+        Skills must be highly specific and tailormade to {role}. Do NOT output generic software engineering terms like "Database Management", "API Development", or "Version Control" if more specific tool-specific skills are relevant.
+        For example:
+        - Instead of "Database Management", output "MariaDB" or "PostgreSQL" or "Frappe ORM".
+        - Instead of "API Development", output "Frappe REST API" or "Webhooks".
+        - Instead of "General Programming", output "Python", "JavaScript", "Jinja templating".
+        - For emerging, output actual emerging tech relevant to the role (e.g., "AI-assisted ERP automation", "LLM integration with Frappe", "AI agents for ERP workflows").
+
+        RULES:
+        - Each skill list must contain only string values (e.g. ["Python", "JavaScript"]). Do NOT include details like descriptions, counts, or objects.
+        - single_path
+        - profession_only
+        - ordered
+        - modern
+        - atomic_skills
+        - canonical_names
+        - no_duplicates
+        - json_only
+
+        TARGET COUNTS:
+        - foundation_skills: 5 to 8 skills (strings)
+        - core_domain_skills: 10 to 15 skills (strings)
+        - industry_skills: 5 to 10 skills (strings)
+        - emerging_skills: 3 to 6 skills (strings)
+
+        EXPECTED OUTPUT FORMAT (JSON ONLY):
+        {{
+          "role": "{role}",
+          "foundation_skills": [
+            "Skill Name 1",
+            "Skill Name 2"
+          ],
+          "core_domain_skills": [
+            "Skill Name 1"
+          ],
+          "industry_skills": [
+            "Skill Name 1"
+          ],
+          "emerging_skills": [
+            "Skill Name 1"
+          ]
+        }}
+        """
+
+    # def _call(self, prompt: str) -> str:
+    #     result = compress(
+    #         messages=[{"role": "user", "content": prompt}],
+    #         model=self.model_name,
+    #     )
+    #     compressed_messages = result.messages
+    #     compressed_prompt = compressed_messages[0]["content"]
+
+    #     logger.info(
+    #         "headroom: saved %d tokens (%.0f%% reduction)",
+    #         result.tokens_saved, result.compression_ratio * 100,
+    #     )
+
+    #     if self.provider == "omniroute":
+    #         resp = requests.post(
+    #             f"{self.base_url.rstrip('/')}/chat/completions",
+    #             json={
+    #                 "model": self.model_name,
+    #                 "messages": compressed_messages,
+    #                 "temperature": 0.2,
+    #             },
+    #             timeout=self.timeout,
+    #         )
 
     def _call(self, prompt: str) -> str:
+        result = compress(
+            messages=[{"role": "user", "content": prompt}],
+            model=self.model_name,
+        )
+        compressed_messages = result.messages
+        logger.info(
+            "headroom: saved %d tokens (%.0f%% reduction)",
+            result.tokens_saved, result.compression_ratio * 100,
+        )
+        frappe.logger("headroom").info(
+    "saved %d tokens (%.0f%% reduction)",
+    result.tokens_saved, result.compression_ratio * 100,
+)
+
         if self.provider == "omniroute":
             resp = requests.post(
                 f"{self.base_url.rstrip('/')}/chat/completions",
                 json={
                     "model": self.model_name,
-                    "messages": [{"role": "user", "content": prompt}],
+                    "messages": compressed_messages,
                     "temperature": 0.2,
                 },
                 timeout=self.timeout,
             )
-            resp.raise_for_status()    
+            resp.raise_for_status()
             data = resp.json()
             return data["choices"][0]["message"]["content"]
+
+        # Ollama /api/generate wants ONE flat string. compress() may return
+        # multiple messages (e.g. a stabilized prefix + dynamic tail) or a
+        # message with content=None — flatten and filter rather than
+        # assuming messages[0] holds everything.
+        compressed_prompt = "\n".join(
+            m["content"] for m in compressed_messages if m.get("content")
+        )
+        if not compressed_prompt.strip():
+            logger.warning("headroom: compression returned no usable content — falling back to original prompt")
+            compressed_prompt = prompt
 
         resp = requests.post(
             self.base_url,
             json={
                 "model": self.model_name,
-                "prompt": prompt,
+                "prompt": compressed_prompt,
                 "stream": False,
                 "options": {"temperature": 0.2},
             },
@@ -190,6 +180,49 @@ class LLMService:
         resp.raise_for_status()
         data = resp.json()
         return data.get("response", "")
+        
+    # def _call(self, prompt: str) -> str:
+    #     if self.provider == "omniroute":
+    #         resp = requests.post(
+    #             f"{self.base_url.rstrip('/')}/chat/completions",
+    #             json={
+    #                 "model": self.model_name,
+    #                 "messages": [{"role": "user", "content": prompt}],
+    #                 "temperature": 0.2,
+    #             },
+    #             timeout=self.timeout,
+    #         )
+    #         resp.raise_for_status()    
+    #         data = resp.json()
+    #         return data["choices"][0]["message"]["content"]
+ 
+    #     resp = requests.post(
+    #         self.base_url,
+    #         json={
+    #             "model": self.model_name,
+    #             "prompt": prompt,
+    #             "stream": False,
+    #             "options": {"temperature": 0.2},
+    #         },
+    #         timeout=self.timeout,
+    #     )
+    #     resp.raise_for_status()
+    #     data = resp.json()
+    #     return data.get("response", "")
+
+
+    def _normalize_skill_list(self, val) -> list[str]:
+        if not isinstance(val, list):
+            return []
+        result = []
+        for item in val:
+            if isinstance(item, str):
+                result.append(item.strip())
+            elif isinstance(item, dict):
+                name = item.get("name") or item.get("skill") or item.get("title")
+                if name:
+                    result.append(str(name).strip())
+        return result
 
     def _parse(self, raw_text: str) -> dict:
         cleaned = raw_text.strip()
@@ -207,8 +240,25 @@ class LLMService:
 
         return {
             "role": payload.get("role", ""),
-            "foundation_skills": payload.get("foundation_skills", []) or [],
-            "core_domain_skills": payload.get("core_domain_skills", []) or [],
-            "industry_skills": payload.get("industry_skills", []) or [],
-            "emerging_skills": payload.get("emerging_skills", []) or [],
-        }     
+            "foundation_skills": self._normalize_skill_list(payload.get("foundation_skills")),
+            "core_domain_skills": self._normalize_skill_list(payload.get("core_domain_skills")),
+            "industry_skills": self._normalize_skill_list(payload.get("industry_skills")),
+            "emerging_skills": self._normalize_skill_list(payload.get("emerging_skills")),
+        }
+     
+        # Cross-tier deduplication after canonicalization:
+        # A skill that appeared in an earlier tier is removed from later tiers.
+        # Comparison is done on a normalised key (lowercase, strip spaces/hyphens)
+        # so that "Git", "git", and "Git Version Control" (already stripped to "Git")
+        # all collapse to the same key.
+        seen_keys: set[str] = set()
+        for tier_field in ("foundation_skills", "core_domain_skills", "industry_skills", "emerging_skills"):
+            deduped: list[str] = []
+            for s in tiers[tier_field]:
+                key = s.strip().lower().replace(" ", "").replace("-", "").replace("_", "")
+                if key not in seen_keys:
+                    seen_keys.add(key)
+                    deduped.append(s)
+            tiers[tier_field] = deduped
+        return tiers
+     

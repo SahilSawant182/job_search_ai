@@ -265,6 +265,7 @@ class KnowledgeBuilder:
         extracted_careers = CareerLLMExtractor.extract(
             search_text=combined_text,
             career_focus=self._career_name,
+            student=self._student,
         )
         timings["llm_extraction"] = time.perf_counter() - t
 

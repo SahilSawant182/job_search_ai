@@ -257,7 +257,7 @@ document.addEventListener("DOMContentLoaded", function () {
 				<div class="cc-skills-details d-none"></div>
 				<div class="cc-action">
 					<i class="bi bi-chevron-down"></i>
-					<span class="action-text">Click to load and view required skills (Junior)</span>
+					<span class="action-text">Analyze Skill Gap &amp; Readiness</span>
 				</div>
 			`;
 
@@ -280,7 +280,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		if (isActive) {
 			card.classList.remove("active");
 			detailsContainer.classList.add("d-none");
-			actionEl.innerHTML = `<i class="bi bi-chevron-down"></i><span class="action-text">Click to load and view required skills (Junior)</span>`;
+			actionEl.innerHTML = `<i class="bi bi-chevron-down"></i><span class="action-text">Analyze Skill Gap &amp; Readiness</span>`;
 		} else {
 			// Collapse all other cards first
 			document.querySelectorAll(".career-card.active").forEach(otherCard => {
@@ -290,38 +290,41 @@ document.addEventListener("DOMContentLoaded", function () {
 					if (otherDetails) otherDetails.classList.add("d-none");
 					const otherAction = otherCard.querySelector(".cc-action");
 					if (otherAction) {
-						otherAction.innerHTML = `<i class="bi bi-chevron-down"></i><span class="action-text">Click to load and view required skills (Junior)</span>`;
+						otherAction.innerHTML = `<i class="bi bi-chevron-down"></i><span class="action-text">Analyze Skill Gap &amp; Readiness</span>`;
 					}
 				}
 			});
 
 			card.classList.add("active");
 			detailsContainer.classList.remove("d-none");
-			actionEl.innerHTML = `<i class="bi bi-chevron-up"></i><span class="action-text">Click to collapse skills</span>`;
+			actionEl.innerHTML = `<i class="bi bi-chevron-up"></i><span class="action-text">Hide analysis</span>`;
 
-			if (loadedSkillsCache[careerName]) {
-				renderSkillsInContainer(detailsContainer, loadedSkillsCache[careerName], careerName);
+			const studentSkills = document.getElementById("skills").value;
+			const cacheKey = `${careerName}_${studentSkills}`;
+
+			if (loadedSkillsCache[cacheKey]) {
+				renderSkillGapInContainer(detailsContainer, loadedSkillsCache[cacheKey], careerName);
 			} else {
-				fetchSkills(careerName, detailsContainer);
+				fetchSkillGap(careerName, detailsContainer, studentSkills, cacheKey);
 			}
 		}
 	}
 
-	function fetchSkills(careerName, detailsContainer) {
+	function fetchSkillGap(careerName, detailsContainer, studentSkills, cacheKey) {
 		const params = new URLSearchParams({
-			role: careerName,
-			seniority: "Junior",
-			save: 1
+			career: careerName,
+			student_skills: studentSkills,
+			student: "demo_student@example.com"
 		});
 
 		detailsContainer.innerHTML = `
 			<div class="skills-loading">
 				<div class="spinner-border text-primary spinner-border-sm" role="status"></div>
-				<div class="small text-muted fw-semibold">Consulting Skill Agent for Junior-level skills...</div>
+				<div class="small text-muted fw-semibold">Consulting Skill Gap Agent...</div>
 			</div>
 		`;
 
-		fetch("/api/method/job_search_ai.agents.skill_agent.api.generate_skills", {
+		fetch("/api/method/job_search_ai.services.skill_gap.api.analyze", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded",
@@ -341,14 +344,14 @@ document.addEventListener("DOMContentLoaded", function () {
 			})
 			.then(data => {
 				const res = data.message;
-				loadedSkillsCache[careerName] = res;
-				renderSkillsInContainer(detailsContainer, res, careerName);
+				loadedSkillsCache[cacheKey] = res;
+				renderSkillGapInContainer(detailsContainer, res, careerName);
 			})
 			.catch(err => {
-				console.error("Failed to generate skills:", err);
+				console.error("Failed to fetch skill gap:", err);
 				detailsContainer.innerHTML = `
 					<div class="skills-error">
-						<i class="bi bi-exclamation-circle-fill me-2"></i>Failed to retrieve skills.
+						<i class="bi bi-exclamation-circle-fill me-2"></i>Failed to retrieve skill gap analysis.
 						<div class="small mt-1">${err.message || "Please try again later."}</div>
 						<button class="skills-retry-btn" type="button">Retry</button>
 					</div>
@@ -357,82 +360,104 @@ document.addEventListener("DOMContentLoaded", function () {
 				if (retryBtn) {
 					retryBtn.addEventListener("click", e => {
 						e.stopPropagation();
-						fetchSkills(careerName, detailsContainer);
+						fetchSkillGap(careerName, detailsContainer, studentSkills, cacheKey);
 					});
 				}
 			});
 	}
 
-	function renderSkillsInContainer(detailsContainer, res, careerName) {
-		const foundationTags = (res.foundation_skills || []).map(s => `<span class="skill-badge">${s}</span>`).join("");
-		const coreDomainTags = (res.core_domain_skills || []).map(s => `<span class="skill-badge">${s}</span>`).join("");
-		const industryTags = (res.industry_skills || []).map(s => `<span class="skill-badge">${s}</span>`).join("");
-		const emergingTags = (res.emerging_skills || []).map(s => `<span class="skill-badge">${s}</span>`).join("");
+	function renderSkillGapInContainer(detailsContainer, res, careerName) {
+		const matchedTags = (res.matched_skills || []).map(s => `<span class="skill-badge matched-skill"><i class="bi bi-check-circle-fill me-1 text-success"></i>${s}</span>`).join("");
+		
+		const missingFoundationTags = (res.missing_foundation || []).map(s => `<span class="skill-badge missing-skill"><i class="bi bi-plus-circle me-1 text-muted"></i>${s}</span>`).join("");
+		const missingCoreDomainTags = (res.missing_core_domain || []).map(s => `<span class="skill-badge missing-skill"><i class="bi bi-plus-circle me-1 text-muted"></i>${s}</span>`).join("");
+		const missingIndustryTags = (res.missing_industry || []).map(s => `<span class="skill-badge missing-skill"><i class="bi bi-plus-circle me-1 text-muted"></i>${s}</span>`).join("");
+		const missingEmergingTags = (res.missing_emerging || []).map(s => `<span class="skill-badge missing-skill"><i class="bi bi-plus-circle me-1 text-muted"></i>${s}</span>`).join("");
 
-		const sourceLabel = res.source === "cache" ? "Qdrant Cache (Hit)" : "LLM Generated (Live)";
-		const totalTime = res.metrics && res.metrics.total_time ? res.metrics.total_time.toFixed(2) + "s" : "—";
-		const docName = res.doc_name || "";
+		const score = res.readiness_score || 0;
+		const readyStatusClass = res.ready_for_job ? "ready" : "not-ready";
+		const readyStatusText = res.ready_for_job ? "Job Ready" : "Gap Identified";
+
+		let radialFgColorClass = "danger";
+		if (res.ready_for_job) {
+			radialFgColorClass = "ready";
+		} else if (score >= 50) {
+			radialFgColorClass = "warning";
+		}
 
 		detailsContainer.innerHTML = `
 			<div class="skills-detail-container">
-				<div class="skills-detail-title">
-					<i class="bi bi-cpu-fill text-primary"></i> Skill Intelligence Roadmap (Junior Level)
+				<div class="gap-header-row">
+					<div class="gap-readiness-box">
+						<div class="gap-radial-container">
+							<div class="gap-radial-bg"></div>
+							<div class="gap-radial-fg ${radialFgColorClass}" style="--percent: ${score}%;"></div>
+							<div class="gap-radial-text">${Math.round(score)}%</div>
+						</div>
+						<div>
+							<div class="gap-status-title">Job Readiness Analysis</div>
+							<div class="gap-status-desc">${res.matched_skill_count} of ${res.required_skill_count} required skills verified</div>
+						</div>
+					</div>
+					<div>
+						<span class="gap-badge-status ${readyStatusClass}">${readyStatusText}</span>
+					</div>
 				</div>
-				<div class="row g-3 mb-3">
+
+				<div class="mb-3">
+					<div class="skills-detail-title">
+						<i class="bi bi-patch-check-fill text-success"></i> Your Matched Skills
+					</div>
+					<div class="d-flex flex-wrap gap-2">
+						${matchedTags || '<span class="skill-badge-empty">No matching skills found in the profile. Add more skills on the left to match.</span>'}
+					</div>
+				</div>
+
+				<div class="skills-detail-title">
+					<i class="bi bi-slash-circle text-warning"></i> Missing Skills to Acquire
+				</div>
+
+				<div class="row g-3">
 					<div class="col-md-6 col-lg-3">
 						<div class="skill-tier-card foundation-tier">
 							<div class="tier-header">
-								<i class="bi bi-mortarboard-fill text-primary"></i> 1. Foundation Skills
+								<i class="bi bi-mortarboard-fill text-primary"></i> Foundation
 							</div>
 							<div class="tier-body">
-								${foundationTags || '<span class="text-muted small">None defined</span>'}
+								${missingFoundationTags || '<span class="skill-badge-empty"><i class="bi bi-check2-circle text-success"></i> Mastered</span>'}
 							</div>
 						</div>
 					</div>
 					<div class="col-md-6 col-lg-3">
 						<div class="skill-tier-card core-tier">
 							<div class="tier-header">
-								<i class="bi bi-code-slash text-indigo"></i> 2. Core Domain Skills
+								<i class="bi bi-code-slash text-indigo"></i> Core Domain
 							</div>
 							<div class="tier-body">
-								${coreDomainTags || '<span class="text-muted small">None defined</span>'}
+								${missingCoreDomainTags || '<span class="skill-badge-empty"><i class="bi bi-check2-circle text-success"></i> Mastered</span>'}
 							</div>
 						</div>
 					</div>
 					<div class="col-md-6 col-lg-3">
 						<div class="skill-tier-card industry-tier">
 							<div class="tier-header">
-								<i class="bi bi-building text-violet"></i> 3. Industry Skills
+								<i class="bi bi-building text-violet"></i> Industry
 							</div>
 							<div class="tier-body">
-								${industryTags || '<span class="text-muted small">None defined</span>'}
+								${missingIndustryTags || '<span class="skill-badge-empty"><i class="bi bi-check2-circle text-success"></i> Mastered</span>'}
 							</div>
 						</div>
 					</div>
 					<div class="col-md-6 col-lg-3">
 						<div class="skill-tier-card emerging-tier">
 							<div class="tier-header">
-								<i class="bi bi-rocket-takeoff-fill text-success"></i> 4. Emerging Skills
+								<i class="bi bi-rocket-takeoff-fill text-success"></i> Emerging
 							</div>
 							<div class="tier-body">
-								${emergingTags || '<span class="text-muted small">None defined</span>'}
+								${missingEmergingTags || '<span class="skill-badge-empty"><i class="bi bi-check2-circle text-success"></i> Mastered</span>'}
 							</div>
 						</div>
 					</div>
-				</div>
-
-				<div class="skills-meta-info">
-					<div class="skills-meta-left">
-						<span><i class="bi bi-database me-1"></i>Source: <strong>${sourceLabel}</strong></span>
-						<span><i class="bi bi-lightning-charge me-1"></i>Time: <strong>${totalTime}</strong></span>
-					</div>
-					${docName ? `
-						<div>
-							<a href="/app/job-description/${docName}" target="_blank" class="text-primary fw-semibold text-decoration-none">
-								<i class="bi bi-box-arrow-up-right me-1"></i>Open Job Description
-							</a>
-						</div>
-					` : ""}
 				</div>
 			</div>
 		`;

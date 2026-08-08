@@ -247,11 +247,18 @@ class RecommendationEngine:
 
         skill_score = 0.70 * req_coverage + 0.30 * pref_coverage
 
-        # Apply configurable missing critical skill penalty if required skills exist
+        # Apply configurable missing critical skill penalty if required skills exist, scaled by student's academic year
         from job_search_ai.services.knowledge.constants import CRITICAL_SKILL_PENALTY_WEIGHT
         if required_skills and len(missing_req) > 0:
             missing_ratio = len(missing_req) / len(required_skills)
-            skill_score = max(0.0, skill_score - (CRITICAL_SKILL_PENALTY_WEIGHT * missing_ratio))
+            year = getattr(student, "year", 4)
+            try:
+                year_val = int(year)
+            except (ValueError, TypeError):
+                year_val = 4
+            penalty_factor = max(0.0, min(1.0, (year_val - 1) / 3.0))
+            effective_penalty = CRITICAL_SKILL_PENALTY_WEIGHT * penalty_factor * missing_ratio
+            skill_score = max(0.0, skill_score - effective_penalty)
 
         return skill_score, {
             "matched_req": matched_req, "missing_req": missing_req,
