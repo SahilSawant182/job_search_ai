@@ -201,42 +201,57 @@ class LLMService:
     def _parse_response(self, raw: dict, recommendations: list[CareerRecommendation]) -> CareerTrendResponse:
         """Convert the parsed JSON dictionary and merge with the python-ranked recommendations."""
         try:
-            # Create a lookup for python recommendations
             rec_lookup = {r.career.lower().strip(): r for r in recommendations}
+            final_paths = []
+            seen_careers = set()
             
             for path in raw.get("recommended_paths", []):
-                career_name = str(path.get("career", "")).lower().strip()
+                career_name = str(path.get("career", "")).strip()
                 why_for_you = str(path.get("why_for_you", "")).strip()
+                if not career_name:
+                    continue
                 
-                # Try exact/cleaned match
-                if career_name in rec_lookup:
-                    rec_lookup[career_name].why_for_you = why_for_you
+                c_name_lower = career_name.lower().strip()
+                matched_rec = None
+                
+                # 1. Exact match
+                if c_name_lower in rec_lookup:
+                    matched_rec = rec_lookup[c_name_lower]
                 else:
-                    # Try fallback matching (e.g. substring or first word)
-                    matched = False
+                    # 2. Substring/Fuzzy match fallback
                     for k, rec in rec_lookup.items():
-                        if k in career_name or career_name in k:
-                            rec.why_for_you = why_for_you
-                            matched = True
+                        if k in c_name_lower or c_name_lower in k:
+                            matched_rec = rec
                             break
-                    # If still not matched, just apply to the first one that has no why_for_you
-                    if not matched:
-                        for rec in recommendations:
-                            if not rec.why_for_you:
-                                rec.why_for_you = why_for_you
-                                break
+                
+                if matched_rec:
+                    rec_key = matched_rec.career.lower().strip()
+                    if rec_key not in seen_careers:
+                        seen_careers.add(rec_key)
+                        matched_rec.why_for_you = why_for_you
+                        final_paths.append(matched_rec)
+                else:
+                    logger.warning("LLM returned career not present in Python candidate set: %s (discarding)", career_name)
 
             # Ensure every recommendation has a why_for_you
-            for rec in recommendations:
+            for rec in final_paths:
                 if not rec.why_for_you:
                     rec.why_for_you = f"This path is a strong match for your skills in {', '.join(rec.skills[:3]) if rec.skills else 'your area'} and matches your academic background."
+
+            # Fallback to the original python-ranked list if final_paths is empty or invalid
+            if not final_paths:
+                logger.warning("No valid careers returned from LLM. Falling back to deterministic Python recommendations.")
+                final_paths = recommendations
+                for rec in final_paths:
+                    if not rec.why_for_you:
+                        rec.why_for_you = f"This path is a strong match for your skills in {', '.join(rec.skills[:3]) if rec.skills else 'your area'} and matches your academic background."
 
             strategy = raw.get("strategy", "")
             if not strategy:
                 strategy = "No overall strategy provided."
 
             return CareerTrendResponse(
-                recommended_paths=recommendations,
+                recommended_paths=final_paths,
                 strategy=strategy,
                 generated_at=datetime.now(tz=timezone.utc),
             )

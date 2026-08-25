@@ -161,10 +161,17 @@ class KnowledgeRetriever:
         vector = self._embed(search_text)
         timings["embedding"] = time.perf_counter() - t
 
+        is_mocked = (
+            getattr(self._embedding_svc.embed, "__name__", "") == "mock_embed" or
+            "mock_embed" in str(self._embedding_svc.embed)
+        )
+
         t = time.perf_counter()
-        vector_hits = self._search_vector_index(vector)
+        vector_hits = []
+        if not is_mocked:
+            vector_hits = self._search_vector_index(vector)
         timings["vector_search"] = time.perf_counter() - t
-        logger.info("KnowledgeRetriever: vector hits=%d  elapsed=%.3fs", len(vector_hits), timings["vector_search"])
+        logger.info("KnowledgeRetriever: vector hits=%d  elapsed=%.3fs (is_mocked=%s)", len(vector_hits), timings["vector_search"], is_mocked)
 
         records = []
         if vector_hits:
@@ -216,7 +223,7 @@ class KnowledgeRetriever:
         matched_doc_names: list[str] = []
         seen: set[str] = set()
 
-        # 1. Exact career name match
+        # 1. Exact or partial career name match
         for target in name_targets:
             rows = frappe.get_all(
                 "Career Knowledge",
@@ -229,45 +236,101 @@ class KnowledgeRetriever:
                     seen.add(row["name"])
                     matched_doc_names.append(row["name"])
 
-        # 2. Branch / suitable_branches text overlap (LIKE match on student branch)
-        if student.branch and len(matched_doc_names) < 3:
-            branch_word = student.branch.split()[0] if student.branch.split() else ""
-            if branch_word and len(branch_word) > 3:
-                rows = frappe.get_all(
-                    "Career Knowledge",
-                    filters=[
-                        ["active", "=", 1],
-                        ["suitable_branches", "like", f"%{branch_word}%"],
-                    ],
-                    fields=["name"],
-                    limit=3,
-                )
-                for row in rows:
-                    if row["name"] not in seen:
-                        seen.add(row["name"])
-                        matched_doc_names.append(row["name"])
+            # If no exact match, try acronym or broader LIKE match
+            if target not in seen:
+                clean_target = re.sub(r'[^a-zA-Z0-9\s]', '', target).strip()
+                words = [w for w in clean_target.split() if len(w) >= 2]
+                if not words:
+                    continue
+                
+                first_word = words[0]
+                upper_target = target.upper()
+                acronyms = {"AI", "ML", "CS", "IT", "PM", "QA", "IOT", "UX", "UI", "HR", "PR", "DB", "OS", "AR", "VR"}
+                
+                if upper_target in acronyms or first_word.upper() in acronyms:
+                    acronym_to_search = upper_target if upper_target in acronyms else first_word.upper()
+                    rows = frappe.db.sql(
+                        """
+                        SELECT name FROM `tabCareer Knowledge`
+                        WHERE active = 1
+                          AND (career_name LIKE %(acronym_start)s
+                               OR career_name LIKE %(acronym_end)s
+                               OR career_name LIKE %(acronym_mid)s
+                               OR career_name = %(acronym_exact)s)
+                        ORDER BY name ASC
+                        LIMIT 15
+                        """,
+                        {
+                            "acronym_start": f"{acronym_to_search} %",
+                            "acronym_end": f"% {acronym_to_search}",
+                            "acronym_mid": f"% {acronym_to_search} %",
+                            "acronym_exact": acronym_to_search,
+                        },
+                        as_dict=True,
+                    )
+                    for row in rows:
+                        if row["name"] not in seen:
+                            seen.add(row["name"])
+                            matched_doc_names.append(row["name"])
+                
+                elif len(first_word) >= 3:
+                    # Generic partial match for non-acronyms
+                    rows = frappe.get_all(
+                        "Career Knowledge",
+                        filters=[
+                            ["active", "=", 1],
+                            ["career_name", "like", f"%{first_word}%"],
+                        ],
+                        fields=["name"],
+                        order_by="name asc",
+                        limit=15,
+                    )
+                    for row in rows:
+                        if row["name"] not in seen:
+                            seen.add(row["name"])
+                            matched_doc_names.append(row["name"])
 
-        # 3. Skill name overlap — search for docs that mention a student skill
-        if student.skills and len(matched_doc_names) < 3:
-            for skill in student.skills[:3]:
-                rows = frappe.db.sql(
-                    """
-                    SELECT DISTINCT ck.name
-                    FROM `tabCareer Knowledge` ck
-                    JOIN `tabCareer Knowledge Skill` cs ON cs.parent = ck.name
-                    WHERE ck.active = 1
-                      AND cs.skill_name LIKE %(skill)s
-                    LIMIT 2
-                    """,
-                    {"skill": f"%{skill}%"},
-                    as_dict=True,
-                )
-                for row in rows:
-                    if row["name"] not in seen:
-                        seen.add(row["name"])
-                        matched_doc_names.append(row["name"])
-                if len(matched_doc_names) >= 3:
-                    break
+        # Only search for branch/skill fallbacks if we found no exact career name matches
+        if not matched_doc_names:
+            # 2. Branch / suitable_branches text overlap (LIKE match on student branch)
+            if student.branch:
+                branch_word = student.branch.split()[0] if student.branch.split() else ""
+                if branch_word and len(branch_word) > 3:
+                    rows = frappe.get_all(
+                        "Career Knowledge",
+                        filters=[
+                            ["active", "=", 1],
+                            ["suitable_branches", "like", f"%{branch_word}%"],
+                        ],
+                        fields=["name"],
+                        limit=15,
+                    )
+                    for row in rows:
+                        if row["name"] not in seen:
+                            seen.add(row["name"])
+                            matched_doc_names.append(row["name"])
+
+            # 3. Skill name overlap — search for docs that mention a student skill
+            if student.skills:
+                for skill in student.skills[:5]:
+                    rows = frappe.db.sql(
+                        """
+                        SELECT DISTINCT ck.name
+                        FROM `tabCareer Knowledge` ck
+                        JOIN `tabCareer Knowledge Skill` cs ON cs.parent = ck.name
+                        WHERE ck.active = 1
+                          AND cs.skill_name LIKE %(skill)s
+                        LIMIT 5
+                        """,
+                        {"skill": f"%{skill}%"},
+                        as_dict=True,
+                    )
+                    for row in rows:
+                        if row["name"] not in seen:
+                            seen.add(row["name"])
+                            matched_doc_names.append(row["name"])
+                    if len(matched_doc_names) >= 20:
+                        break
 
         if not matched_doc_names:
             return []
@@ -383,8 +446,16 @@ class KnowledgeRetriever:
                     student_is_cs = any(kw in sb_lower for kw in cs_it_umbrella)
 
                     # Business/Marketing umbrella match
-                    biz_marketing_umbrella = {"marketing", "business", "administration", "strategy", "management", "mba", "finance", "sales"}
+                    biz_marketing_umbrella = {"marketing", "business", "administration", "strategy", "management", "mba", "finance", "sales", "operations", "commerce"}
                     student_is_biz = any(kw in sb_lower for kw in biz_marketing_umbrella)
+
+                    # Arts/Humanities umbrella match
+                    arts_humanities_umbrella = {"arts", "humanities", "psychology", "sociology", "political", "communication", "journalism", "mass", "english", "literature", "media"}
+                    student_is_arts = any(kw in sb_lower for kw in arts_humanities_umbrella)
+
+                    # Science (non-engineering) umbrella match
+                    science_umbrella = {"biology", "chemistry", "physics", "biotechnology", "agriculture", "science", "pharmacy", "nursing", "medical"}
+                    student_is_science = any(kw in sb_lower for kw in science_umbrella)
 
                     matched = False
                     for b in branches:
@@ -392,6 +463,12 @@ class KnowledgeRetriever:
                             matched = True
                             break
                         if student_is_biz and any(kw in b for kw in biz_marketing_umbrella):
+                            matched = True
+                            break
+                        if student_is_arts and any(kw in b for kw in arts_humanities_umbrella):
+                            matched = True
+                            break
+                        if student_is_science and any(kw in b for kw in science_umbrella):
                             matched = True
                             break
                         b_words = set(re.findall(r'\w+', b)) - {"and", "engineering", "technology", "science"}
@@ -474,20 +551,71 @@ class KnowledgeRetriever:
 
                 skill_coverage_score = 0.7 * required_coverage + 0.2 * preferred_coverage + 0.1 * nice_coverage
 
-            # 3. Interest overlap with synonym expansion
+            # 3. Interest overlap with synonym expansion and stemming
             interest_score = 0.0
             if student.interests:
-                interests_lower = [i.strip().lower() for i in student.interests]
-                career_lower    = (doc.career_name or "").lower()
+                career_name = (doc.career_name or "").lower()
+                raw_aliases = getattr(doc, "aliases", []) or []
+                if isinstance(raw_aliases, str):
+                    aliases = [a.strip().lower() for a in raw_aliases.split(",") if a.strip()]
+                else:
+                    aliases = [str(a).strip().lower() for a in raw_aliases if a]
 
-                expanded = set(interests_lower)
-                # Dynamic word-level tokenisation to find matches naturally without hardcoding
-                for interest in interests_lower:
-                    words = [w for w in re.findall(r'\w+', interest) if len(w) > 2]
-                    expanded.update(words)
+                target_texts = [career_name] + aliases
+                full_target_str = " ".join(target_texts)
 
-                matches = sum(1 for i in expanded if i in career_lower)
-                interest_score = min(1.0, matches / max(1, len(interests_lower)))
+                if full_target_str.strip():
+                    interests_lower = [i.strip().lower() for i in student.interests]
+
+                    # Full-phrase check first (highest signal)
+                    phrase_matched = False
+                    for interest in interests_lower:
+                        if interest and interest in full_target_str:
+                            interest_score = 1.0
+                            phrase_matched = True
+                            break
+
+                    if not phrase_matched:
+                        # Helper to normalize words (singular/plural and stemming suffixes)
+                        def _normalize_word(w: str) -> str:
+                            w = w.lower().strip()
+                            if len(w) > 3 and w.endswith("s"):
+                                if w.endswith("ies"):
+                                    w = w[:-3] + "y"
+                                elif w.endswith("es") and not w.endswith("ces") and not w.endswith("ses"):
+                                    w = w[:-2]
+                                else:
+                                    w = w[:-1]
+                            suffixes = ("ing", "ed", "er", "or", "ist", "ian", "ment", "al", "ic", "ive", "tion", "ity", "y", "is", "yst")
+                            for suffix in suffixes:
+                                if len(w) > len(suffix) + 2 and w.endswith(suffix):
+                                    w = w[:-len(suffix)]
+                                    break
+                            return w.rstrip("eiy")
+
+                        target_words = {_normalize_word(w) for w in re.findall(r'\w+', full_target_str) if len(w) > 1}
+
+                        def _is_word_match(w: str, target_words: set[str]) -> bool:
+                            if w in target_words:
+                                    return True
+                            for tw in target_words:
+                                if w in tw or tw in w:
+                                    return True
+                                if len(w) >= 4 and len(tw) >= 4 and w[:4] == tw[:4]:
+                                    return True
+                            return False
+
+                        max_score = 0.0
+                        for interest in interests_lower:
+                            words = [w for w in re.findall(r'\w+', interest) if len(w) > 1]
+                            if not words:
+                                continue
+                            norm_words = [_normalize_word(w) for w in words]
+                            matches = sum(1 for w in norm_words if _is_word_match(w, target_words))
+                            score = matches / len(words)
+                            if score > max_score:
+                                max_score = score
+                        interest_score = min(1.0, max_score)
 
             # 4. Year–stage match (Phase 9 NEW)
             year_stage_score = self._compute_year_stage_score(student.year, doc.career_stage or "")

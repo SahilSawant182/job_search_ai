@@ -318,15 +318,30 @@ class PromptBuilder:
 
     def _matching_rules(self, context: "StudentContext", is_kh: bool) -> str:
         rule = getattr(context, "year_matching_rule", "")
+        interest_note = (
+            "INTEREST ≠ SKILL: Treat interests as preference signals, not evidence of proficiency. "
+            "Never claim that a student possesses a skill or competence merely because they listed a related topic or field in their interests. "
+            "Distinguish interest from actual competence."
+        )
+        learning_distance_note = (
+            "REALISTIC LEARNING DISTANCE: Prefer careers that are reasonably reachable from the student's current academic background, skills, and interests. "
+            "A strong interest alone should not outweigh a very large skill or domain gap."
+        )
         if is_kh:
             return (
                 f"Matching Rules: Recommend careers realistically achievable based on the student's current "
-                f"skills, interests, and graduation timeline. {rule}"
+                f"skills, academic background, and graduation timeline. {rule} "
+                f"Do NOT claim the student possesses a skill unless it appears in their supplied profile. "
+                f"{interest_note} {learning_distance_note}"
             )
         return (
             "## Matching Rules\n"
-            "1. Recommend careers realistically achievable based on current skills and interests.\n"
-            "2. Academic year determines realism: "
+            f"1. {learning_distance_note}\n"
+            "2. Recommend careers based on the intersection of the student's current skills, academic background, interests, and realistic learning distance.\n"
+            f"3. {interest_note}\n"
+            "4. Do NOT recommend a career solely because the student expressed interest in it — interest is not competence.\n"
+            "5. Do NOT claim the student possesses a skill unless it explicitly appears in the supplied student profile.\n"
+            "6. Academic year determines realism: "
             f"{rule}"
         )
 
@@ -337,22 +352,25 @@ class PromptBuilder:
         )
         if is_kh:
             return (
-                "RULE: For each Career in the templates above, provide a personalized explanation why it is suitable in 'why_for_you' (max 2 sentences).\n"
+                "RULE: For each Career in the templates above, provide a personalized explanation why it is suitable in 'why_for_you' (max 2 sentences). "
+                "Base it on the student's actual skills — not their interests. "
                 "Also provide overall placement strategy in 'strategy'.\n"
                 "Return ONLY JSON: " + schema
             )
         return (
             "## Output Format\n"
             "RULE: For each Career in the templates above, provide a personalized explanation why it is suitable in 'why_for_you' (max 2 sentences).\n"
-            "Also provide overall placement strategy in 'strategy' based on the student's graduation timeline.\n"
+            "Base the explanation on skills the student ACTUALLY POSSESSES — never on interests alone.\n"
+            "Also provide overall placement strategy in 'strategy' based on the student's graduation timeline and current skills.\n"
             "Do NOT include other fields. Do NOT invent new careers. Do NOT include URLs.\n"
+            "Do NOT fabricate skill possession — only reference skills present in the student profile.\n"
             "Return ONLY JSON:\n"
             "{\n"
-            '  "strategy": "strategic advice based on graduation timeline",\n'
+            '  "strategy": "strategic advice based on graduation timeline and actual skill profile",\n'
             '  "recommended_paths": [\n'
             "    {\n"
             '      "career": "exact job title from Evidence Career Templates",\n'
-            '      "why_for_you": "explanation why this career suits the student (max 2 sentences)"\n'
+            '      "why_for_you": "explanation grounded in the student\'s actual skills (max 2 sentences)"\n'
             "    }\n"
             "  ]\n"
             "}"

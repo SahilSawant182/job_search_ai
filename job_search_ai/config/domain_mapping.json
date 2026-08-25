@@ -8,5 +8,9 @@
   "civil engineering": ["civil", "structural", "construction", "surveying", "geotechnical", "infrastructure", "engineer"],
   "chemical engineering": ["chemical", "process", "petrochemical", "materials", "bioprocess", "engineer"],
   "agriculture": ["agriculture", "agronomy", "farming", "crop", "soil", "botany", "agricultural"],
-  "business administration": ["business", "management", "marketing", "finance", "sales", "hr", "operations", "strategy", "consultant", "analyst", "manager"]
+  "business administration": ["business", "management", "marketing", "finance", "sales", "hr", "operations", "strategy", "consultant", "analyst", "manager"],
+  "mass communication": ["media", "communication", "content", "writer", "editor", "journalist", "reporter", "marketing", "pr", "public relations", "advertising", "creator", "producer"],
+  "psychology": ["psychology", "mental", "wellbeing", "counsellor", "counselor", "therapist", "hr", "resources", "behavior", "behaviour", "health"],
+  "sociology": ["sociology", "social", "researcher", "policy", "development", "community", "public", "analyst"],
+  "political science": ["policy", "governance", "politics", "public", "government", "relations", "analyst", "advocate"]
 }

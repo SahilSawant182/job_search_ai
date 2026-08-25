@@ -16,6 +16,7 @@ RELATION_PREREQUISITE = "Prerequisite"
 
 # Adjacency list of implications: skill_key -> Set of implied canonical skill names
 _RELATIONSHIP_CACHE: Dict[str, Set[str]] = {}
+_EXPANDED_RELATIONS_CACHE: Dict[str, Set[str]] = {}
 _INITIALIZED = False
 
 
@@ -34,11 +35,12 @@ def initialize_relationship_cache(force: bool = False) -> None:
     This makes trust configurable per-record: curated imports (ESCO, O*NET) can
     be marked trusted by an admin even though their source_type is 'Imported'.
     """
-    global _RELATIONSHIP_CACHE, _INITIALIZED
+    global _RELATIONSHIP_CACHE, _INITIALIZED, _EXPANDED_RELATIONS_CACHE
     if _INITIALIZED and not force:
         return
 
     _RELATIONSHIP_CACHE.clear()
+    _EXPANDED_RELATIONS_CACHE.clear()
 
     # Confidence threshold for non-trusted (LLM/Imported) relationships
     confidence_threshold = _DEFAULT_CONFIDENCE_THRESHOLD
@@ -114,8 +116,9 @@ def invalidate_relationship_cache() -> None:
     """
     Force reload the relationship cache.
     """
-    global _INITIALIZED
+    global _INITIALIZED, _EXPANDED_RELATIONS_CACHE
     _INITIALIZED = False
+    _EXPANDED_RELATIONS_CACHE.clear()
     initialize_relationship_cache(force=True)
 
 
@@ -134,6 +137,10 @@ def expand_skill_relations(skill_name: str) -> Set[str]:
     start_key = get_skill_key(start_skill)
     if not start_key:
         return {start_skill}
+
+    global _EXPANDED_RELATIONS_CACHE
+    if start_key in _EXPANDED_RELATIONS_CACHE:
+        return _EXPANDED_RELATIONS_CACHE[start_key]
 
     visited: Set[str] = set()
     expanded_skills: Set[str] = {start_skill}
@@ -166,4 +173,5 @@ def expand_skill_relations(skill_name: str) -> Set[str]:
         rec_stack.pop()
 
     dfs(start_skill)
+    _EXPANDED_RELATIONS_CACHE[start_key] = expanded_skills
     return expanded_skills

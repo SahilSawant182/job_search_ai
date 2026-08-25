@@ -1,0 +1,2369 @@
+[
+  {
+    "profile_id": "STU001",
+    "name": "Aarav Frontend Beginner",
+    "goal": "Frontend Developer",
+    "interests": [
+      "Frontend Development",
+      "Web Development",
+      "UI Development"
+    ],
+    "skills": [
+      "HTML",
+      "CSS",
+      "JavaScript"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.17434111200054758,
+    "run1_recs": [
+      "Web Development Manager",
+      "Frontend Developer",
+      "Web Developer",
+      "Front End Developer"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.021934596999926725,
+    "run2_recs": [
+      "Web Development Manager",
+      "Frontend Developer",
+      "Web Developer",
+      "Front End Developer"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU002",
+    "name": "Riya Frontend Advanced",
+    "goal": "Frontend Developer",
+    "interests": [
+      "Frontend Development",
+      "React",
+      "UI Engineering"
+    ],
+    "skills": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "React",
+      "Redux",
+      "TypeScript",
+      "Git"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.036764188000233844,
+    "run1_recs": [
+      "Frontend Developer",
+      "Front End Developer",
+      "Web Development Manager",
+      "Web Developer",
+      "Data Engineer"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.024015545999645838,
+    "run2_recs": [
+      "Frontend Developer",
+      "Front End Developer",
+      "Web Development Manager",
+      "Web Developer",
+      "Data Engineer"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU003",
+    "name": "Aditya Backend",
+    "goal": "Backend Developer",
+    "interests": [
+      "Backend Development",
+      "APIs",
+      "Cloud Applications"
+    ],
+    "skills": [
+      "Python",
+      "SQL",
+      "Git",
+      "FastAPI",
+      "PostgreSQL"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.014284719999523077,
+    "run1_recs": [
+      "DevOps Engineer for Web Applications"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.013161500999558484,
+    "run2_recs": [
+      "DevOps Engineer for Web Applications"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU004",
+    "name": "Vihan Full Stack",
+    "goal": "Full Stack Developer",
+    "interests": [
+      "Full Stack Development",
+      "Web Applications",
+      "SaaS"
+    ],
+    "skills": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "React",
+      "Node.js",
+      "Express",
+      "MongoDB",
+      "Git"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.01767236499927094,
+    "run1_recs": [
+      "Full Stack Developer"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.010204975999840826,
+    "run2_recs": [
+      "Full Stack Developer"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU005",
+    "name": "Yash AI Engineer",
+    "goal": "AI Engineer",
+    "interests": [
+      "Artificial Intelligence",
+      "Deep Learning",
+      "Generative AI"
+    ],
+    "skills": [
+      "Python",
+      "Machine Learning",
+      "Deep Learning",
+      "TensorFlow",
+      "PyTorch",
+      "Git"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.033110743000179355,
+    "run1_recs": [
+      "AI Agent Developer",
+      "AI Engineer",
+      "AI Expert",
+      "AI/ML Engineer",
+      "Artificial Intelligence Engineer"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.029869928000152868,
+    "run2_recs": [
+      "AI Agent Developer",
+      "AI Engineer",
+      "AI Expert",
+      "AI/ML Engineer",
+      "Artificial Intelligence Engineer"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU006",
+    "name": "Rahul Data Scientist",
+    "goal": "Data Scientist",
+    "interests": [
+      "Data Science",
+      "Statistics",
+      "Predictive Analytics"
+    ],
+    "skills": [
+      "Python",
+      "SQL",
+      "Statistics",
+      "Pandas",
+      "Scikit-Learn",
+      "Machine Learning"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.6978014110000004,
+    "run1_recs": [
+      "Machine Learning Engineer",
+      "AI Engineer",
+      "Data Scientist",
+      "Artificial Intelligence Engineer",
+      "Biomedical Data Analyst",
+      "Business Intelligence Analyst"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "qwen2.5:1.5b",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.5638862310006516,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.02167588100019202,
+    "run2_recs": [
+      "Machine Learning Engineer",
+      "Data Scientist"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 0.99999994,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU007",
+    "name": "Karan DevOps",
+    "goal": "DevOps Engineer",
+    "interests": [
+      "DevOps",
+      "Cloud Engineering",
+      "Infrastructure Automation"
+    ],
+    "skills": [
+      "Git",
+      "Linux",
+      "Docker",
+      "Kubernetes",
+      "Terraform",
+      "AWS",
+      "Ansible",
+      "Prometheus"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.014982229000452207,
+    "run1_recs": [
+      "DevOps Engineer"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.012342902999989747,
+    "run2_recs": [
+      "DevOps Engineer"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU008",
+    "name": "Meera Frappe Developer",
+    "goal": "Frappe Developer",
+    "interests": [
+      "Frappe Framework",
+      "ERPNext",
+      "Enterprise Applications"
+    ],
+    "skills": [
+      "Python",
+      "Git",
+      "SQL",
+      "Frappe Framework",
+      "Frappe ORM",
+      "MariaDB",
+      "Redis"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.009139767000306165,
+    "run1_recs": [
+      "ERPNext Developer"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.007974658999955864,
+    "run2_recs": [
+      "ERPNext Developer"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU009",
+    "name": "Arjun Cybersecurity",
+    "goal": "Cybersecurity Analyst",
+    "interests": [
+      "Cybersecurity",
+      "Ethical Hacking",
+      "Network Security"
+    ],
+    "skills": [
+      "Linux",
+      "Networking",
+      "Python",
+      "Wireshark",
+      "Nmap",
+      "Git"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.012079522999556502,
+    "run1_recs": [
+      "Information Security Manager",
+      "Security Manager/Specialist"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.014512509999804024,
+    "run2_recs": [
+      "Information Security Manager",
+      "Security Manager/Specialist"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU010",
+    "name": "Sneha Cloud Engineer",
+    "goal": "Cloud Engineer",
+    "interests": [
+      "Cloud Computing",
+      "Cloud Architecture",
+      "Infrastructure"
+    ],
+    "skills": [
+      "AWS",
+      "Linux",
+      "Docker",
+      "Terraform",
+      "Networking",
+      "Python"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.011121884000203863,
+    "run1_recs": [
+      "Cloud Security Specialist"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.009413325999958033,
+    "run2_recs": [
+      "Cloud Security Specialist"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 0.99999994,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU011",
+    "name": "Rohan Mechanical Robotics",
+    "goal": "Robotics Engineer",
+    "interests": [
+      "Robotics",
+      "Automation",
+      "Manufacturing"
+    ],
+    "skills": [
+      "CAD",
+      "MATLAB",
+      "Python",
+      "PLC Basics"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 6.9919659319994025,
+    "run1_recs": [
+      "Robotics Engineer",
+      "Automation Engineer",
+      "Robotics and Artificial Intelligence Engineer"
+    ],
+    "run1_knowledge_hit": false,
+    "run1_model": "qwen2.5:1.5b",
+    "run1_tavily_used": true,
+    "run1_llm_time": 0.2805341129997032,
+    "run1_search_time": 4.238094019000528,
+    "run1_kb_build_time": 2.395314060000601,
+    "run1_error": null,
+    "run2_status": "FAIL",
+    "run2_duration": 0.41808697800024675,
+    "run2_recs": [],
+    "run2_knowledge_hit": false,
+    "run2_model": "N/A",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 0.0,
+    "run2_comb_sim": 0.0,
+    "run2_error": "TavilyService failed: All Tavily searches failed. Errors: 'Robotics required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Robotics career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}"
+  },
+  {
+    "profile_id": "STU012",
+    "name": "Isha Mechanical Design",
+    "goal": "Mechanical Design Engineer",
+    "interests": [
+      "Product Design",
+      "Mechanical Design",
+      "Manufacturing"
+    ],
+    "skills": [
+      "AutoCAD",
+      "SolidWorks",
+      "CAD",
+      "GD&T"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.012485102000027837,
+    "run1_recs": [
+      "Product Designer"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.01685148599972308,
+    "run2_recs": [
+      "Product Designer"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 0.99999994,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU013",
+    "name": "Om Electrical Engineer",
+    "goal": "Electrical Engineer",
+    "interests": [
+      "Power Systems",
+      "Electrical Design",
+      "Renewable Energy"
+    ],
+    "skills": [
+      "MATLAB",
+      "Circuit Analysis",
+      "AutoCAD Electrical",
+      "Electrical Machines"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.015928376999909233,
+    "run1_recs": [
+      "Power Systems Engineer"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.014156870000078925,
+    "run2_recs": [
+      "Power Systems Engineer"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU014",
+    "name": "Ananya Electronics Embedded",
+    "goal": "Embedded Systems Engineer",
+    "interests": [
+      "Embedded Systems",
+      "IoT",
+      "Electronics"
+    ],
+    "skills": [
+      "C",
+      "C++",
+      "Microcontrollers",
+      "Arduino",
+      "Embedded C"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.007830079000086698,
+    "run1_recs": [
+      "Embedded Systems Engineer"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.011786533000304189,
+    "run2_recs": [
+      "Embedded Systems Engineer"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU015",
+    "name": "Vivek Civil Engineer",
+    "goal": "Civil Engineer",
+    "interests": [
+      "Construction",
+      "Infrastructure",
+      "Structural Engineering"
+    ],
+    "skills": [
+      "AutoCAD",
+      "STAAD Pro",
+      "Structural Analysis",
+      "Project Planning"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.007998559000043315,
+    "run1_recs": [
+      "Construction Engineer"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.011330452999573026,
+    "run2_recs": [
+      "Construction Engineer"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU016",
+    "name": "Kavya Chemical",
+    "goal": "Process Engineer",
+    "interests": [
+      "Process Engineering",
+      "Manufacturing",
+      "Energy"
+    ],
+    "skills": [
+      "Process Simulation",
+      "MATLAB",
+      "Thermodynamics",
+      "Process Control"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.016158896999513672,
+    "run1_recs": [
+      "Process Engineer",
+      "Manufacturing Engineer"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.018988103000083356,
+    "run2_recs": [
+      "Process Engineer",
+      "Manufacturing Engineer"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU017",
+    "name": "Tanya Statistics",
+    "goal": "Data Analyst",
+    "interests": [
+      "Statistics",
+      "Data Analysis",
+      "Research"
+    ],
+    "skills": [
+      "Excel",
+      "Statistics",
+      "R",
+      "SQL"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.018036034000033396,
+    "run1_recs": [
+      "Data Scientist",
+      "Data Engineer"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.02157026099939685,
+    "run2_recs": [
+      "Data Scientist",
+      "Data Engineer"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU018",
+    "name": "Priya Mathematics",
+    "goal": "Data Scientist",
+    "interests": [
+      "Analytics",
+      "Statistics",
+      "Machine Learning"
+    ],
+    "skills": [
+      "Python",
+      "Statistics",
+      "Linear Algebra",
+      "SQL"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.03261465500054328,
+    "run1_recs": [
+      "AI Agent Developer",
+      "Machine Learning Engineer",
+      "Business Intelligence Analyst",
+      "Data Scientist",
+      "Artificial Intelligence Engineer"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.03650876800020342,
+    "run2_recs": [
+      "AI Agent Developer",
+      "Machine Learning Engineer",
+      "Business Intelligence Analyst",
+      "Data Scientist",
+      "Artificial Intelligence Engineer"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU019",
+    "name": "Aditi Physics",
+    "goal": "Research Scientist",
+    "interests": [
+      "Research",
+      "Simulation",
+      "Data Analysis"
+    ],
+    "skills": [
+      "Python",
+      "MATLAB",
+      "Numerical Methods",
+      "Statistics"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.01877505399988877,
+    "run1_recs": [
+      "Data Analyst"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.023439167000105954,
+    "run2_recs": [
+      "Data Analyst"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU020",
+    "name": "Nikhil Biotechnology",
+    "goal": "Bioinformatics Analyst",
+    "interests": [
+      "Biotechnology",
+      "Genomics",
+      "Healthcare Research"
+    ],
+    "skills": [
+      "Biology",
+      "Biostatistics",
+      "Python",
+      "Laboratory Techniques"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.01415071000064927,
+    "run1_recs": [
+      "Biotech Research Scientist"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.010678175000066403,
+    "run2_recs": [
+      "Biotech Research Scientist"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU021",
+    "name": "Sahil Finance",
+    "goal": "Financial Analyst",
+    "interests": [
+      "Finance",
+      "Investment Analysis",
+      "Banking"
+    ],
+    "skills": [
+      "Excel",
+      "Financial Modeling",
+      "Accounting",
+      "Financial Analysis"
+    ],
+    "run1_status": "FAIL",
+    "run1_duration": 0.4740003599999909,
+    "run1_recs": [],
+    "run1_knowledge_hit": false,
+    "run1_model": "N/A",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": "TavilyService failed: All Tavily searches failed. Errors: 'Finance career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Finance business management required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}",
+    "run2_status": "FAIL",
+    "run2_duration": 0.4796001740005522,
+    "run2_recs": [],
+    "run2_knowledge_hit": false,
+    "run2_model": "N/A",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 0.0,
+    "run2_comb_sim": 0.0,
+    "run2_error": "TavilyService failed: All Tavily searches failed. Errors: 'Finance career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Finance business management required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}"
+  },
+  {
+    "profile_id": "STU022",
+    "name": "Neha Accounting",
+    "goal": "Accountant",
+    "interests": [
+      "Accounting",
+      "Auditing",
+      "Taxation"
+    ],
+    "skills": [
+      "Accounting",
+      "Tally",
+      "Excel",
+      "GST"
+    ],
+    "run1_status": "FAIL",
+    "run1_duration": 0.45835940200049663,
+    "run1_recs": [],
+    "run1_knowledge_hit": false,
+    "run1_model": "N/A",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": "TavilyService failed: All Tavily searches failed. Errors: 'Accounting career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Accounting business management required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}",
+    "run2_status": "FAIL",
+    "run2_duration": 0.46003360000031535,
+    "run2_recs": [],
+    "run2_knowledge_hit": false,
+    "run2_model": "N/A",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 0.0,
+    "run2_comb_sim": 0.0,
+    "run2_error": "TavilyService failed: All Tavily searches failed. Errors: 'Accounting business management required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Accounting career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}"
+  },
+  {
+    "profile_id": "STU023",
+    "name": "Riya Investment",
+    "goal": "Investment Banking Analyst",
+    "interests": [
+      "Investment Banking",
+      "Equity Research",
+      "Capital Markets"
+    ],
+    "skills": [
+      "Financial Modeling",
+      "Excel",
+      "Valuation",
+      "Financial Analysis"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.014122261000011349,
+    "run1_recs": [
+      "ESG Investment Banking Specialist",
+      "Investment Advisor"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.00858876800066355,
+    "run2_recs": [
+      "ESG Investment Banking Specialist",
+      "Investment Advisor"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU024",
+    "name": "Kunal Banking",
+    "goal": "Banking Operations Analyst",
+    "interests": [
+      "Banking",
+      "Financial Services",
+      "Risk Management"
+    ],
+    "skills": [
+      "Excel",
+      "Accounting",
+      "Financial Analysis",
+      "Communication"
+    ],
+    "run1_status": "FAIL",
+    "run1_duration": 0.43777774199952546,
+    "run1_recs": [],
+    "run1_knowledge_hit": false,
+    "run1_model": "N/A",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": "TavilyService failed: All Tavily searches failed. Errors: 'Banking career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Banking business management required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}",
+    "run2_status": "FAIL",
+    "run2_duration": 0.4618561889992634,
+    "run2_recs": [],
+    "run2_knowledge_hit": false,
+    "run2_model": "N/A",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 0.0,
+    "run2_comb_sim": 0.0,
+    "run2_error": "TavilyService failed: All Tavily searches failed. Errors: 'Banking business management required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Banking career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}"
+  },
+  {
+    "profile_id": "STU025",
+    "name": "Aman Marketing",
+    "goal": "Digital Marketing Specialist",
+    "interests": [
+      "Digital Marketing",
+      "Brand Strategy",
+      "Advertising"
+    ],
+    "skills": [
+      "SEO",
+      "Google Analytics",
+      "Content Writing",
+      "Social Media Marketing"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.0118051130002641,
+    "run1_recs": [
+      "Digital Marketing Specialist"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.00861655900007463,
+    "run2_recs": [
+      "Digital Marketing Specialist"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU026",
+    "name": "Shreya HR",
+    "goal": "HR Specialist",
+    "interests": [
+      "Human Resources",
+      "Recruitment",
+      "Employee Engagement"
+    ],
+    "skills": [
+      "Communication",
+      "Recruitment",
+      "Excel",
+      "Interviewing"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.005349653999473958,
+    "run1_recs": [
+      "Employee Engagement Specialist"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.009131517000241729,
+    "run2_recs": [
+      "Employee Engagement Specialist"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU027",
+    "name": "Dev Business Analyst",
+    "goal": "Business Analyst",
+    "interests": [
+      "Business Analytics",
+      "Process Improvement",
+      "Data Analysis"
+    ],
+    "skills": [
+      "Excel",
+      "SQL",
+      "Power BI",
+      "Requirements Gathering"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.018633284000316053,
+    "run1_recs": [
+      "Data Analyst",
+      "Business Analyst",
+      "Business Intelligence Specialist"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.0165199869998105,
+    "run2_recs": [
+      "Data Analyst",
+      "Business Analyst",
+      "Business Intelligence Specialist"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU028",
+    "name": "Mahi Product Management",
+    "goal": "Product Manager",
+    "interests": [
+      "Product Management",
+      "Technology Products",
+      "Business Strategy"
+    ],
+    "skills": [
+      "Market Research",
+      "Product Strategy",
+      "Excel",
+      "Communication"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.012574682000376924,
+    "run1_recs": [
+      "Product Manager",
+      "Senior Product Manager"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.015081379000548623,
+    "run2_recs": [
+      "Product Manager",
+      "Senior Product Manager"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU029",
+    "name": "Varun Operations",
+    "goal": "Operations Analyst",
+    "interests": [
+      "Operations",
+      "Supply Chain",
+      "Process Optimization"
+    ],
+    "skills": [
+      "Excel",
+      "Supply Chain Basics",
+      "Process Mapping",
+      "Data Analysis"
+    ],
+    "run1_status": "FAIL",
+    "run1_duration": 0.4735561309998957,
+    "run1_recs": [],
+    "run1_knowledge_hit": false,
+    "run1_model": "N/A",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": "TavilyService failed: All Tavily searches failed. Errors: 'Operations career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Operations business management required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}",
+    "run2_status": "FAIL",
+    "run2_duration": 0.42188341499968374,
+    "run2_recs": [],
+    "run2_knowledge_hit": false,
+    "run2_model": "N/A",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 0.0,
+    "run2_comb_sim": 0.0,
+    "run2_error": "TavilyService failed: All Tavily searches failed. Errors: 'Operations business management required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Operations career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}"
+  },
+  {
+    "profile_id": "STU030",
+    "name": "Pooja Entrepreneurship",
+    "goal": "Entrepreneur",
+    "interests": [
+      "Entrepreneurship",
+      "Startups",
+      "Business Strategy"
+    ],
+    "skills": [
+      "Business Planning",
+      "Market Research",
+      "Communication",
+      "Financial Modeling"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.006699851000121271,
+    "run1_recs": [
+      "Business Development Manager"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.007165979000092193,
+    "run2_recs": [
+      "Business Development Manager"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU031",
+    "name": "Aarya UI UX Designer",
+    "goal": "UI UX Designer",
+    "interests": [
+      "UI/UX Design",
+      "Product Design",
+      "User Research"
+    ],
+    "skills": [
+      "Figma",
+      "Wireframing",
+      "Prototyping",
+      "User Research"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.011095054999714193,
+    "run1_recs": [
+      "UX Designer",
+      "UI Designer"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.007793118000336108,
+    "run2_recs": [
+      "UX Designer",
+      "UI Designer"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU032",
+    "name": "Rohit Graphic Designer",
+    "goal": "Graphic Designer",
+    "interests": [
+      "Graphic Design",
+      "Branding",
+      "Visual Communication"
+    ],
+    "skills": [
+      "Photoshop",
+      "Illustrator",
+      "Typography",
+      "Brand Design"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.00805178800055728,
+    "run1_recs": [
+      "Graphic Designer"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.010877374000301643,
+    "run2_recs": [
+      "Graphic Designer"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU033",
+    "name": "Ira Animation Student",
+    "goal": "3D Artist",
+    "interests": [
+      "Animation",
+      "3D Design",
+      "Motion Graphics"
+    ],
+    "skills": [
+      "Blender",
+      "3D Modeling",
+      "Animation",
+      "After Effects"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.006156893000479613,
+    "run1_recs": [
+      "Animation Director"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.010853755999960413,
+    "run2_recs": [
+      "Animation Director"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU034",
+    "name": "Kabir Content Creator",
+    "goal": "Content Creator",
+    "interests": [
+      "Content Creation",
+      "Social Media",
+      "Video Production"
+    ],
+    "skills": [
+      "Video Editing",
+      "Content Writing",
+      "Storytelling",
+      "Social Media"
+    ],
+    "run1_status": "FAIL",
+    "run1_duration": 0.4352343580003435,
+    "run1_recs": [],
+    "run1_knowledge_hit": false,
+    "run1_model": "N/A",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": "TavilyService failed: All Tavily searches failed. Errors: 'Content Creation career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Content Creation social sciences humanities required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}",
+    "run2_status": "FAIL",
+    "run2_duration": 0.4473160790003021,
+    "run2_recs": [],
+    "run2_knowledge_hit": false,
+    "run2_model": "N/A",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 0.0,
+    "run2_comb_sim": 0.0,
+    "run2_error": "TavilyService failed: All Tavily searches failed. Errors: 'Content Creation social sciences humanities required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Content Creation career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}"
+  },
+  {
+    "profile_id": "STU035",
+    "name": "Anjali Psychology",
+    "goal": "Counsellor",
+    "interests": [
+      "Psychology",
+      "Mental Wellbeing",
+      "Counselling"
+    ],
+    "skills": [
+      "Communication",
+      "Psychological Assessment",
+      "Counselling Basics",
+      "Research"
+    ],
+    "run1_status": "FAIL",
+    "run1_duration": 0.42646668899942597,
+    "run1_recs": [],
+    "run1_knowledge_hit": false,
+    "run1_model": "N/A",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": "TavilyService failed: All Tavily searches failed. Errors: 'Psychology social sciences humanities required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Psychology career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}",
+    "run2_status": "FAIL",
+    "run2_duration": 0.4002083559998937,
+    "run2_recs": [],
+    "run2_knowledge_hit": false,
+    "run2_model": "N/A",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 0.0,
+    "run2_comb_sim": 0.0,
+    "run2_error": "TavilyService failed: All Tavily searches failed. Errors: 'Psychology social sciences humanities required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Psychology career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}"
+  },
+  {
+    "profile_id": "STU036",
+    "name": "Sameer Sociology",
+    "goal": "Social Researcher",
+    "interests": [
+      "Social Research",
+      "Community Development",
+      "Public Policy"
+    ],
+    "skills": [
+      "Research",
+      "Data Collection",
+      "Communication",
+      "Report Writing"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.009374617000503349,
+    "run1_recs": [
+      "Social Researcher",
+      "Social Scientist",
+      "Researcher"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.02413393700044253,
+    "run2_recs": [
+      "Social Researcher",
+      "Social Scientist",
+      "Researcher"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU037",
+    "name": "Megha Political Science",
+    "goal": "Policy Analyst",
+    "interests": [
+      "Public Policy",
+      "Governance",
+      "Politics"
+    ],
+    "skills": [
+      "Research",
+      "Policy Analysis",
+      "Writing",
+      "Public Speaking"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.014929830000255606,
+    "run1_recs": [
+      "Policy Analyst"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.010547904999839375,
+    "run2_recs": [
+      "Policy Analyst"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU038",
+    "name": "Sakshi English",
+    "goal": "Content Writer",
+    "interests": [
+      "Writing",
+      "Publishing",
+      "Content"
+    ],
+    "skills": [
+      "Writing",
+      "Editing",
+      "Research",
+      "Communication"
+    ],
+    "run1_status": "FAIL",
+    "run1_duration": 0.43766818399944896,
+    "run1_recs": [],
+    "run1_knowledge_hit": false,
+    "run1_model": "N/A",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": "TavilyService failed: All Tavily searches failed. Errors: 'Writing required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Writing career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}",
+    "run2_status": "FAIL",
+    "run2_duration": 0.4415461580001647,
+    "run2_recs": [],
+    "run2_knowledge_hit": false,
+    "run2_model": "N/A",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 0.0,
+    "run2_comb_sim": 0.0,
+    "run2_error": "TavilyService failed: All Tavily searches failed. Errors: 'Writing career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Writing required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}"
+  },
+  {
+    "profile_id": "STU039",
+    "name": "Rahul Law",
+    "goal": "Corporate Lawyer",
+    "interests": [
+      "Corporate Law",
+      "Legal Research",
+      "Compliance"
+    ],
+    "skills": [
+      "Legal Research",
+      "Contract Drafting",
+      "Communication",
+      "Compliance"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.008352430000741151,
+    "run1_recs": [
+      "Corporate Law Specialist"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.012994102999982715,
+    "run2_recs": [
+      "Corporate Law Specialist"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU040",
+    "name": "Naina Legal Tech",
+    "goal": "Technology Lawyer",
+    "interests": [
+      "Legal Technology",
+      "Cyber Law",
+      "Technology Law"
+    ],
+    "skills": [
+      "Legal Research",
+      "Cyber Law",
+      "Contract Drafting",
+      "Basic Python"
+    ],
+    "run1_status": "FAIL",
+    "run1_duration": 0.3831022309996115,
+    "run1_recs": [],
+    "run1_knowledge_hit": false,
+    "run1_model": "N/A",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": "TavilyService failed: All Tavily searches failed. Errors: 'Legal Technology career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Legal Technology legal law required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}",
+    "run2_status": "FAIL",
+    "run2_duration": 0.42154171699985454,
+    "run2_recs": [],
+    "run2_knowledge_hit": false,
+    "run2_model": "N/A",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 0.0,
+    "run2_comb_sim": 0.0,
+    "run2_error": "TavilyService failed: All Tavily searches failed. Errors: 'Legal Technology legal law required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Legal Technology career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}"
+  },
+  {
+    "profile_id": "STU041",
+    "name": "Diya Nursing",
+    "goal": "Registered Nurse",
+    "interests": [
+      "Healthcare",
+      "Patient Care",
+      "Clinical Practice"
+    ],
+    "skills": [
+      "Patient Care",
+      "Clinical Assessment",
+      "Communication",
+      "Basic Medical Knowledge"
+    ],
+    "run1_status": "FAIL",
+    "run1_duration": 0.40424507099942275,
+    "run1_recs": [],
+    "run1_knowledge_hit": false,
+    "run1_model": "N/A",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": "TavilyService failed: All Tavily searches failed. Errors: 'Healthcare career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Healthcare healthcare medical required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}",
+    "run2_status": "FAIL",
+    "run2_duration": 0.39355025599979854,
+    "run2_recs": [],
+    "run2_knowledge_hit": false,
+    "run2_model": "N/A",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 0.0,
+    "run2_comb_sim": 0.0,
+    "run2_error": "TavilyService failed: All Tavily searches failed. Errors: 'Healthcare career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Healthcare healthcare medical required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}"
+  },
+  {
+    "profile_id": "STU042",
+    "name": "Aarohi Pharmacy",
+    "goal": "Pharmacist",
+    "interests": [
+      "Pharmaceuticals",
+      "Drug Research",
+      "Healthcare"
+    ],
+    "skills": [
+      "Pharmacology",
+      "Drug Formulation",
+      "Laboratory Techniques",
+      "Research"
+    ],
+    "run1_status": "FAIL",
+    "run1_duration": 0.406996147999962,
+    "run1_recs": [],
+    "run1_knowledge_hit": false,
+    "run1_model": "N/A",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": "TavilyService failed: All Tavily searches failed. Errors: 'Pharmaceuticals healthcare medical required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Pharmaceuticals career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}",
+    "run2_status": "FAIL",
+    "run2_duration": 0.4358359660000133,
+    "run2_recs": [],
+    "run2_knowledge_hit": false,
+    "run2_model": "N/A",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 0.0,
+    "run2_comb_sim": 0.0,
+    "run2_error": "TavilyService failed: All Tavily searches failed. Errors: 'Pharmaceuticals career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Pharmaceuticals healthcare medical required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}"
+  },
+  {
+    "profile_id": "STU043",
+    "name": "Manav Medical",
+    "goal": "Doctor",
+    "interests": [
+      "Medicine",
+      "Clinical Care",
+      "Healthcare"
+    ],
+    "skills": [
+      "Clinical Diagnosis",
+      "Patient Care",
+      "Medical Research",
+      "Communication"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.01260423300027469,
+    "run1_recs": [
+      "Clinical Data Manager"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.018440865000229678,
+    "run2_recs": [
+      "Clinical Data Manager"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU044",
+    "name": "Isha Biotechnology Healthcare",
+    "goal": "Biotechnology Researcher",
+    "interests": [
+      "Biotech",
+      "Healthcare Technology",
+      "Genomics"
+    ],
+    "skills": [
+      "Biology",
+      "PCR",
+      "Biostatistics",
+      "Research"
+    ],
+    "run1_status": "FAIL",
+    "run1_duration": 0.4597162529998968,
+    "run1_recs": [],
+    "run1_knowledge_hit": false,
+    "run1_model": "N/A",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": "TavilyService failed: All Tavily searches failed. Errors: 'Biotech science research required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Biotech career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}",
+    "run2_status": "FAIL",
+    "run2_duration": 0.4519454239998595,
+    "run2_recs": [],
+    "run2_knowledge_hit": false,
+    "run2_model": "N/A",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 0.0,
+    "run2_comb_sim": 0.0,
+    "run2_error": "TavilyService failed: All Tavily searches failed. Errors: 'Biotech science research required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Biotech career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}"
+  },
+  {
+    "profile_id": "STU045",
+    "name": "Vikas Agriculture",
+    "goal": "Agronomist",
+    "interests": [
+      "Agriculture",
+      "Agri Technology",
+      "Sustainable Farming"
+    ],
+    "skills": [
+      "Agronomy",
+      "Crop Management",
+      "Soil Science",
+      "Data Collection"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.01701848599986988,
+    "run1_recs": [
+      "Agriculture Specialist",
+      "Farm Management Specialist"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.016213887000049,
+    "run2_recs": [
+      "Agriculture Specialist",
+      "Farm Management Specialist"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU046",
+    "name": "Neel AgriTech",
+    "goal": "AgriTech Engineer",
+    "interests": [
+      "AgriTech",
+      "IoT",
+      "Smart Farming"
+    ],
+    "skills": [
+      "Python",
+      "IoT",
+      "Sensors",
+      "Data Analysis"
+    ],
+    "run1_status": "FAIL",
+    "run1_duration": 0.39590997400046035,
+    "run1_recs": [],
+    "run1_knowledge_hit": false,
+    "run1_model": "N/A",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": "TavilyService failed: All Tavily searches failed. Errors: 'AgriTech career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'AgriTech required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}",
+    "run2_status": "FAIL",
+    "run2_duration": 0.40196462599942606,
+    "run2_recs": [],
+    "run2_knowledge_hit": false,
+    "run2_model": "N/A",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 0.0,
+    "run2_comb_sim": 0.0,
+    "run2_error": "TavilyService failed: All Tavily searches failed. Errors: 'AgriTech career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'AgriTech required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}"
+  },
+  {
+    "profile_id": "STU047",
+    "name": "Tanvi Food Technology",
+    "goal": "Food Technologist",
+    "interests": [
+      "Food Technology",
+      "Food Safety",
+      "Product Development"
+    ],
+    "skills": [
+      "Food Chemistry",
+      "Quality Control",
+      "Food Processing",
+      "Laboratory Techniques"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.010711765000451123,
+    "run1_recs": [
+      "Food Innovation Specialist"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.011279184999693825,
+    "run2_recs": [
+      "Food Innovation Specialist"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU048",
+    "name": "Rohan Hospitality",
+    "goal": "Hotel Operations Manager",
+    "interests": [
+      "Hospitality",
+      "Hotels",
+      "Travel"
+    ],
+    "skills": [
+      "Customer Service",
+      "Hotel Operations",
+      "Communication",
+      "Event Management"
+    ],
+    "run1_status": "FAIL",
+    "run1_duration": 0.4393018729997493,
+    "run1_recs": [],
+    "run1_knowledge_hit": false,
+    "run1_model": "N/A",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": "TavilyService failed: All Tavily searches failed. Errors: 'Hospitality career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Hospitality business management required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}",
+    "run2_status": "FAIL",
+    "run2_duration": 0.381502723000267,
+    "run2_recs": [],
+    "run2_knowledge_hit": false,
+    "run2_model": "N/A",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 0.0,
+    "run2_comb_sim": 0.0,
+    "run2_error": "TavilyService failed: All Tavily searches failed. Errors: 'Hospitality business management required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Hospitality career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}"
+  },
+  {
+    "profile_id": "STU049",
+    "name": "Maya Tourism",
+    "goal": "Travel Consultant",
+    "interests": [
+      "Travel",
+      "Tourism",
+      "Event Management"
+    ],
+    "skills": [
+      "Travel Planning",
+      "Customer Service",
+      "Communication",
+      "Event Management"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.010043264999694657,
+    "run1_recs": [
+      "Travel and Tourism Manager"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.009152396999525081,
+    "run2_recs": [
+      "Travel and Tourism Manager"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU050",
+    "name": "Raj Education",
+    "goal": "Teacher",
+    "interests": [
+      "Teaching",
+      "Education",
+      "Child Development"
+    ],
+    "skills": [
+      "Lesson Planning",
+      "Communication",
+      "Classroom Management",
+      "Assessment"
+    ],
+    "run1_status": "FAIL",
+    "run1_duration": 0.4203200689998994,
+    "run1_recs": [],
+    "run1_knowledge_hit": false,
+    "run1_model": "N/A",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": "TavilyService failed: All Tavily searches failed. Errors: 'Teaching career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Teaching required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}",
+    "run2_status": "FAIL",
+    "run2_duration": 0.4224250170000232,
+    "run2_recs": [],
+    "run2_knowledge_hit": false,
+    "run2_model": "N/A",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 0.0,
+    "run2_comb_sim": 0.0,
+    "run2_error": "TavilyService failed: All Tavily searches failed. Errors: 'Teaching career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Teaching required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}"
+  },
+  {
+    "profile_id": "STU051",
+    "name": "Nidhi Educational Technology",
+    "goal": "Instructional Designer",
+    "interests": [
+      "EdTech",
+      "Online Learning",
+      "Instructional Design"
+    ],
+    "skills": [
+      "Instructional Design",
+      "Content Development",
+      "LMS",
+      "Communication"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.010312155000065104,
+    "run1_recs": [
+      "Instructional Designer"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.013037210999755189,
+    "run2_recs": [
+      "Instructional Designer"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU052",
+    "name": "Aman Economics",
+    "goal": "Economic Analyst",
+    "interests": [
+      "Economics",
+      "Finance",
+      "Market Research"
+    ],
+    "skills": [
+      "Economics",
+      "Statistics",
+      "Excel",
+      "Data Analysis"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.01337974100079009,
+    "run1_recs": [
+      "Market Research Analyst"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.013658181000209879,
+    "run2_recs": [
+      "Market Research Analyst"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 0.99999994,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU053",
+    "name": "Pallavi Journalism",
+    "goal": "Journalist",
+    "interests": [
+      "Journalism",
+      "Media",
+      "Investigative Reporting"
+    ],
+    "skills": [
+      "Writing",
+      "Research",
+      "Interviewing",
+      "Video Editing"
+    ],
+    "run1_status": "FAIL",
+    "run1_duration": 0.43449900899940985,
+    "run1_recs": [],
+    "run1_knowledge_hit": false,
+    "run1_model": "N/A",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": "TavilyService failed: All Tavily searches failed. Errors: 'Journalism career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Journalism social sciences humanities required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}",
+    "run2_status": "FAIL",
+    "run2_duration": 0.5148644469991268,
+    "run2_recs": [],
+    "run2_knowledge_hit": false,
+    "run2_model": "N/A",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 0.0,
+    "run2_comb_sim": 0.0,
+    "run2_error": "TavilyService failed: All Tavily searches failed. Errors: 'Journalism career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Journalism social sciences humanities required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}"
+  },
+  {
+    "profile_id": "STU054",
+    "name": "Ayesha Fashion",
+    "goal": "Fashion Designer",
+    "interests": [
+      "Fashion Design",
+      "Apparel",
+      "Creative Design"
+    ],
+    "skills": [
+      "Fashion Illustration",
+      "Pattern Making",
+      "Textile Knowledge",
+      "Design"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.01346277100037696,
+    "run1_recs": [
+      "E-commerce Fashion Designer",
+      "Fashion Designer",
+      "Digital Fashion Designer"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.018970711999827472,
+    "run2_recs": [
+      "E-commerce Fashion Designer",
+      "Fashion Designer",
+      "Digital Fashion Designer"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU055",
+    "name": "Sameer Career Switcher",
+    "goal": "Career Switch",
+    "interests": [
+      "Software Development",
+      "Web Development",
+      "AI"
+    ],
+    "skills": [
+      "Excel",
+      "SQL",
+      "HTML",
+      "CSS",
+      "Python"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.010220997000033094,
+    "run1_recs": [
+      "Web Development Manager"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.009888226000839495,
+    "run2_recs": [
+      "Web Development Manager"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU056",
+    "name": "Pooja Business to Data",
+    "goal": "Data Analyst",
+    "interests": [
+      "Data Science",
+      "Business Analytics",
+      "Machine Learning"
+    ],
+    "skills": [
+      "Excel",
+      "SQL",
+      "Power BI",
+      "Python"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.017881535000014992,
+    "run1_recs": [
+      "Data Scientist",
+      "Data Analyst"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.02136246999998548,
+    "run2_recs": [
+      "Data Scientist",
+      "Data Analyst"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU057",
+    "name": "Ritesh Engineering to Finance",
+    "goal": "Financial Analyst",
+    "interests": [
+      "Finance",
+      "Investment",
+      "Analytics"
+    ],
+    "skills": [
+      "Excel",
+      "Python",
+      "Statistics",
+      "Financial Modeling"
+    ],
+    "run1_status": "FAIL",
+    "run1_duration": 0.4047300419997555,
+    "run1_recs": [],
+    "run1_knowledge_hit": false,
+    "run1_model": "N/A",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": "TavilyService failed: All Tavily searches failed. Errors: 'Finance career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Finance required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}",
+    "run2_status": "FAIL",
+    "run2_duration": 0.42217142800018337,
+    "run2_recs": [],
+    "run2_knowledge_hit": false,
+    "run2_model": "N/A",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 0.0,
+    "run2_comb_sim": 0.0,
+    "run2_error": "TavilyService failed: All Tavily searches failed. Errors: 'Finance career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Finance required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}"
+  },
+  {
+    "profile_id": "STU058",
+    "name": "Snehal Creative Tech",
+    "goal": "UX Engineer",
+    "interests": [
+      "UX Engineering",
+      "Frontend Development",
+      "Product Design"
+    ],
+    "skills": [
+      "Figma",
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "User Research"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.025318064000202867,
+    "run1_recs": [
+      "Frontend Developer",
+      "Front End Developer",
+      "Web Development Manager",
+      "UX/UI Designer",
+      "UX Designer"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.027649050999571045,
+    "run2_recs": [
+      "Frontend Developer",
+      "Front End Developer",
+      "Web Development Manager",
+      "UX/UI Designer",
+      "UX Designer"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU059",
+    "name": "Harsh Mixed AI Business",
+    "goal": "AI Product Manager",
+    "interests": [
+      "AI",
+      "Business Strategy",
+      "Product Management"
+    ],
+    "skills": [
+      "Python",
+      "SQL",
+      "Excel",
+      "Power BI",
+      "Machine Learning"
+    ],
+    "run1_status": "SUCCESS",
+    "run1_duration": 0.01940565300083108,
+    "run1_recs": [
+      "Business Analyst - AI",
+      "Data Scientist"
+    ],
+    "run1_knowledge_hit": true,
+    "run1_model": "profile_recommendation_knowledge",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": null,
+    "run2_status": "SUCCESS",
+    "run2_duration": 0.011051754999243713,
+    "run2_recs": [
+      "Business Analyst - AI",
+      "Data Scientist"
+    ],
+    "run2_knowledge_hit": true,
+    "run2_model": "profile_recommendation_knowledge",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 1.0,
+    "run2_comb_sim": 1.0,
+    "run2_error": null
+  },
+  {
+    "profile_id": "STU060",
+    "name": "Zero Skill Beginner",
+    "goal": "Explore Career",
+    "interests": [
+      "Technology",
+      "Business",
+      "Creative Work"
+    ],
+    "skills": [],
+    "run1_status": "FAIL",
+    "run1_duration": 0.42395194600067043,
+    "run1_recs": [],
+    "run1_knowledge_hit": false,
+    "run1_model": "N/A",
+    "run1_tavily_used": false,
+    "run1_llm_time": 0.0,
+    "run1_search_time": 0.0,
+    "run1_kb_build_time": 0.0,
+    "run1_error": "TavilyService failed: All Tavily searches failed. Errors: 'Technology career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Technology social sciences humanities required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}",
+    "run2_status": "FAIL",
+    "run2_duration": 0.3466215150001517,
+    "run2_recs": [],
+    "run2_knowledge_hit": false,
+    "run2_model": "N/A",
+    "run2_tavily_used": false,
+    "run2_avg_sim": 0.0,
+    "run2_comb_sim": 0.0,
+    "run2_error": "TavilyService failed: All Tavily searches failed. Errors: 'Technology career demand hiring trends future growth India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}; 'Technology social sciences humanities required skills job description site:linkedin.com/jobs OR site:indeed.com OR site:naukri.com India': Tavily HTTP error 432: . {\"detail\":{\"error\":\"This request exceeds your plan's set usage limit. Please upgrade your plan or contact support@tavily.com\"}}"
+  }
+]

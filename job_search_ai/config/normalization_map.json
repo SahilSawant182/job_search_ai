@@ -1,4 +1,12 @@
 {
+  "data analitics": {
+    "interests": ["data analytics", "data science", "business intelligence"],
+    "skills": ["python", "sql", "pandas", "numpy", "power bi", "tableau", "excel"]
+  },
+  "data analytics": {
+    "interests": ["data analytics", "data science", "business intelligence"],
+    "skills": ["python", "sql", "pandas", "numpy", "power bi", "tableau", "excel"]
+  },
   "mern": {
     "interests": ["web development", "full stack development", "software engineering"],
     "skills": ["mongodb", "express", "react", "node.js"]

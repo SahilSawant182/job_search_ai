@@ -1,0 +1,569 @@
+CareerTrendAgent: KnowledgeBuilder failed for interest='Research' (KnowledgeBuilder: CareerLLMExtractor returned no valid careers for focus='Research'.) — skipping
+CareerTrendAgent: KnowledgeBuilder failed for interest='Entrepreneurship' (KnowledgeBuilder: CareerLLMExtractor returned no valid careers for focus='Entrepreneurship'.) — skipping
+CareerTrendAgent: no candidates available — returning empty recommendation
+CareerTrendAgent: KnowledgeBuilder failed for interest='Entrepreneurship' (KnowledgeBuilder: CareerLLMExtractor returned no valid careers for focus='Entrepreneurship'.) — skipping
+CareerTrendAgent: no candidates available — returning empty recommendation
+CareerTrendAgent: KnowledgeBuilder failed for interest='Legal Technology' (KnowledgeBuilder: CareerLLMExtractor returned no valid careers for focus='Legal Technology'.) — skipping
+CareerTrendAgent: no candidates available — returning empty recommendation
+CareerTrendAgent: KnowledgeBuilder failed for interest='Healthcare' (KnowledgeBuilder: CareerLLMExtractor returned no valid careers for focus='Healthcare'.) — skipping
+CareerTrendAgent: no candidates available — returning empty recommendation
+CareerTrendAgent: KnowledgeBuilder failed for interest='Healthcare' (KnowledgeBuilder: CareerLLMExtractor returned no valid careers for focus='Healthcare'.) — skipping
+CareerTrendAgent: no candidates available — returning empty recommendation
+==================================================
+TRACING STU001 - Aarav Frontend Beginner (COLD)
+==================================================
+PKB Hit/Miss       : MISS
+PKB Similarity     : 1.0000
+Domain Compat      : Compatible
+Candidate Count    : 5
+Candidate Careers  : ['Web Development Manager', 'Frontend Developer', 'Web Developer', 'Front End Developer', 'Full Stack Developer']
+Scored Candidates count: 5
+Python Rank (Pre-LLM): ['Web Development Manager', 'Frontend Developer', 'Web Developer']
+LLM Rank (Post-LLM)  : ['Web Development Manager', 'Frontend Developer', 'Web Developer']
+LLM Changed Rank?  : NO
+
+Top Scored Candidates Details:
+  1. Web Development Manager:
+     Interest Score : 1.0000
+     Skill Score    : 0.7000
+     Degree Score   : 1.0000
+     Branch Score   : 1.0000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.8500
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: JavaScript, HTML', '✓ Domain keyword overlap (57%)', '✓ Academic degree compatible (B.Tech)', '✓ Branch domain aligned (Computer Science)']
+  2. Frontend Developer:
+     Interest Score : 1.0000
+     Skill Score    : 0.7000
+     Degree Score   : 1.0000
+     Branch Score   : 1.0000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.8500
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: JavaScript, HTML5', '✓ Domain keyword overlap (42%)', '✓ Academic degree compatible (B.Tech)', '✓ Branch domain aligned (Computer Science)']
+  3. Web Developer:
+     Interest Score : 1.0000
+     Skill Score    : 0.5125
+     Degree Score   : 1.0000
+     Branch Score   : 1.0000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.7562
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: javascript, html, css', '✓ Domain keyword overlap (57%)', '✓ Academic degree compatible (B.Tech)', '✓ Branch domain aligned (Computer Science)']
+--------------------------------------------------
+==================================================
+TRACING STU001 - Aarav Frontend Beginner (WARM)
+==================================================
+PKB Hit/Miss       : HIT
+PKB Similarity     : 1.0000
+Domain Compat      : Compatible
+Candidate Count    : 5
+Candidate Careers  : ['Web Development Manager', 'Frontend Developer', 'Web Developer', 'Front End Developer', 'Full Stack Developer']
+Scored Candidates count: 5
+Python Rank (Pre-LLM): ['Web Development Manager', 'Frontend Developer', 'Web Developer']
+LLM Rank (Post-LLM)  : ['Web Development Manager', 'Frontend Developer', 'Web Developer']
+LLM Changed Rank?  : NO
+
+Top Scored Candidates Details:
+  1. Web Development Manager:
+     Interest Score : 1.0000
+     Skill Score    : 0.7000
+     Degree Score   : 1.0000
+     Branch Score   : 1.0000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.8500
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: JavaScript, HTML', '✓ Domain keyword overlap (57%)', '✓ Academic degree compatible (B.Tech)', '✓ Branch domain aligned (Computer Science)']
+  2. Frontend Developer:
+     Interest Score : 1.0000
+     Skill Score    : 0.7000
+     Degree Score   : 1.0000
+     Branch Score   : 1.0000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.8500
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: JavaScript, HTML5', '✓ Domain keyword overlap (42%)', '✓ Academic degree compatible (B.Tech)', '✓ Branch domain aligned (Computer Science)']
+  3. Web Developer:
+     Interest Score : 1.0000
+     Skill Score    : 0.5125
+     Degree Score   : 1.0000
+     Branch Score   : 1.0000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.7562
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: javascript, html, css', '✓ Domain keyword overlap (57%)', '✓ Academic degree compatible (B.Tech)', '✓ Branch domain aligned (Computer Science)']
+--------------------------------------------------
+==================================================
+TRACING STU018 - Priya Mathematics (COLD)
+==================================================
+PKB Hit/Miss       : MISS
+PKB Similarity     : 0.0000
+Domain Compat      : N/A
+Candidate Count    : 11
+Candidate Careers  : ['Business Intelligence Analyst', 'Machine Learning Engineer', 'Analytics Specialist', 'AI Engineer', 'Quantitative Analyst', 'Data Analyst', 'AI E2E Test Engineer', 'Research Analyst', 'Analytics Manager', 'AI/ML Engineer', 'Business/ Data Analyst']
+Scored Candidates count: 11
+Python Rank (Pre-LLM): ['Machine Learning Engineer', 'Analytics Specialist', 'Quantitative Analyst']
+LLM Rank (Post-LLM)  : ['AI Agent Developer', 'Machine Learning Engineer', 'Agricultural Data Scientist']
+LLM Changed Rank?  : YES
+
+Top Scored Candidates Details:
+  1. Machine Learning Engineer:
+     Interest Score : 1.0000
+     Skill Score    : 0.2200
+     Degree Score   : 1.0000
+     Branch Score   : 1.0000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.6100
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: python, sql', '✓ Domain keyword overlap (50%)', '✓ Academic degree compatible (B.Sc)', '✓ Branch domain aligned (Mathematics)']
+  2. Analytics Specialist:
+     Interest Score : 1.0000
+     Skill Score    : 0.2000
+     Degree Score   : 1.0000
+     Branch Score   : 1.0000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.6000
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: SQL', '✓ Matched preferred skills: Statistics', '✓ Domain keyword overlap (37%)', '✓ Academic degree compatible (B.Sc)', '✓ Branch domain aligned (Mathematics)']
+  3. Quantitative Analyst:
+     Interest Score : 1.0000
+     Skill Score    : 0.0600
+     Degree Score   : 1.0000
+     Branch Score   : 1.0000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.5300
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: Statistics', '✓ Domain keyword overlap (50%)', '✓ Academic degree compatible (B.Sc)', '✓ Branch domain aligned (Mathematics)']
+--------------------------------------------------
+==================================================
+TRACING STU018 - Priya Mathematics (WARM)
+==================================================
+PKB Hit/Miss       : MISS
+PKB Similarity     : 0.0000
+Domain Compat      : N/A
+Candidate Count    : 11
+Candidate Careers  : ['Business Intelligence Analyst', 'Machine Learning Engineer', 'Analytics Specialist', 'AI Engineer', 'Quantitative Analyst', 'Data Analyst', 'AI E2E Test Engineer', 'Research Analyst', 'Analytics Manager', 'AI/ML Engineer', 'Business/ Data Analyst']
+Scored Candidates count: 11
+Python Rank (Pre-LLM): ['Machine Learning Engineer', 'Analytics Specialist', 'Quantitative Analyst']
+LLM Rank (Post-LLM)  : ['AI Agent Developer', 'Machine Learning Engineer', 'Agricultural Data Scientist']
+LLM Changed Rank?  : YES
+
+Top Scored Candidates Details:
+  1. Machine Learning Engineer:
+     Interest Score : 1.0000
+     Skill Score    : 0.2200
+     Degree Score   : 1.0000
+     Branch Score   : 1.0000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.6100
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: python, sql', '✓ Domain keyword overlap (50%)', '✓ Academic degree compatible (B.Sc)', '✓ Branch domain aligned (Mathematics)']
+  2. Analytics Specialist:
+     Interest Score : 1.0000
+     Skill Score    : 0.2000
+     Degree Score   : 1.0000
+     Branch Score   : 1.0000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.6000
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: SQL', '✓ Matched preferred skills: Statistics', '✓ Domain keyword overlap (37%)', '✓ Academic degree compatible (B.Sc)', '✓ Branch domain aligned (Mathematics)']
+  3. Quantitative Analyst:
+     Interest Score : 1.0000
+     Skill Score    : 0.0600
+     Degree Score   : 1.0000
+     Branch Score   : 1.0000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.5300
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: Statistics', '✓ Domain keyword overlap (50%)', '✓ Academic degree compatible (B.Sc)', '✓ Branch domain aligned (Mathematics)']
+--------------------------------------------------
+==================================================
+TRACING STU019 - Aditi Physics (COLD)
+==================================================
+PKB Hit/Miss       : MISS
+PKB Similarity     : 1.0000
+Domain Compat      : Compatible
+Candidate Count    : 7
+Candidate Careers  : ['AI E2E Test Engineer', 'AI Engineer', 'Research Analyst', 'Data Analyst', 'Research Scientist', 'Researcher', 'Business Intelligence Analyst']
+Scored Candidates count: 6
+Python Rank (Pre-LLM): ['AI E2E Test Engineer', 'Research Analyst', 'AI Engineer']
+LLM Rank (Post-LLM)  : ['AI E2E Test Engineer', 'Research Analyst', 'AI Engineer']
+LLM Changed Rank?  : NO
+
+Top Scored Candidates Details:
+  1. AI E2E Test Engineer:
+     Interest Score : 1.0000
+     Skill Score    : 0.0333
+     Degree Score   : 0.5000
+     Branch Score   : 0.5000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.5167
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: Python Programming', '✓ Domain keyword overlap (11%)']
+  2. Research Analyst:
+     Interest Score : 1.0000
+     Skill Score    : 0.0143
+     Degree Score   : 1.0000
+     Branch Score   : 0.8000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.5071
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: statistics', '✓ Domain keyword overlap (44%)', '✓ Academic degree compatible (B.Sc)', '✓ Branch domain aligned (Physics)']
+  3. AI Engineer:
+     Interest Score : 1.0000
+     Skill Score    : 0.0000
+     Degree Score   : 1.0000
+     Branch Score   : 1.0000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.5000
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: python', '✓ Domain keyword overlap (33%)', '✓ Academic degree compatible (B.Sc)', '✓ Branch domain aligned (Physics)']
+--------------------------------------------------
+==================================================
+TRACING STU019 - Aditi Physics (WARM)
+==================================================
+PKB Hit/Miss       : HIT
+PKB Similarity     : 1.0000
+Domain Compat      : Compatible
+Candidate Count    : 7
+Candidate Careers  : ['AI E2E Test Engineer', 'AI Engineer', 'Research Analyst', 'Data Analyst', 'Research Scientist', 'Researcher', 'Business Intelligence Analyst']
+Scored Candidates count: 6
+Python Rank (Pre-LLM): ['AI E2E Test Engineer', 'Research Analyst', 'AI Engineer']
+LLM Rank (Post-LLM)  : ['Research Scientist', 'Data Analyst']
+LLM Changed Rank?  : YES
+
+Top Scored Candidates Details:
+  1. AI E2E Test Engineer:
+     Interest Score : 1.0000
+     Skill Score    : 0.0333
+     Degree Score   : 0.5000
+     Branch Score   : 0.5000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.5167
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: Python Programming', '✓ Domain keyword overlap (11%)']
+  2. Research Analyst:
+     Interest Score : 1.0000
+     Skill Score    : 0.0143
+     Degree Score   : 1.0000
+     Branch Score   : 0.8000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.5071
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: statistics', '✓ Domain keyword overlap (44%)', '✓ Academic degree compatible (B.Sc)', '✓ Branch domain aligned (Physics)']
+  3. AI Engineer:
+     Interest Score : 1.0000
+     Skill Score    : 0.0000
+     Degree Score   : 1.0000
+     Branch Score   : 1.0000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.5000
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: python', '✓ Domain keyword overlap (33%)', '✓ Academic degree compatible (B.Sc)', '✓ Branch domain aligned (Physics)']
+--------------------------------------------------
+==================================================
+TRACING STU022 - Neha Accounting (COLD)
+==================================================
+PKB Hit/Miss       : MISS
+PKB Similarity     : 1.0000
+Domain Compat      : Compatible
+Candidate Count    : 8
+Candidate Careers  : ['CPA (Certified Public Accountant)', 'Fund Accountant', 'Accountant', 'Financial Accountant', 'Certified Public Accountant (CPA)', 'Chartered Accountant (CA)', 'Auditing and Assurance Specialist', 'Certified Management Accountant (CMA)']
+Scored Candidates count: 8
+Python Rank (Pre-LLM): ['CPA (Certified Public Accountant)', 'Fund Accountant', 'Accountant']
+LLM Rank (Post-LLM)  : ['CPA (Certified Public Accountant)', 'Fund Accountant', 'Accountant']
+LLM Changed Rank?  : NO
+
+Top Scored Candidates Details:
+  1. CPA (Certified Public Accountant):
+     Interest Score : 1.0000
+     Skill Score    : 0.3167
+     Degree Score   : 1.0000
+     Branch Score   : 1.0000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.6583
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: Accounting Standards', '✓ Matched preferred skills: Forensic Accounting', '✓ Domain keyword overlap (42%)', '✓ Academic degree compatible (B.Com)', '✓ Branch domain aligned (Accounting and Finance)']
+  2. Fund Accountant:
+     Interest Score : 1.0000
+     Skill Score    : 0.2000
+     Degree Score   : 1.0000
+     Branch Score   : 0.8000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.6000
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: financial accounting, fund accounting, accounting', '✓ Domain keyword overlap (14%)', '✓ Academic degree compatible (B.Com)', '✓ Branch domain aligned (Accounting and Finance)']
+  3. Accountant:
+     Interest Score : 1.0000
+     Skill Score    : 0.1667
+     Degree Score   : 1.0000
+     Branch Score   : 0.8000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.5833
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: Accounting Software', '✓ Domain keyword overlap (28%)', '✓ Academic degree compatible (B.Com)', '✓ Branch domain aligned (Accounting and Finance)']
+--------------------------------------------------
+==================================================
+TRACING STU022 - Neha Accounting (WARM)
+==================================================
+PKB Hit/Miss       : HIT
+PKB Similarity     : 1.0000
+Domain Compat      : Compatible
+Candidate Count    : 8
+Candidate Careers  : ['CPA (Certified Public Accountant)', 'Fund Accountant', 'Accountant', 'Financial Accountant', 'Certified Public Accountant (CPA)', 'Chartered Accountant (CA)', 'Auditing and Assurance Specialist', 'Certified Management Accountant (CMA)']
+Scored Candidates count: 8
+Python Rank (Pre-LLM): ['CPA (Certified Public Accountant)', 'Fund Accountant', 'Accountant']
+LLM Rank (Post-LLM)  : ['CPA (Certified Public Accountant)', 'Fund Accountant', 'Accountant']
+LLM Changed Rank?  : NO
+
+Top Scored Candidates Details:
+  1. CPA (Certified Public Accountant):
+     Interest Score : 1.0000
+     Skill Score    : 0.3167
+     Degree Score   : 1.0000
+     Branch Score   : 1.0000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.6583
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: Accounting Standards', '✓ Matched preferred skills: Forensic Accounting', '✓ Domain keyword overlap (42%)', '✓ Academic degree compatible (B.Com)', '✓ Branch domain aligned (Accounting and Finance)']
+  2. Fund Accountant:
+     Interest Score : 1.0000
+     Skill Score    : 0.2000
+     Degree Score   : 1.0000
+     Branch Score   : 0.8000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.6000
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: financial accounting, fund accounting, accounting', '✓ Domain keyword overlap (14%)', '✓ Academic degree compatible (B.Com)', '✓ Branch domain aligned (Accounting and Finance)']
+  3. Accountant:
+     Interest Score : 1.0000
+     Skill Score    : 0.1667
+     Degree Score   : 1.0000
+     Branch Score   : 0.8000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.5833
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: Accounting Software', '✓ Domain keyword overlap (28%)', '✓ Academic degree compatible (B.Com)', '✓ Branch domain aligned (Accounting and Finance)']
+--------------------------------------------------
+==================================================
+TRACING STU030 - Pooja Entrepreneurship (COLD)
+==================================================
+PKB Hit/Miss       : MISS
+PKB Similarity     : 1.0000
+Domain Compat      : Compatible
+Candidate Count    : 0
+Candidate Careers  : []
+Scored Candidates count: 0
+Python Rank (Pre-LLM): []
+LLM Rank (Post-LLM)  : []
+LLM Changed Rank?  : NO
+
+Top Scored Candidates Details:
+--------------------------------------------------
+==================================================
+TRACING STU030 - Pooja Entrepreneurship (WARM)
+==================================================
+PKB Hit/Miss       : HIT
+PKB Similarity     : 1.0000
+Domain Compat      : Compatible
+Candidate Count    : 0
+Candidate Careers  : []
+Scored Candidates count: 0
+Python Rank (Pre-LLM): []
+LLM Rank (Post-LLM)  : []
+LLM Changed Rank?  : NO
+
+Top Scored Candidates Details:
+--------------------------------------------------
+==================================================
+TRACING STU040 - Naina Legal Tech (COLD)
+==================================================
+PKB Hit/Miss       : MISS
+PKB Similarity     : 1.0000
+Domain Compat      : Compatible
+Candidate Count    : 0
+Candidate Careers  : []
+Scored Candidates count: 0
+Python Rank (Pre-LLM): []
+LLM Rank (Post-LLM)  : []
+LLM Changed Rank?  : NO
+
+Top Scored Candidates Details:
+--------------------------------------------------
+==================================================
+TRACING STU040 - Naina Legal Tech (WARM)
+==================================================
+PKB Hit/Miss       : HIT
+PKB Similarity     : 1.0000
+Domain Compat      : Compatible
+Candidate Count    : 0
+Candidate Careers  : []
+Scored Candidates count: 0
+Python Rank (Pre-LLM): []
+LLM Rank (Post-LLM)  : ['Legal Tech Specialist']
+LLM Changed Rank?  : NO
+
+Top Scored Candidates Details:
+--------------------------------------------------
+==================================================
+TRACING STU041 - Diya Nursing (COLD)
+==================================================
+PKB Hit/Miss       : MISS
+PKB Similarity     : 0.0000
+Domain Compat      : N/A
+Candidate Count    : 0
+Candidate Careers  : []
+Scored Candidates count: 0
+Python Rank (Pre-LLM): []
+LLM Rank (Post-LLM)  : []
+LLM Changed Rank?  : NO
+
+Top Scored Candidates Details:
+--------------------------------------------------
+==================================================
+TRACING STU041 - Diya Nursing (WARM)
+==================================================
+PKB Hit/Miss       : MISS
+PKB Similarity     : 0.0000
+Domain Compat      : N/A
+Candidate Count    : 0
+Candidate Careers  : []
+Scored Candidates count: 0
+Python Rank (Pre-LLM): []
+LLM Rank (Post-LLM)  : []
+LLM Changed Rank?  : NO
+
+Top Scored Candidates Details:
+--------------------------------------------------
+==================================================
+TRACING STU055 - Sameer Career Switcher (COLD)
+==================================================
+PKB Hit/Miss       : MISS
+PKB Similarity     : 0.0000
+Domain Compat      : N/A
+Candidate Count    : 20
+Candidate Careers  : ['Full Stack Developer', 'Analytics Specialist', 'Agent Architect', 'Data Analyst', 'AI Engineer', 'Automation Engineer', 'Business Analyst', 'Market Research Analyst', 'Financial Analyst', 'Financial Planner', 'Compliance Officer', 'Wealth Manager', 'Agritech Business Analyst', 'Corporate Law Specialist', 'Investment Advisor', 'Accountant', 'Financial Advisor', 'Financial Services Advisor', 'Account Manager', 'Research Analyst']
+Scored Candidates count: 20
+Python Rank (Pre-LLM): ['Analytics Specialist', 'Data Analyst', 'Business Analyst']
+LLM Rank (Post-LLM)  : ['Analytics Specialist', 'Data Analyst', 'Business Analyst']
+LLM Changed Rank?  : NO
+
+Top Scored Candidates Details:
+  1. Analytics Specialist:
+     Interest Score : 1.0000
+     Skill Score    : 0.3000
+     Degree Score   : 1.0000
+     Branch Score   : 0.0000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.6500
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: SQL, Excel', '✓ Domain keyword overlap (22%)', '✓ Academic degree compatible (B.Com)']
+  2. Data Analyst:
+     Interest Score : 1.0000
+     Skill Score    : 0.0333
+     Degree Score   : 1.0000
+     Branch Score   : 1.0000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.5167
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: python, sql, excel', '✓ Domain keyword overlap (33%)', '✓ Academic degree compatible (B.Com)', '✓ Branch domain aligned (Commerce)']
+  3. Business Analyst:
+     Interest Score : 1.0000
+     Skill Score    : 0.0000
+     Degree Score   : 1.0000
+     Branch Score   : 0.0000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.5000
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: sql, excel, python', '✓ Domain keyword overlap (33%)', '✓ Academic degree compatible (B.Com)']
+--------------------------------------------------
+==================================================
+TRACING STU055 - Sameer Career Switcher (WARM)
+==================================================
+PKB Hit/Miss       : MISS
+PKB Similarity     : 0.0000
+Domain Compat      : N/A
+Candidate Count    : 20
+Candidate Careers  : ['Full Stack Developer', 'Analytics Specialist', 'Agent Architect', 'Data Analyst', 'AI Engineer', 'Automation Engineer', 'Business Analyst', 'Market Research Analyst', 'Financial Analyst', 'Financial Planner', 'Compliance Officer', 'Wealth Manager', 'Agritech Business Analyst', 'Corporate Law Specialist', 'Investment Advisor', 'Accountant', 'Financial Advisor', 'Financial Services Advisor', 'Account Manager', 'Research Analyst']
+Scored Candidates count: 20
+Python Rank (Pre-LLM): ['Analytics Specialist', 'Data Analyst', 'Business Analyst']
+LLM Rank (Post-LLM)  : ['Analytics Specialist', 'Data Analyst', 'Business Analyst']
+LLM Changed Rank?  : NO
+
+Top Scored Candidates Details:
+  1. Analytics Specialist:
+     Interest Score : 1.0000
+     Skill Score    : 0.3000
+     Degree Score   : 1.0000
+     Branch Score   : 0.0000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.6500
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: SQL, Excel', '✓ Domain keyword overlap (22%)', '✓ Academic degree compatible (B.Com)']
+  2. Data Analyst:
+     Interest Score : 1.0000
+     Skill Score    : 0.0333
+     Degree Score   : 1.0000
+     Branch Score   : 1.0000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.5167
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: python, sql, excel', '✓ Domain keyword overlap (33%)', '✓ Academic degree compatible (B.Com)', '✓ Branch domain aligned (Commerce)']
+  3. Business Analyst:
+     Interest Score : 1.0000
+     Skill Score    : 0.0000
+     Degree Score   : 1.0000
+     Branch Score   : 0.0000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.5000
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: sql, excel, python', '✓ Domain keyword overlap (33%)', '✓ Academic degree compatible (B.Com)']
+--------------------------------------------------
+==================================================
+TRACING STU059 - Harsh Mixed AI Business (COLD)
+==================================================
+PKB Hit/Miss       : MISS
+PKB Similarity     : 0.0000
+Domain Compat      : N/A
+Candidate Count    : 20
+Candidate Careers  : ['Agent Architect', 'AI Engineer', 'Data Analyst', 'AI E2E Test Engineer', 'Automation Engineer', 'Financial Analyst', 'Pharmaceutical Data Analyst', 'Digital Transformation Specialist', 'IT Sales Director', 'Customer Success Manager', 'Marketing Coordinator', 'Hospitality Manager', 'Agricultural Consultant', 'Pharma Marketing Specialist', 'Regulatory Affairs Specialist', 'Digital Marketing Specialist', 'Auditing and Assurance Specialist', 'Global Reporting Specialist', 'Financial Planner', 'Digital Journalist']
+Scored Candidates count: 20
+Python Rank (Pre-LLM): ['Agent Architect', 'AI Engineer', 'Data Analyst']
+LLM Rank (Post-LLM)  : ['Agent Architect', 'AI Engineer', 'Data Analyst']
+LLM Changed Rank?  : NO
+
+Top Scored Candidates Details:
+  1. Agent Architect:
+     Interest Score : 1.0000
+     Skill Score    : 0.2000
+     Degree Score   : 0.8000
+     Branch Score   : 0.8000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.6000
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: machine learning, python, sql', '✓ Domain keyword overlap (30%)', '✓ Academic degree compatible (BBA)', '✓ Branch domain aligned (Business Analytics)']
+  2. AI Engineer:
+     Interest Score : 1.0000
+     Skill Score    : 0.1176
+     Degree Score   : 0.8000
+     Branch Score   : 0.8000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.5588
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: python, sql, machine learning algorithms', '✓ Matched preferred skills: power bi, machine learning', '✓ Domain keyword overlap (40%)', '✓ Academic degree compatible (BBA)', '✓ Branch domain aligned (Business Analytics)']
+  3. Data Analyst:
+     Interest Score : 1.0000
+     Skill Score    : 0.0833
+     Degree Score   : 1.0000
+     Branch Score   : 1.0000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.5417
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: python, sql, excel', '✓ Matched preferred skills: power bi, machine learning, microsoft power bi', '✓ Domain keyword overlap (80%)', '✓ Academic degree compatible (BBA)', '✓ Branch domain aligned (Business Analytics)']
+--------------------------------------------------
+==================================================
+TRACING STU059 - Harsh Mixed AI Business (WARM)
+==================================================
+PKB Hit/Miss       : MISS
+PKB Similarity     : 0.0000
+Domain Compat      : N/A
+Candidate Count    : 20
+Candidate Careers  : ['Agent Architect', 'AI Engineer', 'Data Analyst', 'AI E2E Test Engineer', 'Automation Engineer', 'Financial Analyst', 'Pharmaceutical Data Analyst', 'Digital Transformation Specialist', 'IT Sales Director', 'Customer Success Manager', 'Marketing Coordinator', 'Hospitality Manager', 'Agricultural Consultant', 'Pharma Marketing Specialist', 'Regulatory Affairs Specialist', 'Digital Marketing Specialist', 'Auditing and Assurance Specialist', 'Global Reporting Specialist', 'Financial Planner', 'Digital Journalist']
+Scored Candidates count: 20
+Python Rank (Pre-LLM): ['Agent Architect', 'AI Engineer', 'Data Analyst']
+LLM Rank (Post-LLM)  : ['Agent Architect', 'AI Engineer', 'Data Analyst']
+LLM Changed Rank?  : NO
+
+Top Scored Candidates Details:
+  1. Agent Architect:
+     Interest Score : 1.0000
+     Skill Score    : 0.2000
+     Degree Score   : 0.8000
+     Branch Score   : 0.8000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.6000
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: machine learning, python, sql', '✓ Domain keyword overlap (30%)', '✓ Academic degree compatible (BBA)', '✓ Branch domain aligned (Business Analytics)']
+  2. AI Engineer:
+     Interest Score : 1.0000
+     Skill Score    : 0.1176
+     Degree Score   : 0.8000
+     Branch Score   : 0.8000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.5588
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: python, sql, machine learning algorithms', '✓ Matched preferred skills: power bi, machine learning', '✓ Domain keyword overlap (40%)', '✓ Academic degree compatible (BBA)', '✓ Branch domain aligned (Business Analytics)']
+  3. Data Analyst:
+     Interest Score : 1.0000
+     Skill Score    : 0.0833
+     Degree Score   : 1.0000
+     Branch Score   : 1.0000
+     Fit Type       : DIRECT_FIT
+     Final Score    : 0.5417
+     Reason Codes   : ['✓ Interest matched student focus/shorthand (100%)', '✓ Matched required skills: python, sql, excel', '✓ Matched preferred skills: power bi, machine learning, microsoft power bi', '✓ Domain keyword overlap (80%)', '✓ Academic degree compatible (BBA)', '✓ Branch domain aligned (Business Analytics)']
+--------------------------------------------------

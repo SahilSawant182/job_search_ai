@@ -215,47 +215,44 @@ class KnowledgeBuilder:
         Returns a BuiltKnowledge whose .profiles list contains one
         MergedCareerProfile per valid career extracted.
         """
-        if not results:
-            raise KnowledgeBuilderError(
-                "KnowledgeBuilder.build(): results list is empty."
-            )
-
-        logger.info(
-            "KnowledgeBuilder starting: career_focus=%r  country=%r  results=%d",
-            self._career_name, self._country, len(results),
-        )
         timings: dict[str, float] = {}
-
-        # ── Stage 1: Collect and clean all source texts ─────────────────
-        t = time.perf_counter()
         cleaned_texts: list[str] = []
         reliability_scores: list[int] = []
 
-        # Only process up to the top 3 Tavily results to keep extraction fast and focused
-        for r in results[:3]:
-            content = getattr(r, "content", "") or ""
-            cleaned = ContentCleaner.clean(content)
-            if not cleaned.strip():
-                continue
-            # Truncate each result's clean text to 800 chars to focus on primary content/skills
-            truncated_clean = cleaned[:800].strip()
-            if not truncated_clean:
-                continue
-            url    = getattr(r, "url",    "") or ""
-            source = getattr(r, "source", "") or ""
-            analysis = TrustedSourceAnalyzer.analyze(url, source)
-            reliability_scores.append(analysis["reliability_score"])
-            cleaned_texts.append(truncated_clean)
+        if not results:
+            logger.info("KnowledgeBuilder: results list is empty. Proceeding to fallback career extraction.")
+            timings["cleaning"] = 0.0
+        else:
+            logger.info(
+                "KnowledgeBuilder starting: career_focus=%r  country=%r  results=%d",
+                self._career_name, self._country, len(results),
+            )
+            # ── Stage 1: Collect and clean all source texts ─────────────────
+            t = time.perf_counter()
+            # Only process up to the top 3 Tavily results to keep extraction fast and focused
+            for r in results[:3]:
+                content = getattr(r, "content", "") or ""
+                cleaned = ContentCleaner.clean(content)
+                if not cleaned.strip():
+                    continue
+                # Truncate each result's clean text to 800 chars to focus on primary content/skills
+                truncated_clean = cleaned[:800].strip()
+                if not truncated_clean:
+                    continue
+                url    = getattr(r, "url",    "") or ""
+                source = getattr(r, "source", "") or ""
+                analysis = TrustedSourceAnalyzer.analyze(url, source)
+                reliability_scores.append(analysis["reliability_score"])
+                cleaned_texts.append(truncated_clean)
 
-        timings["cleaning"] = time.perf_counter() - t
+            timings["cleaning"] = time.perf_counter() - t
 
         if not cleaned_texts:
-            raise KnowledgeBuilderError(
-                "KnowledgeBuilder: all search results were empty after cleaning."
-            )
-
-        # Combine and cap at 2500 chars to match MAX_INPUT_CHARS in CareerLLMExtractor
-        combined_text = "\n\n---\n\n".join(cleaned_texts)[:2500]
+            logger.info("KnowledgeBuilder: no cleaned texts available. Running career extraction in fallback/empty mode.")
+            combined_text = ""
+        else:
+            # Combine and cap at 2500 chars to match MAX_INPUT_CHARS in CareerLLMExtractor
+            combined_text = "\n\n---\n\n".join(cleaned_texts)[:2500]
 
         # ── Stage 2: LLM Career Extraction ─────────────────────────────
         t = time.perf_counter()

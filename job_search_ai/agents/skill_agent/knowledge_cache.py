@@ -71,7 +71,7 @@ class SkillKnowledgeCache:
             ):
                 continue
 
-            return SkillProfile(
+            profile = SkillProfile(
                 role_name=payload.get("role_name", role),
                 foundation_skills=payload.get("foundation_skills", []),
                 core_domain_skills=payload.get("core_domain_skills", []),
@@ -80,6 +80,20 @@ class SkillKnowledgeCache:
                 similarity=score,
                 source="cache",
             )
+
+            from job_search_ai.agents.skill_agent.validator import validate_and_normalize_profile
+            try:
+                validate_and_normalize_profile(profile)
+                return profile
+            except ValueError as exc:
+                logger.warning("SkillKnowledgeCache: cached profile for %r is stale/invalid (%s). Deleting from Qdrant.", role, exc)
+                try:
+                    del_url = f"{self.qdrant_url}/collections/{self.collection}/points/delete"
+                    del_resp = requests.post(del_url, json={"points": [hit.get("id")]}, timeout=10)
+                    del_resp.raise_for_status()
+                except Exception as del_exc:
+                    logger.warning("SkillKnowledgeCache: failed to delete point %s from Qdrant: %s", hit.get("id"), del_exc)
+                continue
 
         return None
 

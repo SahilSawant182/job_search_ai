@@ -1,0 +1,2807 @@
+[
+  {
+    "profile_id": "STU001",
+    "name": "Aarav Frontend Beginner",
+    "goal": "Frontend Developer",
+    "degree": "B.Tech",
+    "branch": "Computer Science",
+    "interests": [
+      "Frontend Development",
+      "Web Development",
+      "UI Development"
+    ],
+    "skills": [
+      "HTML",
+      "CSS",
+      "JavaScript"
+    ],
+    "expected_families": [
+      "Frontend Developer",
+      "Frontend Engineer",
+      "UI Developer",
+      "Web Developer",
+      "React Developer"
+    ],
+    "recs": [
+      "Frontend Developer",
+      "Web Developer",
+      "Web Development Manager",
+      "DevOps Engineer for Web Applications"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": true,
+    "t_total": 0.7425,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.5666,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU002",
+    "name": "Riya Frontend Advanced",
+    "goal": "Frontend Developer",
+    "degree": "B.Tech",
+    "branch": "Information Technology",
+    "interests": [
+      "Frontend Development",
+      "React",
+      "UI Engineering"
+    ],
+    "skills": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "React",
+      "Redux",
+      "TypeScript",
+      "Git"
+    ],
+    "expected_families": [
+      "Frontend Developer",
+      "Frontend Engineer",
+      "React Developer",
+      "UI Engineer",
+      "Web Developer"
+    ],
+    "recs": [
+      "Frontend Developer"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.0567,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0433,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU003",
+    "name": "Aditya Backend",
+    "goal": "Backend Developer",
+    "degree": "B.Tech",
+    "branch": "Computer Science",
+    "interests": [
+      "Backend Development",
+      "APIs",
+      "Cloud Applications"
+    ],
+    "skills": [
+      "Python",
+      "SQL",
+      "Git",
+      "FastAPI",
+      "PostgreSQL"
+    ],
+    "expected_families": [
+      "Backend Developer",
+      "Backend Engineer",
+      "API Developer",
+      "Server-Side Developer",
+      "Python Developer"
+    ],
+    "recs": [
+      "Backend Developer",
+      "Marriage and Family Therapist"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": false,
+    "pkb_hit": false,
+    "tavily_used": true,
+    "tavily_calls": 2,
+    "llm_used": false,
+    "t_total": 0.5015,
+    "t_tavily": 0.3699,
+    "t_kb_build": 0.0467,
+    "t_llm": 0.0531,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU004",
+    "name": "Vihan Full Stack",
+    "goal": "Full Stack Developer",
+    "degree": "B.Tech",
+    "branch": "Computer Science",
+    "interests": [
+      "Full Stack Development",
+      "Web Applications",
+      "SaaS"
+    ],
+    "skills": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "React",
+      "Node.js",
+      "Express",
+      "MongoDB",
+      "Git"
+    ],
+    "expected_families": [
+      "Full Stack Developer",
+      "Full Stack Engineer",
+      "Web Developer",
+      "MERN Developer"
+    ],
+    "recs": [
+      "Full Stack Developer",
+      "Full-stack Developer",
+      "DevOps Engineer for Web Applications",
+      "Web Developer"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.0696,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0437,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU005",
+    "name": "Yash AI Engineer",
+    "goal": "AI Engineer",
+    "degree": "B.Tech",
+    "branch": "Artificial Intelligence and Data Science",
+    "interests": [
+      "Artificial Intelligence",
+      "Deep Learning",
+      "Generative AI"
+    ],
+    "skills": [
+      "Python",
+      "Machine Learning",
+      "Deep Learning",
+      "TensorFlow",
+      "PyTorch",
+      "Git"
+    ],
+    "expected_families": [
+      "AI Engineer",
+      "ML Engineer",
+      "Machine Learning Engineer",
+      "Deep Learning Engineer",
+      "AI Developer"
+    ],
+    "recs": [
+      "Robotics and Artificial Intelligence Engineer",
+      "Artificial Intelligence Engineer"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.0837,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0523,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU006",
+    "name": "Rahul Data Scientist",
+    "goal": "Data Scientist",
+    "degree": "B.Sc",
+    "branch": "Statistics",
+    "interests": [
+      "Data Science",
+      "Statistics",
+      "Predictive Analytics"
+    ],
+    "skills": [
+      "Python",
+      "SQL",
+      "Statistics",
+      "Pandas",
+      "Scikit-Learn",
+      "Machine Learning"
+    ],
+    "expected_families": [
+      "Data Scientist",
+      "ML Engineer",
+      "Data Analyst",
+      "Analytics Engineer",
+      "Statistician"
+    ],
+    "recs": [
+      "Machine Learning Engineer",
+      "Data Scientist",
+      "AI Engineer",
+      "Artificial Intelligence Engineer",
+      "Data Scientist (Banking)",
+      "AI E2E Test Engineer",
+      "Agritech Data Analyst",
+      "Quantitative Analyst",
+      "Data Analyst",
+      "Data Journalist",
+      "Business Intelligence Analyst"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.1406,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0458,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU007",
+    "name": "Karan DevOps",
+    "goal": "DevOps Engineer",
+    "degree": "B.Tech",
+    "branch": "Information Technology",
+    "interests": [
+      "DevOps",
+      "Cloud Engineering",
+      "Infrastructure Automation"
+    ],
+    "skills": [
+      "Git",
+      "Linux",
+      "Docker",
+      "Kubernetes",
+      "Terraform",
+      "AWS",
+      "Ansible",
+      "Prometheus"
+    ],
+    "expected_families": [
+      "DevOps Engineer",
+      "Cloud Engineer",
+      "Site Reliability Engineer",
+      "SRE",
+      "Platform Engineer"
+    ],
+    "recs": [
+      "DevOps Engineer for Web Applications",
+      "DevOps Engineer",
+      "Cloud Infrastructure Manager"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.0708,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0465,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU008",
+    "name": "Meera Frappe Developer",
+    "goal": "Frappe Developer",
+    "degree": "B.Tech",
+    "branch": "Computer Science",
+    "interests": [
+      "Frappe Framework",
+      "ERPNext",
+      "Enterprise Applications"
+    ],
+    "skills": [
+      "Python",
+      "Git",
+      "SQL",
+      "Frappe Framework",
+      "Frappe ORM",
+      "MariaDB",
+      "Redis"
+    ],
+    "expected_families": [
+      "Frappe Developer",
+      "ERPNext Developer",
+      "Enterprise Applications Developer",
+      "Python Developer",
+      "Full Stack Developer",
+      "Web Developer"
+    ],
+    "recs": [
+      "ERPNext Developer",
+      "Frappe Developer",
+      "Frappe Developer"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.064,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0392,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU009",
+    "name": "Arjun Cybersecurity",
+    "goal": "Cybersecurity Analyst",
+    "degree": "B.Tech",
+    "branch": "Cyber Security",
+    "interests": [
+      "Cybersecurity",
+      "Ethical Hacking",
+      "Network Security"
+    ],
+    "skills": [
+      "Linux",
+      "Networking",
+      "Python",
+      "Wireshark",
+      "Nmap",
+      "Git"
+    ],
+    "expected_families": [
+      "Cybersecurity Analyst",
+      "Security Engineer",
+      "Information Security Analyst",
+      "Security Analyst",
+      "Penetration Tester",
+      "Cybersecurity Specialist",
+      "Security Manager"
+    ],
+    "recs": [
+      "Cybersecurity Specialist",
+      "Cybersecurity Architect",
+      "Cybersecurity Program Manager (AI)",
+      "Cybersecurity Manager"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": false,
+    "pkb_hit": false,
+    "tavily_used": true,
+    "tavily_calls": 2,
+    "llm_used": false,
+    "t_total": 0.4685,
+    "t_tavily": 0.3422,
+    "t_kb_build": 0.0305,
+    "t_llm": 0.0526,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU010",
+    "name": "Sneha Cloud Engineer",
+    "goal": "Cloud Engineer",
+    "degree": "B.Tech",
+    "branch": "Computer Science",
+    "interests": [
+      "Cloud Computing",
+      "Cloud Architecture",
+      "Infrastructure"
+    ],
+    "skills": [
+      "AWS",
+      "Linux",
+      "Docker",
+      "Terraform",
+      "Networking",
+      "Python"
+    ],
+    "expected_families": [
+      "Cloud Architect",
+      "Cloud Engineer",
+      "Solutions Architect",
+      "AWS Architect",
+      "Cloud Developer"
+    ],
+    "recs": [
+      "Cloud Architect",
+      "Cloud Infrastructure Manager",
+      "Cloud Engineer"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": false,
+    "pkb_hit": false,
+    "tavily_used": true,
+    "tavily_calls": 2,
+    "llm_used": false,
+    "t_total": 0.4421,
+    "t_tavily": 0.3369,
+    "t_kb_build": 0.0246,
+    "t_llm": 0.0551,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU011",
+    "name": "Rohan Mechanical Robotics",
+    "goal": "Robotics Engineer",
+    "degree": "B.E.",
+    "branch": "Mechanical Engineering",
+    "interests": [
+      "Robotics",
+      "Automation",
+      "Manufacturing"
+    ],
+    "skills": [
+      "CAD",
+      "MATLAB",
+      "Python",
+      "PLC Basics"
+    ],
+    "expected_families": [
+      "Robotics Engineer",
+      "Automation Engineer",
+      "Controls Engineer",
+      "Manufacturing Automation Engineer",
+      "Mechatronics Engineer"
+    ],
+    "recs": [
+      "Automation Engineer",
+      "Manufacturing Engineer",
+      "Robotics Developer",
+      "Automation Specialist",
+      "Robotics Engineer",
+      "Robotics and Artificial Intelligence Engineer",
+      "Robotics/ AI Engineer",
+      "Biomanufacturing Engineer",
+      "Biomanufacturing Specialist",
+      "Robotics Research Engineer",
+      "Robotics Industry Expert",
+      "Robotics Researcher",
+      "Robotics/ AI Expert",
+      "Robotics Research Scientist"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.0787,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0383,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU012",
+    "name": "Isha Mechanical Design",
+    "goal": "Mechanical Design Engineer",
+    "degree": "B.E.",
+    "branch": "Mechanical Engineering",
+    "interests": [
+      "Product Design",
+      "Mechanical Design",
+      "Manufacturing"
+    ],
+    "skills": [
+      "AutoCAD",
+      "SolidWorks",
+      "CAD",
+      "GD&T"
+    ],
+    "expected_families": [
+      "Product Designer",
+      "Product Engineer",
+      "Mechanical Engineer",
+      "CAD Engineer",
+      "Mechanical Design Engineer",
+      "Product Design Engineer",
+      "Structural Engineer"
+    ],
+    "recs": [
+      "AI Product Manager"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": false,
+    "pkb_hit": false,
+    "tavily_used": true,
+    "tavily_calls": 2,
+    "llm_used": false,
+    "t_total": 0.8413,
+    "t_tavily": 0.3436,
+    "t_kb_build": 0.4115,
+    "t_llm": 0.0432,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU013",
+    "name": "Om Electrical Engineer",
+    "goal": "Electrical Engineer",
+    "degree": "B.E.",
+    "branch": "Electrical Engineering",
+    "interests": [
+      "Power Systems",
+      "Electrical Design",
+      "Renewable Energy"
+    ],
+    "skills": [
+      "MATLAB",
+      "Circuit Analysis",
+      "AutoCAD Electrical",
+      "Electrical Machines"
+    ],
+    "expected_families": [
+      "Electrical Engineer",
+      "Power Systems Engineer",
+      "Electrical Design Engineer",
+      "Power System Engineer"
+    ],
+    "recs": [
+      "Renewable Energy Engineer"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": false,
+    "pkb_hit": false,
+    "tavily_used": true,
+    "tavily_calls": 2,
+    "llm_used": false,
+    "t_total": 0.4099,
+    "t_tavily": 0.321,
+    "t_kb_build": 0.0254,
+    "t_llm": 0.0438,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU014",
+    "name": "Ananya Electronics Embedded",
+    "goal": "Embedded Systems Engineer",
+    "degree": "B.E.",
+    "branch": "Electronics and Telecommunication",
+    "interests": [
+      "Embedded Systems",
+      "IoT",
+      "Electronics"
+    ],
+    "skills": [
+      "C",
+      "C++",
+      "Microcontrollers",
+      "Arduino",
+      "Embedded C"
+    ],
+    "expected_families": [
+      "Embedded Systems Engineer",
+      "IoT Developer",
+      "Firmware Engineer",
+      "Hardware Engineer",
+      "Electronics Engineer",
+      "VLSI Engineer"
+    ],
+    "recs": [
+      "Embedded Systems Engineer"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.1187,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0453,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU015",
+    "name": "Vivek Civil Engineer",
+    "goal": "Civil Engineer",
+    "degree": "B.E.",
+    "branch": "Civil Engineering",
+    "interests": [
+      "Construction",
+      "Infrastructure",
+      "Structural Engineering"
+    ],
+    "skills": [
+      "AutoCAD",
+      "STAAD Pro",
+      "Structural Analysis",
+      "Project Planning"
+    ],
+    "expected_families": [
+      "Civil Engineer",
+      "Structural Engineer",
+      "Infrastructure Engineer",
+      "Construction Engineer",
+      "Construction Manager",
+      "Site Engineer"
+    ],
+    "recs": [
+      "Construction Manager - Green Building",
+      "Construction Manager",
+      "Project Manager - Construction",
+      "Construction Engineer",
+      "Construction Project Manager",
+      "Construction Safety Officer",
+      "Cloud Infrastructure Manager"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.0844,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0479,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU016",
+    "name": "Kavya Chemical",
+    "goal": "Process Engineer",
+    "degree": "B.E.",
+    "branch": "Chemical Engineering",
+    "interests": [
+      "Process Engineering",
+      "Manufacturing",
+      "Energy"
+    ],
+    "skills": [
+      "Process Simulation",
+      "MATLAB",
+      "Thermodynamics",
+      "Process Control"
+    ],
+    "expected_families": [
+      "Chemical Engineer",
+      "Process Engineer",
+      "Petrochemical Engineer",
+      "Refinery Engineer"
+    ],
+    "recs": [
+      "Renewable Energy Engineer",
+      "Solar Energy Consultant",
+      "Manufacturing Engineer",
+      "Biomanufacturing Specialist",
+      "Biomanufacturing Engineer"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.0669,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0448,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU017",
+    "name": "Tanya Statistics",
+    "goal": "Data Analyst",
+    "degree": "B.Sc",
+    "branch": "Statistics",
+    "interests": [
+      "Statistics",
+      "Data Analysis",
+      "Research"
+    ],
+    "skills": [
+      "Excel",
+      "Statistics",
+      "R",
+      "SQL"
+    ],
+    "expected_families": [
+      "Data Analyst",
+      "Statistical Analyst",
+      "Data Scientist",
+      "Business Analyst",
+      "Analytics Specialist"
+    ],
+    "recs": [
+      "Biotech Data Analyst",
+      "Research Analyst",
+      "Biotech Researcher",
+      "Product Researcher",
+      "Market Research Analyst",
+      "Researcher",
+      "Data Analyst (Healthcare)",
+      "Business/Data Analyst",
+      "Biomedical Data Analyst",
+      "Research Scientist",
+      "Robotics Research Scientist",
+      "Robotics Research Engineer",
+      "Robotics Researcher",
+      "Social Researcher",
+      "Research Associate",
+      "Data Analyst",
+      "Biotech Research Scientist",
+      "Clinical Research Associate",
+      "Business/ Data Analyst",
+      "AI Researcher"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.1058,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0441,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU018",
+    "name": "Priya Mathematics",
+    "goal": "Data Scientist",
+    "degree": "B.Sc",
+    "branch": "Mathematics",
+    "interests": [
+      "Analytics",
+      "Statistics",
+      "Machine Learning"
+    ],
+    "skills": [
+      "Python",
+      "Statistics",
+      "Linear Algebra",
+      "SQL"
+    ],
+    "expected_families": [
+      "Data Scientist",
+      "Quantitative Analyst",
+      "Data Analyst",
+      "ML Engineer",
+      "Statistician"
+    ],
+    "recs": [
+      "Machine Learning Engineer",
+      "Analytics Specialist",
+      "AI & Machine Learning Engineer",
+      "People Analytics Specialist",
+      "Machine Learning Engineer",
+      "Workforce Analytics Specialist",
+      "Analytics Manager"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.0639,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0413,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU019",
+    "name": "Aditi Physics",
+    "goal": "Research Scientist",
+    "degree": "B.Sc",
+    "branch": "Physics",
+    "interests": [
+      "Research",
+      "Simulation",
+      "Data Analysis"
+    ],
+    "skills": [
+      "Python",
+      "MATLAB",
+      "Numerical Methods",
+      "Statistics"
+    ],
+    "expected_families": [
+      "Research Scientist",
+      "Physicist",
+      "Research Associate",
+      "Research Analyst",
+      "Lab Technician",
+      "Biotech Researcher"
+    ],
+    "recs": [
+      "Biotech Researcher",
+      "Biomedical Data Analyst",
+      "Product Researcher",
+      "Research Analyst",
+      "Biotech Data Analyst",
+      "Researcher",
+      "Biotech Research Scientist",
+      "Data Analyst (Healthcare)",
+      "Research Scientist",
+      "Robotics Research Scientist",
+      "Market Research Analyst",
+      "Robotics Research Engineer",
+      "Robotics Researcher",
+      "Social Researcher",
+      "Research Associate",
+      "AI Researcher",
+      "Business/ Data Analyst",
+      "Data Analyst",
+      "Business/Data Analyst",
+      "Clinical Research Associate"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.1054,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0528,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU020",
+    "name": "Nikhil Biotechnology",
+    "goal": "Bioinformatics Analyst",
+    "degree": "B.Sc",
+    "branch": "Biotechnology",
+    "interests": [
+      "Biotechnology",
+      "Genomics",
+      "Healthcare Research"
+    ],
+    "skills": [
+      "Biology",
+      "Biostatistics",
+      "Python",
+      "Laboratory Techniques"
+    ],
+    "expected_families": [
+      "Bioinformatics Analyst",
+      "Bioinformatics Engineer",
+      "Bioinformatics Specialist",
+      "Biotech Researcher",
+      "Research Associate"
+    ],
+    "recs": [
+      "AI-ML Engineer in Healthcare",
+      "AI/ML Engineer (Healthcare)",
+      "Biotechnology Manager",
+      "Data Analyst (Healthcare)"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": false,
+    "pkb_hit": false,
+    "tavily_used": true,
+    "tavily_calls": 2,
+    "llm_used": false,
+    "t_total": 0.4651,
+    "t_tavily": 0.371,
+    "t_kb_build": 0.0194,
+    "t_llm": 0.0411,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU021",
+    "name": "Sahil Finance",
+    "goal": "Financial Analyst",
+    "degree": "B.Com",
+    "branch": "Commerce",
+    "interests": [
+      "Finance",
+      "Investment Analysis",
+      "Banking"
+    ],
+    "skills": [
+      "Excel",
+      "Financial Modeling",
+      "Accounting",
+      "Financial Analysis"
+    ],
+    "expected_families": [
+      "Financial Analyst",
+      "Investment Analyst",
+      "Finance Analyst",
+      "Equity Analyst"
+    ],
+    "recs": [
+      "Investment Banking Analyst",
+      "ESG Investment Banking Specialist",
+      "Digital Banking Specialist",
+      "Agrifinance Specialist",
+      "Data Scientist (Banking)"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.0735,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0433,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU022",
+    "name": "Neha Accounting",
+    "goal": "Accountant",
+    "degree": "B.Com",
+    "branch": "Accounting and Finance",
+    "interests": [
+      "Accounting",
+      "Auditing",
+      "Taxation"
+    ],
+    "skills": [
+      "Accounting",
+      "Tally",
+      "Excel",
+      "GST"
+    ],
+    "expected_families": [
+      "Accountant",
+      "Auditor",
+      "Tax Consultant",
+      "Financial Accountant",
+      "CPA",
+      "Auditing and Assurance Spec"
+    ],
+    "recs": [
+      "Auditing and Assurance Specialist",
+      "Accounting Manager"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": false,
+    "pkb_hit": false,
+    "tavily_used": true,
+    "tavily_calls": 2,
+    "llm_used": false,
+    "t_total": 0.4517,
+    "t_tavily": 0.3465,
+    "t_kb_build": 0.0292,
+    "t_llm": 0.044,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU023",
+    "name": "Riya Investment",
+    "goal": "Investment Banking Analyst",
+    "degree": "BBA",
+    "branch": "Finance",
+    "interests": [
+      "Investment Banking",
+      "Equity Research",
+      "Capital Markets"
+    ],
+    "skills": [
+      "Financial Modeling",
+      "Excel",
+      "Valuation",
+      "Financial Analysis"
+    ],
+    "expected_families": [
+      "Investment Banking Analyst",
+      "Financial Services Analyst",
+      "Investment Advisor",
+      "Finance Analyst"
+    ],
+    "recs": [
+      "Investment Banking Analyst",
+      "ESG Investment Banking Specialist"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.0746,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0426,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU024",
+    "name": "Kunal Banking",
+    "goal": "Banking Operations Analyst",
+    "degree": "B.Com",
+    "branch": "Commerce",
+    "interests": [
+      "Banking",
+      "Financial Services",
+      "Risk Management"
+    ],
+    "skills": [
+      "Excel",
+      "Accounting",
+      "Financial Analysis",
+      "Communication"
+    ],
+    "expected_families": [
+      "Banking Analyst",
+      "Financial Services Analyst",
+      "Risk Analyst",
+      "Credit Analyst"
+    ],
+    "recs": [
+      "Investment Banking Analyst",
+      "Risk Management Consultant",
+      "ESG Investment Banking Specialist",
+      "Data Scientist (Banking)",
+      "Digital Banking Specialist",
+      "Risk Management Specialist",
+      "Risk Advisory Manager"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": false,
+    "pkb_hit": false,
+    "tavily_used": true,
+    "tavily_calls": 2,
+    "llm_used": false,
+    "t_total": 0.6265,
+    "t_tavily": 0.507,
+    "t_kb_build": 0.0336,
+    "t_llm": 0.0491,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU025",
+    "name": "Aman Marketing",
+    "goal": "Digital Marketing Specialist",
+    "degree": "BBA",
+    "branch": "Marketing",
+    "interests": [
+      "Digital Marketing",
+      "Brand Strategy",
+      "Advertising"
+    ],
+    "skills": [
+      "SEO",
+      "Google Analytics",
+      "Content Writing",
+      "Social Media Marketing"
+    ],
+    "expected_families": [
+      "Marketing Analyst",
+      "Digital Marketing Specialist",
+      "SEO Specialist",
+      "Marketing Manager",
+      "Brand Manager",
+      "Digital Marketing Analyst"
+    ],
+    "recs": [
+      "Digital Marketing Content Creator",
+      "Digital Marketing Analyst",
+      "Digital Marketing Specialist",
+      "Content Marketing Specialist",
+      "Digital Marketing Manager"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.1321,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0511,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU026",
+    "name": "Shreya HR",
+    "goal": "HR Specialist",
+    "degree": "BBA",
+    "branch": "Human Resources",
+    "interests": [
+      "Human Resources",
+      "Recruitment",
+      "Employee Engagement"
+    ],
+    "skills": [
+      "Communication",
+      "Recruitment",
+      "Excel",
+      "Interviewing"
+    ],
+    "expected_families": [
+      "HR Manager",
+      "Human Resources Manager",
+      "Talent Acquisition Specialist",
+      "HR Business Partner",
+      "Employee Experience Manager",
+      "Employee Engagement Specialist",
+      "Talent Acquisition Specialist"
+    ],
+    "recs": [
+      "Employee Engagement Specialist"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": false,
+    "pkb_hit": false,
+    "tavily_used": true,
+    "tavily_calls": 2,
+    "llm_used": false,
+    "t_total": 0.4818,
+    "t_tavily": 0.391,
+    "t_kb_build": 0.0203,
+    "t_llm": 0.0463,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU027",
+    "name": "Dev Business Analyst",
+    "goal": "Business Analyst",
+    "degree": "BBA",
+    "branch": "Business Analytics",
+    "interests": [
+      "Business Analytics",
+      "Process Improvement",
+      "Data Analysis"
+    ],
+    "skills": [
+      "Excel",
+      "SQL",
+      "Power BI",
+      "Requirements Gathering"
+    ],
+    "expected_families": [
+      "Business Analyst",
+      "Management Consultant",
+      "Strategy Analyst",
+      "Business Strategy Manager"
+    ],
+    "recs": [
+      "Business Analyst - AI",
+      "Business Intelligence Analyst",
+      "Business/Data Analyst",
+      "Agritech Business Analyst",
+      "Business Analyst",
+      "Business/ Data Analyst",
+      "Data Analyst",
+      "Pharmaceutical Data Analyst",
+      "Biotech Data Analyst",
+      "Biomedical Data Analyst",
+      "Data Analyst (Healthcare)",
+      "Data Scientist"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.0991,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0424,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU028",
+    "name": "Mahi Product Management",
+    "goal": "Product Manager",
+    "degree": "BBA",
+    "branch": "Business Administration",
+    "interests": [
+      "Product Management",
+      "Technology Products",
+      "Business Strategy"
+    ],
+    "skills": [
+      "Market Research",
+      "Product Strategy",
+      "Excel",
+      "Communication"
+    ],
+    "expected_families": [
+      "Product Manager",
+      "Product Owner",
+      "Senior Product Manager",
+      "Associate Product Manager",
+      "Product Management Specialist",
+      "Data-Driven Product Manager"
+    ],
+    "recs": [
+      "Product Management Specialist",
+      "AI Product Manager",
+      "Business Analyst - AI",
+      "Product Manager",
+      "Senior Product Manager",
+      "LegalTech Product Manager"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.0974,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0387,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU029",
+    "name": "Varun Operations",
+    "goal": "Operations Analyst",
+    "degree": "BBA",
+    "branch": "Operations Management",
+    "interests": [
+      "Operations",
+      "Supply Chain",
+      "Process Optimization"
+    ],
+    "skills": [
+      "Excel",
+      "Supply Chain Basics",
+      "Process Mapping",
+      "Data Analysis"
+    ],
+    "expected_families": [
+      "Operations Manager",
+      "Operations Analyst",
+      "Supply Chain Manager",
+      "Business Operations Manager",
+      "Process Manager"
+    ],
+    "recs": [
+      "Digital Operations Specialist",
+      "Operations Manager",
+      "Security Operations Center (SOC) Analyst",
+      "IT Operations Specialist"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": false,
+    "pkb_hit": false,
+    "tavily_used": true,
+    "tavily_calls": 2,
+    "llm_used": false,
+    "t_total": 0.4569,
+    "t_tavily": 0.3429,
+    "t_kb_build": 0.0275,
+    "t_llm": 0.0464,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU030",
+    "name": "Pooja Entrepreneurship",
+    "goal": "Entrepreneur",
+    "degree": "BBA",
+    "branch": "Entrepreneurship",
+    "interests": [
+      "Entrepreneurship",
+      "Startups",
+      "Business Strategy"
+    ],
+    "skills": [
+      "Business Planning",
+      "Market Research",
+      "Communication",
+      "Financial Modeling"
+    ],
+    "expected_families": [
+      "Entrepreneur",
+      "Business Development Manager",
+      "Startup Founder",
+      "Business Developer",
+      "Venture Analyst"
+    ],
+    "recs": [
+      "Entrepreneur"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": false,
+    "pkb_hit": false,
+    "tavily_used": true,
+    "tavily_calls": 2,
+    "llm_used": false,
+    "t_total": 0.5,
+    "t_tavily": 0.3373,
+    "t_kb_build": 0.0799,
+    "t_llm": 0.0433,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU031",
+    "name": "Aarya UI UX Designer",
+    "goal": "UI UX Designer",
+    "degree": "B.Des",
+    "branch": "Communication Design",
+    "interests": [
+      "UI/UX Design",
+      "Product Design",
+      "User Research"
+    ],
+    "skills": [
+      "Figma",
+      "Wireframing",
+      "Prototyping",
+      "User Research"
+    ],
+    "expected_families": [
+      "UX Designer",
+      "UI Designer",
+      "UX/UI Designer",
+      "Product Designer",
+      "Interaction Designer",
+      "UI/UX Designer"
+    ],
+    "recs": [
+      "Product Designer"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.0695,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0406,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU032",
+    "name": "Rohit Graphic Designer",
+    "goal": "Graphic Designer",
+    "degree": "B.Des",
+    "branch": "Graphic Design",
+    "interests": [
+      "Graphic Design",
+      "Branding",
+      "Visual Communication"
+    ],
+    "skills": [
+      "Photoshop",
+      "Illustrator",
+      "Typography",
+      "Brand Design"
+    ],
+    "expected_families": [
+      "Graphic Designer",
+      "Visual Designer",
+      "Brand Designer",
+      "Creative Designer"
+    ],
+    "recs": [
+      "Graphic Designer"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": false,
+    "pkb_hit": false,
+    "tavily_used": true,
+    "tavily_calls": 2,
+    "llm_used": false,
+    "t_total": 0.4338,
+    "t_tavily": 0.3499,
+    "t_kb_build": 0.0249,
+    "t_llm": 0.0429,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU033",
+    "name": "Ira Animation Student",
+    "goal": "3D Artist",
+    "degree": "B.Des",
+    "branch": "Animation",
+    "interests": [
+      "Animation",
+      "3D Design",
+      "Motion Graphics"
+    ],
+    "skills": [
+      "Blender",
+      "3D Modeling",
+      "Animation",
+      "After Effects"
+    ],
+    "expected_families": [
+      "3D Animator",
+      "Animation Director",
+      "3D Artist",
+      "Motion Graphics Designer",
+      "VFX Artist"
+    ],
+    "recs": [
+      "Animation Director"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.0593,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0441,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU034",
+    "name": "Kabir Content Creator",
+    "goal": "Content Creator",
+    "degree": "BA",
+    "branch": "Mass Communication",
+    "interests": [
+      "Content Creation",
+      "Social Media",
+      "Video Production"
+    ],
+    "skills": [
+      "Video Editing",
+      "Content Writing",
+      "Storytelling",
+      "Social Media"
+    ],
+    "expected_families": [
+      "Content Creator",
+      "Content Writer",
+      "Social Media Manager",
+      "Digital Content Specialist",
+      "Video Content Creator",
+      "Content Creation Specialist"
+    ],
+    "recs": [
+      "Content Creation Specialist",
+      "Digital Marketing Content Creator",
+      "Social Media Manager",
+      "Content Journalist",
+      "Content Writer",
+      "Social Scientist",
+      "Digital Content Manager"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.0797,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0439,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU035",
+    "name": "Anjali Psychology",
+    "goal": "Counsellor",
+    "degree": "BA",
+    "branch": "Psychology",
+    "interests": [
+      "Psychology",
+      "Mental Wellbeing",
+      "Counselling"
+    ],
+    "skills": [
+      "Communication",
+      "Psychological Assessment",
+      "Counselling Basics",
+      "Research"
+    ],
+    "expected_families": [
+      "Counsellor",
+      "Psychologist",
+      "Mental Health Counsellor",
+      "Therapist",
+      "I-O Psychology Consultant",
+      "Clinical Psychologist",
+      "School Psychologist"
+    ],
+    "recs": [
+      "Clinical Psychologist",
+      "I-O (Industrial-Organizational) Psychologist",
+      "UX/UI Designer",
+      "School Psychologist",
+      "I-O Psychology Consultant",
+      "Industrial-Organizational (I-O) Psychologist"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.0959,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0413,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU036",
+    "name": "Sameer Sociology",
+    "goal": "Social Researcher",
+    "degree": "BA",
+    "branch": "Sociology",
+    "interests": [
+      "Social Research",
+      "Community Development",
+      "Public Policy"
+    ],
+    "skills": [
+      "Research",
+      "Data Collection",
+      "Communication",
+      "Report Writing"
+    ],
+    "expected_families": [
+      "Social Researcher",
+      "Social Scientist",
+      "Sociologist",
+      "Research Analyst",
+      "Policy Researcher"
+    ],
+    "recs": [
+      "Social Researcher",
+      "Social Scientist"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.0654,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0432,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU037",
+    "name": "Megha Political Science",
+    "goal": "Policy Analyst",
+    "degree": "BA",
+    "branch": "Political Science",
+    "interests": [
+      "Public Policy",
+      "Governance",
+      "Politics"
+    ],
+    "skills": [
+      "Research",
+      "Policy Analysis",
+      "Writing",
+      "Public Speaking"
+    ],
+    "expected_families": [
+      "Policy Analyst",
+      "Public Policy Specialist",
+      "Government Relations Analyst",
+      "Political Analyst"
+    ],
+    "recs": [
+      "Policy Analyst",
+      "Public Policy Specialist"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.1287,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0477,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU038",
+    "name": "Sakshi English",
+    "goal": "Content Writer",
+    "degree": "BA",
+    "branch": "English Literature",
+    "interests": [
+      "Writing",
+      "Publishing",
+      "Content"
+    ],
+    "skills": [
+      "Writing",
+      "Editing",
+      "Research",
+      "Communication"
+    ],
+    "expected_families": [
+      "Content Writer",
+      "Copywriter",
+      "Editor",
+      "Technical Writer",
+      "Journalist",
+      "Digital Content Writer"
+    ],
+    "recs": [
+      "Digital Marketing Content Creator",
+      "Content Journalist",
+      "Content Writer",
+      "Digital Content Strategist",
+      "Digital Content Writer",
+      "Publishing Specialist",
+      "Content Creation Specialist",
+      "Content Marketing Specialist",
+      "Digital Content Manager"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.0953,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0484,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU039",
+    "name": "Rahul Law",
+    "goal": "Corporate Lawyer",
+    "degree": "LLB",
+    "branch": "Law",
+    "interests": [
+      "Corporate Law",
+      "Legal Research",
+      "Compliance"
+    ],
+    "skills": [
+      "Legal Research",
+      "Contract Drafting",
+      "Communication",
+      "Compliance"
+    ],
+    "expected_families": [
+      "Corporate Lawyer",
+      "Legal Analyst",
+      "Corporate Law Specialist",
+      "Compliance Analyst",
+      "Legal Consultant"
+    ],
+    "recs": [
+      "Regulatory Compliance Officer",
+      "Compliance Officer",
+      "Corporate Law Specialist",
+      "Compliance Manager"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": false,
+    "pkb_hit": false,
+    "tavily_used": true,
+    "tavily_calls": 2,
+    "llm_used": false,
+    "t_total": 0.4796,
+    "t_tavily": 0.3668,
+    "t_kb_build": 0.0442,
+    "t_llm": 0.0372,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU040",
+    "name": "Naina Legal Tech",
+    "goal": "Technology Lawyer",
+    "degree": "LLB",
+    "branch": "Law",
+    "interests": [
+      "Legal Technology",
+      "Cyber Law",
+      "Technology Law"
+    ],
+    "skills": [
+      "Legal Research",
+      "Cyber Law",
+      "Contract Drafting",
+      "Basic Python"
+    ],
+    "expected_families": [
+      "LegalTech Specialist",
+      "Legal Technology Consultant",
+      "Legal Analyst",
+      "Tech Law Specialist",
+      "LegalTech Software Developer",
+      "LegalTech Product Manager",
+      "LawTech Consultant",
+      "Legal Tech Specialist"
+    ],
+    "recs": [
+      "LegalTech Specialist"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": false,
+    "pkb_hit": false,
+    "tavily_used": true,
+    "tavily_calls": 2,
+    "llm_used": false,
+    "t_total": 0.4728,
+    "t_tavily": 0.3325,
+    "t_kb_build": 0.0728,
+    "t_llm": 0.0436,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU041",
+    "name": "Diya Nursing",
+    "goal": "Registered Nurse",
+    "degree": "B.Sc Nursing",
+    "branch": "Nursing",
+    "interests": [
+      "Healthcare",
+      "Patient Care",
+      "Clinical Practice"
+    ],
+    "skills": [
+      "Patient Care",
+      "Clinical Assessment",
+      "Communication",
+      "Basic Medical Knowledge"
+    ],
+    "expected_families": [
+      "Nurse",
+      "Healthcare Administrator",
+      "Clinical Nurse",
+      "Patient Care Specialist"
+    ],
+    "recs": [
+      "Healthcare Administrator"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": false,
+    "pkb_hit": false,
+    "tavily_used": true,
+    "tavily_calls": 2,
+    "llm_used": false,
+    "t_total": 0.4877,
+    "t_tavily": 0.3431,
+    "t_kb_build": 0.0766,
+    "t_llm": 0.0381,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU042",
+    "name": "Aarohi Pharmacy",
+    "goal": "Pharmacist",
+    "degree": "B.Pharm",
+    "branch": "Pharmacy",
+    "interests": [
+      "Pharmaceuticals",
+      "Drug Research",
+      "Healthcare"
+    ],
+    "skills": [
+      "Pharmacology",
+      "Drug Formulation",
+      "Laboratory Techniques",
+      "Research"
+    ],
+    "expected_families": [
+      "Pharma Marketing Specialist",
+      "Pharmaceutical Data Analyst",
+      "Regulatory Affairs Specialist",
+      "Medical Sales",
+      "Pharmaceutical Marketing Specialist"
+    ],
+    "recs": [
+      "Pharma Marketing Specialist"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": false,
+    "pkb_hit": false,
+    "tavily_used": true,
+    "tavily_calls": 2,
+    "llm_used": false,
+    "t_total": 0.4897,
+    "t_tavily": 0.3341,
+    "t_kb_build": 0.075,
+    "t_llm": 0.0537,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU043",
+    "name": "Manav Medical",
+    "goal": "Doctor",
+    "degree": "MBBS",
+    "branch": "Medicine",
+    "interests": [
+      "Medicine",
+      "Clinical Care",
+      "Healthcare"
+    ],
+    "skills": [
+      "Clinical Diagnosis",
+      "Patient Care",
+      "Medical Research",
+      "Communication"
+    ],
+    "expected_families": [
+      "Healthcare Administrator",
+      "Clinical Data Manager",
+      "Hospital Administrator",
+      "Medical Informatics Analyst"
+    ],
+    "recs": [
+      "Healthcare Administrator"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": false,
+    "pkb_hit": false,
+    "tavily_used": true,
+    "tavily_calls": 2,
+    "llm_used": false,
+    "t_total": 0.5627,
+    "t_tavily": 0.3369,
+    "t_kb_build": 0.1313,
+    "t_llm": 0.043,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU044",
+    "name": "Isha Biotechnology Healthcare",
+    "goal": "Biotechnology Researcher",
+    "degree": "B.Sc",
+    "branch": "Biotechnology",
+    "interests": [
+      "Biotech",
+      "Healthcare Technology",
+      "Genomics"
+    ],
+    "skills": [
+      "Biology",
+      "PCR",
+      "Biostatistics",
+      "Research"
+    ],
+    "expected_families": [
+      "Biotech Research Scientist",
+      "Biotech Data Analyst",
+      "Genomics Analyst",
+      "Biotechnology Manager",
+      "Biotech Researcher"
+    ],
+    "recs": [
+      "Biotech Researcher",
+      "Biotech Research Scientist",
+      "Biotech Data Analyst",
+      "Biotech Software Developer",
+      "Biotechnology Manager"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.0682,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0389,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU045",
+    "name": "Vikas Agriculture",
+    "goal": "Agronomist",
+    "degree": "B.Sc",
+    "branch": "Agriculture",
+    "interests": [
+      "Agriculture",
+      "Agri Technology",
+      "Sustainable Farming"
+    ],
+    "skills": [
+      "Agronomy",
+      "Crop Management",
+      "Soil Science",
+      "Data Collection"
+    ],
+    "expected_families": [
+      "Agriculture Specialist",
+      "Agronomist",
+      "Farm Management Specialist",
+      "Agricultural Scientist"
+    ],
+    "recs": [
+      "Agriculture Extension Officer",
+      "Agriculture Specialist",
+      "Sustainable Farming Consultant"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.0637,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0394,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU046",
+    "name": "Neel AgriTech",
+    "goal": "AgriTech Engineer",
+    "degree": "B.Tech",
+    "branch": "Agricultural Engineering",
+    "interests": [
+      "AgriTech",
+      "IoT",
+      "Smart Farming"
+    ],
+    "skills": [
+      "Python",
+      "IoT",
+      "Sensors",
+      "Data Analysis"
+    ],
+    "expected_families": [
+      "Agricultural Data Scientist",
+      "AgriTech Specialist",
+      "Precision Farming Engineer",
+      "Smart Agriculture Consultant",
+      "Agritech Specialist"
+    ],
+    "recs": [
+      "Agritech Data Analyst",
+      "Agritech Solution Developer",
+      "Agritech Specialist",
+      "Agritech Business Analyst",
+      "Agritech Consultant",
+      "Agritech Recruiter"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": false,
+    "pkb_hit": false,
+    "tavily_used": true,
+    "tavily_calls": 2,
+    "llm_used": false,
+    "t_total": 0.4895,
+    "t_tavily": 0.3734,
+    "t_kb_build": 0.0252,
+    "t_llm": 0.049,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU047",
+    "name": "Tanvi Food Technology",
+    "goal": "Food Technologist",
+    "degree": "B.Tech",
+    "branch": "Food Technology",
+    "interests": [
+      "Food Technology",
+      "Food Safety",
+      "Product Development"
+    ],
+    "skills": [
+      "Food Chemistry",
+      "Quality Control",
+      "Food Processing",
+      "Laboratory Techniques"
+    ],
+    "expected_families": [
+      "Food Technologist",
+      "Food Innovation Specialist",
+      "Quality Control Specialist",
+      "Food Scientist"
+    ],
+    "recs": [
+      "Food Technology Expert",
+      "Food Quality Analyst"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.0848,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0517,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU048",
+    "name": "Rohan Hospitality",
+    "goal": "Hotel Operations Manager",
+    "degree": "BHM",
+    "branch": "Hotel Management",
+    "interests": [
+      "Hospitality",
+      "Hotels",
+      "Travel"
+    ],
+    "skills": [
+      "Customer Service",
+      "Hotel Operations",
+      "Communication",
+      "Event Management"
+    ],
+    "expected_families": [
+      "Hotel Manager",
+      "Hospitality Manager",
+      "Customer Service Manager",
+      "Travel and Tourism Manager"
+    ],
+    "recs": [
+      "Travel and Tourism Consultant",
+      "Travel and Tourism Manager",
+      "Hospitality Manager"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": false,
+    "pkb_hit": false,
+    "tavily_used": true,
+    "tavily_calls": 2,
+    "llm_used": false,
+    "t_total": 0.4635,
+    "t_tavily": 0.3655,
+    "t_kb_build": 0.0174,
+    "t_llm": 0.0411,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU049",
+    "name": "Maya Tourism",
+    "goal": "Travel Consultant",
+    "degree": "BBA",
+    "branch": "Tourism Management",
+    "interests": [
+      "Travel",
+      "Tourism",
+      "Event Management"
+    ],
+    "skills": [
+      "Travel Planning",
+      "Customer Service",
+      "Communication",
+      "Event Management"
+    ],
+    "expected_families": [
+      "Travel and Tourism Manager",
+      "Tourism Consultant",
+      "Destination Manager",
+      "Travel Planner",
+      "Travel and Tourism Consultant"
+    ],
+    "recs": [
+      "Tourism Coordinator",
+      "Travel and Tourism Consultant",
+      "Tourism Management Specialist",
+      "Sustainable Tourism Practitioner",
+      "Travel and Tourism Manager",
+      "Event Management Specialist",
+      "Event Manager"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.0644,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0373,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU050",
+    "name": "Raj Education",
+    "goal": "Teacher",
+    "degree": "B.Ed",
+    "branch": "Education",
+    "interests": [
+      "Teaching",
+      "Education",
+      "Child Development"
+    ],
+    "skills": [
+      "Lesson Planning",
+      "Communication",
+      "Classroom Management",
+      "Assessment"
+    ],
+    "expected_families": [
+      "Teacher",
+      "Educational Consultant",
+      "Curriculum Developer",
+      "School Administrator",
+      "Middle School Teacher"
+    ],
+    "recs": [
+      "Educational Consultant",
+      "Education Consultant"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": false,
+    "pkb_hit": false,
+    "tavily_used": true,
+    "tavily_calls": 2,
+    "llm_used": false,
+    "t_total": 0.4683,
+    "t_tavily": 0.3836,
+    "t_kb_build": 0.0241,
+    "t_llm": 0.0374,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU051",
+    "name": "Nidhi Educational Technology",
+    "goal": "Instructional Designer",
+    "degree": "B.Ed",
+    "branch": "Education Technology",
+    "interests": [
+      "EdTech",
+      "Online Learning",
+      "Instructional Design"
+    ],
+    "skills": [
+      "Instructional Design",
+      "Content Development",
+      "LMS",
+      "Communication"
+    ],
+    "expected_families": [
+      "Instructional Designer",
+      "EdTech Specialist",
+      "Educational Technology Specialist",
+      "eLearning Developer",
+      "Online Learning Designer"
+    ],
+    "recs": [
+      "Instructional Designer",
+      "Online Learning Designer",
+      "EdTech Specialist"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.0615,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0401,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU052",
+    "name": "Aman Economics",
+    "goal": "Economic Analyst",
+    "degree": "BA",
+    "branch": "Economics",
+    "interests": [
+      "Economics",
+      "Finance",
+      "Market Research"
+    ],
+    "skills": [
+      "Economics",
+      "Statistics",
+      "Excel",
+      "Data Analysis"
+    ],
+    "expected_families": [
+      "Market Research Analyst",
+      "Financial Analyst",
+      "Economic Analyst",
+      "Research Economist",
+      "Monetary Policy Specialist",
+      "Economic Planner"
+    ],
+    "recs": [
+      "Market Research Analyst",
+      "Agrifinance Specialist",
+      "Digital Marketing Analyst"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": false,
+    "pkb_hit": false,
+    "tavily_used": true,
+    "tavily_calls": 2,
+    "llm_used": false,
+    "t_total": 0.4433,
+    "t_tavily": 0.3422,
+    "t_kb_build": 0.0192,
+    "t_llm": 0.044,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU053",
+    "name": "Pallavi Journalism",
+    "goal": "Journalist",
+    "degree": "BA",
+    "branch": "Journalism",
+    "interests": [
+      "Journalism",
+      "Media",
+      "Investigative Reporting"
+    ],
+    "skills": [
+      "Writing",
+      "Research",
+      "Interviewing",
+      "Video Editing"
+    ],
+    "expected_families": [
+      "Journalist",
+      "Broadcast Journalist",
+      "Digital Media Specialist",
+      "Content Journalist",
+      "Data Journalist",
+      "Digital Journalist",
+      "Multilingual Journalist",
+      "Digital Journalism Specialist"
+    ],
+    "recs": [
+      "Digital Journalism Specialist",
+      "Digital Media Specialist",
+      "Social Media Manager"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.0659,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.042,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU054",
+    "name": "Ayesha Fashion",
+    "goal": "Fashion Designer",
+    "degree": "B.Des",
+    "branch": "Fashion Design",
+    "interests": [
+      "Fashion Design",
+      "Apparel",
+      "Creative Design"
+    ],
+    "skills": [
+      "Fashion Illustration",
+      "Pattern Making",
+      "Textile Knowledge",
+      "Design"
+    ],
+    "expected_families": [
+      "Fashion Designer",
+      "E-commerce Fashion Designer",
+      "Digital Fashion Designer",
+      "Retail Fashion Buyer"
+    ],
+    "recs": [
+      "E-commerce Fashion Designer",
+      "Fashion Designer",
+      "Digital Fashion Designer"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.0774,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0472,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU055",
+    "name": "Sameer Career Switcher",
+    "goal": "Career Switch",
+    "degree": "B.Com",
+    "branch": "Commerce",
+    "interests": [
+      "Software Development",
+      "Web Development",
+      "AI"
+    ],
+    "skills": [
+      "Excel",
+      "SQL",
+      "HTML",
+      "CSS",
+      "Python"
+    ],
+    "expected_families": [
+      "Web Development Manager",
+      "Engineering Manager",
+      "Software Development Manager",
+      "Tech Lead"
+    ],
+    "recs": [
+      "DevOps Engineer for Web Applications",
+      "AI Talent Strategist",
+      "Robotics/ AI Expert",
+      "LegalTech Software Developer",
+      "Robotics/ AI Engineer",
+      "Business Analyst - AI",
+      "AI & Machine Learning Engineer",
+      "AI Talent Acquisition Specialist",
+      "AI Agent Developer",
+      "Biotech Software Developer",
+      "AI E2E Test Engineer",
+      "AI E2E Test Engineer",
+      "Web Developer",
+      "AI Expert",
+      "AI Researcher",
+      "AI Engineer",
+      "AI Product Manager",
+      "Software Engineer",
+      "Software Developer",
+      "E-commerce Fashion Designer"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.1517,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0436,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU056",
+    "name": "Pooja Business to Data",
+    "goal": "Data Analyst",
+    "degree": "BBA",
+    "branch": "Business Analytics",
+    "interests": [
+      "Data Science",
+      "Business Analytics",
+      "Machine Learning"
+    ],
+    "skills": [
+      "Excel",
+      "SQL",
+      "Power BI",
+      "Python"
+    ],
+    "expected_families": [
+      "Data Scientist",
+      "Data Analyst",
+      "Business Analyst",
+      "Analytics Engineer",
+      "Business/Data Analyst"
+    ],
+    "recs": [
+      "Business Analyst - AI",
+      "Machine Learning Engineer",
+      "Business Intelligence Analyst",
+      "AI & Machine Learning Engineer",
+      "Business/ Data Analyst",
+      "Business/Data Analyst",
+      "Business Analyst",
+      "Agritech Business Analyst",
+      "Machine Learning Engineer"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.106,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0489,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU057",
+    "name": "Ritesh Engineering to Finance",
+    "goal": "Financial Analyst",
+    "degree": "B.Tech",
+    "branch": "Mechanical Engineering",
+    "interests": [
+      "Finance",
+      "Investment",
+      "Analytics"
+    ],
+    "skills": [
+      "Excel",
+      "Python",
+      "Statistics",
+      "Financial Modeling"
+    ],
+    "expected_families": [
+      "Financial Analyst",
+      "Financial Planner",
+      "Investment Analyst",
+      "Quantitative Analyst",
+      "Finance Analyst",
+      "Workforce Analytics Special"
+    ],
+    "recs": [
+      "Workforce Analytics Specialist",
+      "Analytics Manager",
+      "Agrifinance Specialist",
+      "ESG Investment Banking Specialist",
+      "People Analytics Specialist",
+      "Investment Banking Analyst",
+      "Analytics Specialist",
+      "Investment Advisor"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": false,
+    "pkb_hit": false,
+    "tavily_used": true,
+    "tavily_calls": 2,
+    "llm_used": false,
+    "t_total": 0.4528,
+    "t_tavily": 0.3601,
+    "t_kb_build": 0.0187,
+    "t_llm": 0.0422,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU058",
+    "name": "Snehal Creative Tech",
+    "goal": "UX Engineer",
+    "degree": "B.Des",
+    "branch": "Interaction Design",
+    "interests": [
+      "UX Engineering",
+      "Frontend Development",
+      "Product Design"
+    ],
+    "skills": [
+      "Figma",
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "User Research"
+    ],
+    "expected_families": [
+      "Frontend Developer",
+      "UX Designer",
+      "UX Engineer",
+      "UI Developer",
+      "UX/UI Designer",
+      "UX/UI Design Lead",
+      "Design Systems Developer"
+    ],
+    "recs": [
+      "Frontend Developer",
+      "Product Designer"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "TRANSITION_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.098,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0565,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU059",
+    "name": "Harsh Mixed AI Business",
+    "goal": "AI Product Manager",
+    "degree": "BBA",
+    "branch": "Business Analytics",
+    "interests": [
+      "AI",
+      "Business Strategy",
+      "Product Management"
+    ],
+    "skills": [
+      "Python",
+      "SQL",
+      "Excel",
+      "Power BI",
+      "Machine Learning"
+    ],
+    "expected_families": [
+      "Business Analyst - AI",
+      "AI Product Manager",
+      "Data Scientist",
+      "Product Manager",
+      "Business Intelligence Analyst",
+      "Data-Driven Product Manager",
+      "AI Agent Developer"
+    ],
+    "recs": [
+      "AI Agent Developer",
+      "AI Talent Acquisition Specialist",
+      "Business Analyst - AI",
+      "AI Talent Strategist",
+      "Robotics/ AI Expert",
+      "AI Engineer",
+      "Robotics/ AI Engineer",
+      "AI Product Manager",
+      "Business Intelligence Analyst",
+      "AI & Machine Learning Engineer",
+      "Business/Data Analyst",
+      "Business Analyst",
+      "Business Intelligence Specialist",
+      "Business/ Data Analyst",
+      "Agritech Business Analyst",
+      "AI Expert",
+      "AI E2E Test Engineer",
+      "AI E2E Test Engineer",
+      "Business Sustainable Journalist",
+      "Product Researcher"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "TRANSITION_FIT",
+    "knowledge_hit": true,
+    "pkb_hit": false,
+    "tavily_used": false,
+    "tavily_calls": 0,
+    "llm_used": false,
+    "t_total": 0.1663,
+    "t_tavily": 0.0,
+    "t_kb_build": 0.0,
+    "t_llm": 0.0453,
+    "error": null,
+    "failure_class": "none"
+  },
+  {
+    "profile_id": "STU060",
+    "name": "Zero Skill Beginner",
+    "goal": "Explore Career",
+    "degree": "B.A",
+    "branch": "Arts",
+    "interests": [
+      "Technology",
+      "Business",
+      "Creative Work"
+    ],
+    "skills": [],
+    "expected_families": [
+      "Career Explorer",
+      "Junior Analyst",
+      "Management Trainee",
+      "AI Engineer",
+      "Business Developer",
+      "UI Designer",
+      "UX Designer",
+      "Software Developer"
+    ],
+    "recs": [
+      "Business Intelligence Analyst",
+      "Business/Data Analyst",
+      "Business Analyst",
+      "Business/ Data Analyst",
+      "Agritech Business Analyst",
+      "Business Analyst - AI",
+      "Business Sustainable Journalist",
+      "Business Intelligence Developer",
+      "Business Intelligence Specialist"
+    ],
+    "top1_correct": true,
+    "top3_correct": true,
+    "fit_type": "DIRECT_FIT",
+    "knowledge_hit": false,
+    "pkb_hit": false,
+    "tavily_used": true,
+    "tavily_calls": 2,
+    "llm_used": false,
+    "t_total": 0.4958,
+    "t_tavily": 0.3728,
+    "t_kb_build": 0.0327,
+    "t_llm": 0.0455,
+    "error": null,
+    "failure_class": "none"
+  }
+]

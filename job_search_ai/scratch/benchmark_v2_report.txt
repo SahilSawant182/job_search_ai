@@ -1,0 +1,42 @@
+======================================================================
+             FINAL CAREER RECOMMENDATION BENCHMARK INTEGRITY REPORT
+======================================================================
+Profiles Evaluated: 60
+
+── OVERALL METRICS COMPARISON ────────────────────────────────────────
+Metric                              | PASS A (Cold Cache)  | PASS B (Warm Cache) 
+-----------------------------------------------------------------------------------
+Top-1 Accuracy (%)                  |              100.0% |              100.0%
+Top-3 Accuracy (%)                  |              100.0% |              100.0%
+Non-Tech Accuracy (%)               |              100.0% |              100.0%
+Transition-Fit Accuracy (%)         |              100.0% |              100.0%
+Has Recommendations (%)             |              100.0% |              100.0%
+PKB HIT Rate (%)                    |                0.0% |               98.3%
+Average HIT Latency                 |                 0 ms |                16 ms
+Average MISS Latency                |               255 ms |               506 ms
+Total Tavily Calls                  |                 23 |                  1
+Total LLM Calls                     |                  1 |                  0
+
+── ERROR CLASSIFICATIONS (PASS A) ────────────────────────────────────
+  RECOMMENDATION_ERROR           : 0
+  RETRIEVAL_ERROR                : 0
+  CACHE_ERROR                    : 0
+  LLM_ERROR                      : 0
+  SEARCH_ERROR                   : 0
+  DATA_QUALITY_ERROR             : 0
+  BENCHMARK_ERROR                : 0
+
+── ERROR CLASSIFICATIONS (PASS B) ────────────────────────────────────
+  RECOMMENDATION_ERROR           : 0
+  RETRIEVAL_ERROR                : 0
+  CACHE_ERROR                    : 0
+  LLM_ERROR                      : 0
+  SEARCH_ERROR                   : 0
+  DATA_QUALITY_ERROR             : 0
+  BENCHMARK_ERROR                : 0
+
+── PASS B MANUAL REVIEW LIST FOR INCORRECT RESULTS ───────────────────
+  None! All recommendations matched the correct career families.
+
+── PASS A MANUAL REVIEW LIST FOR INCORRECT RESULTS ───────────────────
+  None! All recommendations matched the correct career families.

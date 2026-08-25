@@ -27,6 +27,8 @@ DEFAULT_CANONICAL_ALIASES: Dict[str, str] = {
     # Acronyms & Full Names
     "nlp": "Natural Language Processing",
     "natural language processing": "Natural Language Processing",
+    "wasm": "WebAssembly",
+    "webassembly": "WebAssembly",
     "automl": "Automated Machine Learning",
     "automated machine learning": "Automated Machine Learning",
     "iot": "Internet of Things",
@@ -63,7 +65,7 @@ DEFAULT_CANONICAL_ALIASES: Dict[str, str] = {
 }
 
 DANGLING_WORDS: Set[str] = {
-    "and", "or", "for", "using", "with", "the", "in", "by", "on", "of", "to", "etc", "etc.", "eg", "e.g.", "ie", "i.e.", "n/a", "none"
+    "and", "or", "for", "using", "with", "the", "in", "by", "on", "of", "to", "etc", "etc.", "eg", "e.g.", "e.g", "ie", "i.e.", "i.e", "n/a", "none"
 }
 
 

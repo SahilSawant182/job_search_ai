@@ -1,0 +1,381 @@
+CAREER RECOMMENDATION — DIAGNOSTIC BENCHMARK
+================================================================
+
+╔══════════════════════════════════════════════════════════════╗
+║  BENCHMARK REPORT — MAX_MISS_INTERESTS=1                    ║
+╠══════════════════════════════════════════════════════════════╣
+║  ACCURACY                                                    ║
+║  Has recommendations :  58 / 60  (96.7%)              ║
+║  Career-correct      :  50 / 60  (83.3%)              ║
+╠══════════════════════════════════════════════════════════════╣
+║  CACHE PERFORMANCE                                           ║
+║  Profile KB HITs     :  59 / 60  (98.3%)              ║
+║  Career KB HITs      :  57 / 60  (95.0%)              ║
+║  Tavily calls used   :   3 / 60  (5.0%)              ║
+║  LLM synthesis used  :   1 / 60  (1.7%)              ║
+╠══════════════════════════════════════════════════════════════╣
+║  LATENCY (seconds)                                           ║
+║  Avg HIT latency     :   0.097s                              ║
+║  Avg MISS latency    :   1.870s                              ║
+║  Avg total latency   :   0.127s                              ║
+╠══════════════════════════════════════════════════════════════╣
+║  TIME BREAKDOWN (% of avg total)                             ║
+║  Normalization       :   0.1%                               ║
+║  MariaDB retrieval   :  45.9%                               ║
+║  Tavily search       :   4.7%                               ║
+║  KnowledgeBuilder    :  19.2%                               ║
+║  LLM synthesis       :  19.3%                               ║
+╠══════════════════════════════════════════════════════════════╣
+║  TOP FAILURE CAUSES                                          ║
+║    wrong_career_returned          :   8                     ║
+║    tavily_returned_empty          :   2                     ║
+╚══════════════════════════════════════════════════════════════╝
+
+ID       Domain                       Top Career                       OK?    PKB  KHit  Tav      ms Slowest Stage
+------------------------------------------------------------------------------------------------------------------------
+STU001   Computer Science             Web Development Manager          ✓      HIT   HIT   N       20 retrieval
+STU002   Information Technology       Frontend Developer               ✓      HIT   HIT   N       14 retrieval
+STU003   Computer Science             Backend Developer                ✓      HIT   HIT   N       10 retrieval
+STU004   Computer Science             Full Stack Developer             ✓      HIT   HIT   N       13 retrieval
+STU005   Artificial Intelligence and  AI-ML Engineer in Healthcare     ✓      HIT   HIT   N       23 retrieval
+STU006   Statistics                   Machine Learning Engineer        ✓      HIT   HIT   N       30 retrieval
+STU007   Information Technology       DevOps Engineer for Web Applications ✓      HIT   HIT   N       15 retrieval
+STU008   Computer Science             DevOps Engineer for Web Applications ✓      HIT   HIT   N       19 retrieval
+STU009   Cyber Security               Cybersecurity Manager            ✗      HIT   HIT   N       16 retrieval
+STU010   Computer Science             AI Engineer                      ✓      HIT   ---   Y     3353 llm
+STU011   Mechanical Engineering       Robotics Engineer                ✓      HIT   HIT   N       20 retrieval
+STU012   Mechanical Engineering       Product Designer                 ✗      HIT   HIT   N       14 retrieval
+STU013   Electrical Engineering       Power System Engineer            ✓      HIT   HIT   N        8 pkb_hit
+STU014   Electronics and Telecommuni  Embedded Systems Engineer        ✓      HIT   HIT   N       10 pkb_hit
+STU015   Civil Engineering            Construction Manager             ✓      HIT   HIT   N        7 pkb_hit
+STU016   Chemical Engineering         Process Engineer                 ✓      HIT   HIT   N        8 pkb_hit
+STU017   Statistics                   Agritech Data Analyst            ✗      HIT   HIT   N       15 retrieval
+STU018   Mathematics                  AI Agent Developer               ✓      HIT   HIT   N       17 retrieval
+STU019   Physics                      Research Scientist               ✗      HIT   HIT   N        7 pkb_hit
+STU020   Biotechnology                Biotech Research Scientist       ✗      HIT   HIT   N        8 pkb_hit
+STU021   Commerce                     Financial Analyst                ✓      HIT   HIT   N        6 pkb_hit
+STU022   Accounting and Finance       Auditing and Assurance Specialist ✗      HIT   HIT   N        7 pkb_hit
+STU023   Finance                      Investment Banking Analyst       ✗      HIT   HIT   N        6 pkb_hit
+STU024   Commerce                     Risk Management Specialist       ✓      HIT   HIT   N        7 pkb_hit
+STU025   Marketing                    Digital Marketing Content Creator ✓      HIT   HIT   N       14 retrieval
+STU026   Human Resources              Employee Experience Manager      ✓      HIT   HIT   N        7 pkb_hit
+STU027   Business Analytics           Business Intelligence Analyst    ✓      HIT   HIT   N       11 retrieval
+STU028   Business Administration      Product Management Specialist    ✓      HIT   HIT   N       10 pkb_hit
+STU029   Operations Management        Digital Operations Specialist    ✓      HIT   HIT   N       11 retrieval
+STU030   Entrepreneurship             (empty)                          ✗      HIT   ---   Y     1706 retrieval
+STU031   Communication Design         UX Designer                      ✓      HIT   HIT   N       19 retrieval
+STU032   Graphic Design               Graphic Designer                 ✓      HIT   HIT   N       10 retrieval
+STU033   Animation                    Animation Director               ✓      HIT   HIT   N        7 pkb_hit
+STU034   Mass Communication           Content Creation Specialist      ✓      HIT   HIT   N       32 retrieval
+STU035   Psychology                   Clinical Psychologist            ✓      HIT   HIT   N        8 pkb_hit
+STU036   Sociology                    Social Researcher                ✓      HIT   HIT   N       14 retrieval
+STU037   Political Science            Policy Analyst                   ✓      HIT   HIT   N        7 pkb_hit
+STU038   English Literature           Content Writer                   ✓      HIT   HIT   N       18 retrieval
+STU039   Law                          Compliance Officer               ✓      HIT   HIT   N        5 pkb_hit
+STU040   Law                          Legal Tech Specialist            ✓      HIT   HIT   N        4 pkb_hit
+STU041   Nursing                      (empty)                          ✗      ---   ---   Y     1869 retrieval
+STU042   Pharmacy                     Digital Health Pharma Consultant ✓      HIT   HIT   N        8 pkb_hit
+STU043   Medicine                     Medical Tourist Coordinator      ✓      HIT   HIT   N        5 pkb_hit
+STU044   Biotechnology                Biotech Researcher               ✓      HIT   HIT   N       13 retrieval
+STU045   Agriculture                  Agriculture Extension Officer    ✓      HIT   HIT   N       12 retrieval
+STU046   Agricultural Engineering     Agricultural Data Scientist      ✓      HIT   HIT   N       17 retrieval
+STU047   Food Technology              Food Quality Analyst             ✓      HIT   HIT   N        9 pkb_hit
+STU048   Hotel Management             Hospitality Manager              ✓      HIT   HIT   N        5 pkb_hit
+STU049   Tourism Management           Travel and Tourism Manager       ✓      HIT   HIT   N        7 pkb_hit
+STU050   Education                    Teacher                          ✓      HIT   HIT   N        5 pkb_hit
+STU051   Education Technology         Online Learning Designer         ✓      HIT   HIT   N        6 pkb_hit
+STU052   Economics                    Economic Planner                 ✓      HIT   HIT   N        7 pkb_hit
+STU053   Journalism                   Content Journalist               ✓      HIT   HIT   N       10 retrieval
+STU054   Fashion Design               E-commerce Fashion Designer      ✓      HIT   HIT   N        9 pkb_hit
+STU055   Commerce                     Full Stack Developer             ✓      HIT   HIT   N       10 retrieval
+STU056   Business Analytics           AI Engineer                      ✓      HIT   HIT   N       11 retrieval
+STU057   Mechanical Engineering       Financial Analyst                ✓      HIT   HIT   N        5 pkb_hit
+STU058   Interaction Design           Frontend Developer               ✓      HIT   HIT   N       14 retrieval
+STU059   Business Analytics           AI Engineer                      ✓      HIT   HIT   N        8 pkb_hit
+STU060   Arts                         UI Designer                      ✗      HIT   HIT   N        4 pkb_hit
+
+── INCORRECT RECOMMENDATIONS DEEP-DIVE ─────────────────────
+
+  Profile     : STU009
+  Actual recs : ['Cybersecurity Manager', 'Security Architect']
+  Acceptable  : ['Data Engineer', 'Big Data Engineer', 'Analytics Engineer', 'Data Platform Engineer']
+  Failure at  : none
+  PKB hit     : True (sim=1.000)
+  Career KB   : hit=True count=2
+  Tavily used : False
+  Error       : None
+
+  Profile     : STU012
+  Actual recs : ['Product Designer', 'UX/UI Design Lead']
+  Acceptable  : ['Embedded Systems Engineer', 'IoT Developer', 'Firmware Engineer', 'Hardware Engineer']
+  Failure at  : none
+  PKB hit     : True (sim=1.000)
+  Career KB   : hit=True count=2
+  Tavily used : False
+  Error       : None
+
+  Profile     : STU017
+  Actual recs : ['Agritech Data Analyst', 'Data Analyst (Healthcare)', 'Data Analyst', 'Data Scientist', 'Data Scientist (Banking)']
+  Acceptable  : ['Electronics Engineer', 'VLSI Engineer', 'Signal Processing Engineer', 'Hardware Design Engineer']
+  Failure at  : none
+  PKB hit     : True (sim=1.000)
+  Career KB   : hit=True count=5
+  Tavily used : False
+  Error       : None
+
+  Profile     : STU019
+  Actual recs : ['Research Scientist', 'Data Analyst']
+  Acceptable  : ['Environmental Engineer', 'Sustainability Engineer', 'Green Energy Engineer']
+  Failure at  : none
+  PKB hit     : True (sim=1.000)
+  Career KB   : hit=True count=2
+  Tavily used : False
+  Error       : None
+
+  Profile     : STU020
+  Actual recs : ['Biotech Research Scientist', 'AI-ML Engineer in Healthcare']
+  Acceptable  : ['Marketing Analyst', 'Digital Marketing Specialist', 'SEO Specialist', 'Marketing Manager']
+  Failure at  : none
+  PKB hit     : True (sim=1.000)
+  Career KB   : hit=True count=2
+  Tavily used : False
+  Error       : None
+
+  Profile     : STU022
+  Actual recs : ['Auditing and Assurance Specialist']
+  Acceptable  : ['Accountant', 'Auditor', 'Tax Consultant', 'Financial Accountant']
+  Failure at  : none
+  PKB hit     : True (sim=1.000)
+  Career KB   : hit=True count=1
+  Tavily used : False
+  Error       : None
+
+  Profile     : STU023
+  Actual recs : ['Investment Banking Analyst']
+  Acceptable  : ['HR Manager', 'Human Resources Manager', 'Talent Acquisition Specialist', 'HR Business Partner']
+  Failure at  : none
+  PKB hit     : True (sim=1.000)
+  Career KB   : hit=True count=1
+  Tavily used : False
+  Error       : None
+
+  Profile     : STU030
+  Actual recs : []
+  Acceptable  : ['Entrepreneur', 'Business Development Manager', 'Startup Founder', 'Business Developer']
+  Failure at  : tavily_returned_empty
+  PKB hit     : True (sim=1.000)
+  Career KB   : hit=False count=0
+  Tavily used : True
+  Error       : None
+
+  Profile     : STU041
+  Actual recs : []
+  Acceptable  : ['Nurse', 'Healthcare Administrator', 'Clinical Nurse', 'Patient Care Specialist']
+  Failure at  : tavily_returned_empty
+  PKB hit     : False (sim=0.000)
+  Career KB   : hit=False count=0
+  Tavily used : True
+  Error       : None
+
+  Profile     : STU060
+  Actual recs : ['UI Designer']
+  Acceptable  : ['Career Explorer', 'Junior Analyst', 'Management Trainee', 'AI Engineer']
+  Failure at  : none
+  PKB hit     : True (sim=1.000)
+  Career KB   : hit=True count=1
+  Tavily used : False
+  Error       : None
+
+╔══════════════════════════════════════════════════════════════╗
+║  BENCHMARK REPORT — MAX_MISS_INTERESTS=2                    ║
+╠══════════════════════════════════════════════════════════════╣
+║  ACCURACY                                                    ║
+║  Has recommendations :  58 / 60  (96.7%)              ║
+║  Career-correct      :  50 / 60  (83.3%)              ║
+╠══════════════════════════════════════════════════════════════╣
+║  CACHE PERFORMANCE                                           ║
+║  Profile KB HITs     :  59 / 60  (98.3%)              ║
+║  Career KB HITs      :  58 / 60  (96.7%)              ║
+║  Tavily calls used   :   2 / 60  (3.3%)              ║
+║  LLM synthesis used  :   0 / 60  (0.0%)              ║
+╠══════════════════════════════════════════════════════════════╣
+║  LATENCY (seconds)                                           ║
+║  Avg HIT latency     :   0.067s                              ║
+║  Avg MISS latency    :   3.408s                              ║
+║  Avg total latency   :   0.123s                              ║
+╠══════════════════════════════════════════════════════════════╣
+║  TIME BREAKDOWN (% of avg total)                             ║
+║  Normalization       :   0.1%                               ║
+║  MariaDB retrieval   :  88.9%                               ║
+║  Tavily search       :   0.0%                               ║
+║  KnowledgeBuilder    :   0.0%                               ║
+║  LLM synthesis       :   0.0%                               ║
+╠══════════════════════════════════════════════════════════════╣
+║  TOP FAILURE CAUSES                                          ║
+║    wrong_career_returned          :   8                     ║
+║    tavily_returned_empty          :   2                     ║
+╚══════════════════════════════════════════════════════════════╝
+
+ID       Domain                       Top Career                       OK?    PKB  KHit  Tav      ms Slowest Stage
+------------------------------------------------------------------------------------------------------------------------
+STU001   Computer Science             Web Development Manager          ✓      HIT   HIT   N       10 retrieval
+STU002   Information Technology       Frontend Developer               ✓      HIT   HIT   N       13 retrieval
+STU003   Computer Science             Backend Developer                ✓      HIT   HIT   N        7 pkb_hit
+STU004   Computer Science             Full Stack Developer             ✓      HIT   HIT   N       25 retrieval
+STU005   Artificial Intelligence and  AI-ML Engineer in Healthcare     ✓      HIT   HIT   N       64 retrieval
+STU006   Statistics                   Machine Learning Engineer        ✓      HIT   HIT   N       23 retrieval
+STU007   Information Technology       DevOps Engineer for Web Applications ✓      HIT   HIT   N       21 retrieval
+STU008   Computer Science             DevOps Engineer for Web Applications ✓      HIT   HIT   N        9 pkb_hit
+STU009   Cyber Security               Cybersecurity Manager            ✗      HIT   HIT   N        6 pkb_hit
+STU010   Computer Science             AI Engineer                      ✓      HIT   HIT   N       12 retrieval
+STU011   Mechanical Engineering       Robotics Engineer                ✓      HIT   HIT   N        8 pkb_hit
+STU012   Mechanical Engineering       Product Designer                 ✗      HIT   HIT   N        7 pkb_hit
+STU013   Electrical Engineering       Power System Engineer            ✓      HIT   HIT   N        4 pkb_hit
+STU014   Electronics and Telecommuni  Embedded Systems Engineer        ✓      HIT   HIT   N        4 pkb_hit
+STU015   Civil Engineering            Construction Manager             ✓      HIT   HIT   N        4 pkb_hit
+STU016   Chemical Engineering         Process Engineer                 ✓      HIT   HIT   N        4 pkb_hit
+STU017   Statistics                   Agritech Data Analyst            ✗      HIT   HIT   N       14 retrieval
+STU018   Mathematics                  AI Agent Developer               ✓      HIT   HIT   N       24 retrieval
+STU019   Physics                      Research Scientist               ✗      HIT   HIT   N        8 pkb_hit
+STU020   Biotechnology                Biotech Research Scientist       ✗      HIT   HIT   N       12 retrieval
+STU021   Commerce                     Financial Analyst                ✓      HIT   HIT   N       11 retrieval
+STU022   Accounting and Finance       Auditing and Assurance Specialist ✗      HIT   HIT   N        5 pkb_hit
+STU023   Finance                      Investment Banking Analyst       ✗      HIT   HIT   N        4 pkb_hit
+STU024   Commerce                     Risk Management Specialist       ✓      HIT   HIT   N        7 pkb_hit
+STU025   Marketing                    Digital Marketing Content Creator ✓      HIT   HIT   N       16 retrieval
+STU026   Human Resources              Employee Experience Manager      ✓      HIT   HIT   N        7 pkb_hit
+STU027   Business Analytics           Business Intelligence Analyst    ✓      HIT   HIT   N       11 retrieval
+STU028   Business Administration      Product Management Specialist    ✓      HIT   HIT   N       11 retrieval
+STU029   Operations Management        Digital Operations Specialist    ✓      HIT   HIT   N        9 pkb_hit
+STU030   Entrepreneurship             (empty)                          ✗      HIT   ---   Y     3223 retrieval
+STU031   Communication Design         UX Designer                      ✓      HIT   HIT   N       21 retrieval
+STU032   Graphic Design               Graphic Designer                 ✓      HIT   HIT   N       16 retrieval
+STU033   Animation                    Animation Director               ✓      HIT   HIT   N       15 retrieval
+STU034   Mass Communication           Content Creation Specialist      ✓      HIT   HIT   N       42 retrieval
+STU035   Psychology                   Clinical Psychologist            ✓      HIT   HIT   N       20 retrieval
+STU036   Sociology                    Social Researcher                ✓      HIT   HIT   N       15 retrieval
+STU037   Political Science            Policy Analyst                   ✓      HIT   HIT   N        7 pkb_hit
+STU038   English Literature           Content Writer                   ✓      HIT   HIT   N       13 retrieval
+STU039   Law                          Compliance Officer               ✓      HIT   HIT   N        7 pkb_hit
+STU040   Law                          Legal Tech Specialist            ✓      HIT   HIT   N        5 pkb_hit
+STU041   Nursing                      (empty)                          ✗      ---   ---   Y     3408 retrieval
+STU042   Pharmacy                     Digital Health Pharma Consultant ✓      HIT   HIT   N        8 pkb_hit
+STU043   Medicine                     Medical Tourist Coordinator      ✓      HIT   HIT   N        4 pkb_hit
+STU044   Biotechnology                Biotech Researcher               ✓      HIT   HIT   N        9 pkb_hit
+STU045   Agriculture                  Agriculture Extension Officer    ✓      HIT   HIT   N        7 pkb_hit
+STU046   Agricultural Engineering     Agricultural Data Scientist      ✓      HIT   HIT   N       21 retrieval
+STU047   Food Technology              Food Quality Analyst             ✓      HIT   HIT   N        4 pkb_hit
+STU048   Hotel Management             Hospitality Manager              ✓      HIT   HIT   N        6 pkb_hit
+STU049   Tourism Management           Travel and Tourism Manager       ✓      HIT   HIT   N        6 pkb_hit
+STU050   Education                    Teacher                          ✓      HIT   HIT   N       10 retrieval
+STU051   Education Technology         Online Learning Designer         ✓      HIT   HIT   N        9 pkb_hit
+STU052   Economics                    Economic Planner                 ✓      HIT   HIT   N       11 retrieval
+STU053   Journalism                   Content Journalist               ✓      HIT   HIT   N        9 pkb_hit
+STU054   Fashion Design               E-commerce Fashion Designer      ✓      HIT   HIT   N        8 pkb_hit
+STU055   Commerce                     Full Stack Developer             ✓      HIT   HIT   N       16 retrieval
+STU056   Business Analytics           AI Engineer                      ✓      HIT   HIT   N       13 retrieval
+STU057   Mechanical Engineering       Financial Analyst                ✓      HIT   HIT   N        6 pkb_hit
+STU058   Interaction Design           Frontend Developer               ✓      HIT   HIT   N       12 retrieval
+STU059   Business Analytics           AI Engineer                      ✓      HIT   HIT   N        8 pkb_hit
+STU060   Arts                         UI Designer                      ✗      HIT   HIT   N        4 pkb_hit
+
+── INCORRECT RECOMMENDATIONS DEEP-DIVE ─────────────────────
+
+  Profile     : STU009
+  Actual recs : ['Cybersecurity Manager', 'Security Architect']
+  Acceptable  : ['Data Engineer', 'Big Data Engineer', 'Analytics Engineer', 'Data Platform Engineer']
+  Failure at  : none
+  PKB hit     : True (sim=1.000)
+  Career KB   : hit=True count=2
+  Tavily used : False
+  Error       : None
+
+  Profile     : STU012
+  Actual recs : ['Product Designer', 'UX/UI Design Lead']
+  Acceptable  : ['Embedded Systems Engineer', 'IoT Developer', 'Firmware Engineer', 'Hardware Engineer']
+  Failure at  : none
+  PKB hit     : True (sim=1.000)
+  Career KB   : hit=True count=2
+  Tavily used : False
+  Error       : None
+
+  Profile     : STU017
+  Actual recs : ['Agritech Data Analyst', 'Data Analyst (Healthcare)', 'Data Analyst', 'Data Scientist', 'Data Scientist (Banking)']
+  Acceptable  : ['Electronics Engineer', 'VLSI Engineer', 'Signal Processing Engineer', 'Hardware Design Engineer']
+  Failure at  : none
+  PKB hit     : True (sim=1.000)
+  Career KB   : hit=True count=5
+  Tavily used : False
+  Error       : None
+
+  Profile     : STU019
+  Actual recs : ['Research Scientist', 'Data Analyst']
+  Acceptable  : ['Environmental Engineer', 'Sustainability Engineer', 'Green Energy Engineer']
+  Failure at  : none
+  PKB hit     : True (sim=1.000)
+  Career KB   : hit=True count=2
+  Tavily used : False
+  Error       : None
+
+  Profile     : STU020
+  Actual recs : ['Biotech Research Scientist', 'AI-ML Engineer in Healthcare']
+  Acceptable  : ['Marketing Analyst', 'Digital Marketing Specialist', 'SEO Specialist', 'Marketing Manager']
+  Failure at  : none
+  PKB hit     : True (sim=1.000)
+  Career KB   : hit=True count=2
+  Tavily used : False
+  Error       : None
+
+  Profile     : STU022
+  Actual recs : ['Auditing and Assurance Specialist']
+  Acceptable  : ['Accountant', 'Auditor', 'Tax Consultant', 'Financial Accountant']
+  Failure at  : none
+  PKB hit     : True (sim=1.000)
+  Career KB   : hit=True count=1
+  Tavily used : False
+  Error       : None
+
+  Profile     : STU023
+  Actual recs : ['Investment Banking Analyst']
+  Acceptable  : ['HR Manager', 'Human Resources Manager', 'Talent Acquisition Specialist', 'HR Business Partner']
+  Failure at  : none
+  PKB hit     : True (sim=1.000)
+  Career KB   : hit=True count=1
+  Tavily used : False
+  Error       : None
+
+  Profile     : STU030
+  Actual recs : []
+  Acceptable  : ['Entrepreneur', 'Business Development Manager', 'Startup Founder', 'Business Developer']
+  Failure at  : tavily_returned_empty
+  PKB hit     : True (sim=1.000)
+  Career KB   : hit=False count=0
+  Tavily used : True
+  Error       : None
+
+  Profile     : STU041
+  Actual recs : []
+  Acceptable  : ['Nurse', 'Healthcare Administrator', 'Clinical Nurse', 'Patient Care Specialist']
+  Failure at  : tavily_returned_empty
+  PKB hit     : False (sim=0.000)
+  Career KB   : hit=False count=0
+  Tavily used : True
+  Error       : None
+
+  Profile     : STU060
+  Actual recs : ['UI Designer']
+  Acceptable  : ['Career Explorer', 'Junior Analyst', 'Management Trainee', 'AI Engineer']
+  Failure at  : none
+  PKB hit     : True (sim=1.000)
+  Career KB   : hit=True count=1
+  Tavily used : False
+  Error       : None
+
+── COMPARISON: _MAX_MISS_INTERESTS=1 vs 2 ──────────────────
+Metric                                      =1          =2       Delta
+----------------------------------------------------------------------
+Accuracy (%)                             83.33       83.33  +     0.00
+Has recs (%)                             96.67       96.67  +     0.00
+Avg total latency (s)                     0.13        0.12      -0.00
+Total Tavily calls                        2.00        0.00      -2.00
+Profiles used LLM                         1.00        0.00      -1.00

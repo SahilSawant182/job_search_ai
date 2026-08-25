@@ -86,6 +86,10 @@ def save_job_description(profile: SkillProfile) -> str:
         doc.core_domain_skills = _safe_join(core_domain)
         doc.industry_skills = _safe_join(industry)
         doc.emerging_skills = _safe_join(emerging)
+        # Populate deprecated columns for backwards compatibility
+        doc.primary_skills = _safe_join(foundation)
+        doc.advanced_skills = _safe_join(core_domain)
+        doc.expert_skills = _safe_join(industry + emerging)
         doc.save(ignore_permissions=False)
         logger.info("SkillAgent: updated Job Description %r for role=%r", doc.name, profile.role_name)
     else:
@@ -98,6 +102,10 @@ def save_job_description(profile: SkillProfile) -> str:
             "core_domain_skills": _safe_join(core_domain),
             "industry_skills": _safe_join(industry),
             "emerging_skills": _safe_join(emerging),
+            # Populate deprecated columns for backwards compatibility
+            "primary_skills": _safe_join(foundation),
+            "advanced_skills": _safe_join(core_domain),
+            "expert_skills": _safe_join(industry + emerging),
         })
         doc.insert(ignore_permissions=False)
         logger.info("SkillAgent: created Job Description %r for role=%r", doc.name, profile.role_name)

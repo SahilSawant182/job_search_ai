@@ -96,18 +96,21 @@ class SkillGapService:
         effective_threshold = self.get_configured_readiness_threshold(readiness_threshold)
 
         # Validate student existence
-        resolved_student = self._resolve_student_docname(student)
-        if not frappe.db.exists("Student", resolved_student):
-            frappe.throw(f"Student '{student}' not found.", frappe.DoesNotExistError)
+        if student and student != "Generic":
+            resolved_student = self._resolve_student_docname(student)
+            if not frappe.db.exists("Student", resolved_student):
+                frappe.throw(f"Student '{student}' not found.", frappe.DoesNotExistError)
+            # 1. Fetch verified student skills (ai_verified = 1)
+            student_skills = self.fetch_verified_student_skills(resolved_student)
+        else:
+            resolved_student = "Generic"
+            student_skills = []
 
         # Force reload caching layers to ensure database updates are instantly picked up
         from job_search_ai.services.skill_gap.normalizer import initialize_normalization_cache
         from job_search_ai.services.skill_gap.relationship import initialize_relationship_cache
         initialize_normalization_cache(force=True)
         initialize_relationship_cache(force=True)
-
-        # 1. Fetch verified student skills (ai_verified = 1)
-        student_skills = self.fetch_verified_student_skills(resolved_student)
 
         # 2. Resolve skill profile from Skill Agent / Skill Knowledge
         career_identifier = career or role or job_description
@@ -117,19 +120,95 @@ class SkillGapService:
         from job_search_ai.agents.skill_agent.schemas import SkillProfile
 
         if isinstance(career_identifier, str):
-            # Check if it is a valid career in Career Knowledge DocType to raise DoesNotExistError for unknown roles
+            # Check if it is a valid career in Career Knowledge or Career Path DocType to raise DoesNotExistError for unknown roles
             if not frappe.db.exists("Career Knowledge", {"career_name": career_identifier}) and \
-               not frappe.db.exists("Career Knowledge", {"career_name": ["like", f"%{career_identifier}%"]}):
+               not frappe.db.exists("Career Knowledge", {"career_name": ["like", f"%{career_identifier}%"]}) and \
+               not frappe.db.exists("Career Path", career_identifier):
                 frappe.throw(f"Career '{career_identifier}' not found in Skill Knowledge.", frappe.DoesNotExistError)
 
-            from job_search_ai.agents.skill_agent.skill_agent import SkillAgent
-            from job_search_ai.agents.skill_agent.schemas import SkillRequest
-            
-            agent = SkillAgent()
-            request = SkillRequest(role=career_identifier)
-            # Run without saving to Job Description DocType
-            result = agent.run(request, save_to_doctype=False)
-            skill_profile = result.profile
+            # Prioritize Career Path template first, as it contains curated educational curriculum
+            if frappe.db.exists("Career Path", career_identifier):
+                logger.info("SkillGapService: loading directly from Career Path '%s' to bypass SkillAgent", career_identifier)
+                prereqs = frappe.get_all(
+                    "Prerequisite Skills",
+                    filters={"parent": career_identifier, "parentfield": "prerequisite_skills"},
+                    fields=["prerequisite_skills"]
+                )
+                foundation = [p.prerequisite_skills for p in prereqs if p.prerequisite_skills]
+                
+                milestones_std = frappe.get_all(
+                    "Path Milestone",
+                    filters={"parent": career_identifier, "parentfield": "path_milestone"},
+                    fields=["skill", "category"]
+                )
+                
+                core_domain = []
+                industry = []
+                emerging = []
+                for m_std in milestones_std:
+                    sname = m_std.skill
+                    category = m_std.category or "Core Domain"
+                    if not sname:
+                        continue
+                    if category == "Core Domain":
+                        core_domain.append(sname)
+                    elif category == "Industry":
+                        industry.append(sname)
+                    elif category == "Emerging":
+                        emerging.append(sname)
+                    else:
+                        core_domain.append(sname)
+                        
+                skill_profile = SkillProfile(
+                    role_name=career_identifier,
+                    foundation_skills=foundation,
+                    core_domain_skills=core_domain,
+                    industry_skills=industry,
+                    emerging_skills=emerging,
+                    similarity=1.0,
+                    source="db_career_path"
+                )
+            else:
+                ck_name = frappe.db.get_value("Career Knowledge", {"career_name": career_identifier, "active": 1}, "name")
+                if not ck_name:
+                    ck_name = frappe.db.get_value("Career Knowledge", {"career_name": ["like", f"%{career_identifier}%"], "active": 1}, "name")
+                
+                if ck_name:
+                    logger.info("SkillGapService: loading directly from Career Knowledge '%s' to bypass SkillAgent", ck_name)
+                    doc = frappe.get_doc("Career Knowledge", ck_name)
+                    foundation = []
+                    core_domain = []
+                    industry = []
+                    emerging = []
+                    for s in (doc.skills or []):
+                        sname = s.get("skill_name")
+                        stype = s.get("skill_type") or "Required"
+                        if not sname:
+                            continue
+                        if stype == "Required":
+                            core_domain.append(sname)
+                        elif stype in ("Preferred", "Advanced"):
+                            industry.append(sname)
+                        elif stype == "Foundation":
+                            foundation.append(sname)
+                        else:
+                            emerging.append(sname)
+                    skill_profile = SkillProfile(
+                        role_name=doc.career_name or career_identifier,
+                        foundation_skills=foundation,
+                        core_domain_skills=core_domain,
+                        industry_skills=industry,
+                        emerging_skills=emerging,
+                        similarity=1.0,
+                        source="db_knowledge"
+                    )
+                else:
+                    from job_search_ai.agents.skill_agent.skill_agent import SkillAgent
+                    from job_search_ai.agents.skill_agent.schemas import SkillRequest
+                    agent = SkillAgent()
+                    request = SkillRequest(role=career_identifier)
+                    result = agent.run(request, save_to_doctype=False)
+                    skill_profile = result.profile
         elif isinstance(career_identifier, SkillProfile):
             skill_profile = career_identifier
         elif isinstance(career_identifier, dict):

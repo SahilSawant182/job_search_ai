@@ -75,8 +75,23 @@ class SkillAgent:
             profile = self._generate(request)
             t_llm = time.perf_counter() - t
 
-            # Best-effort cache write, never blocks the response.
-            self._safe_store(cache, profile)
+            import frappe
+            from job_search_ai.agents.skill_agent.doctype_writer import _resolve_job_profile
+            ck_name = _resolve_job_profile(request.role)
+            has_sufficient_authority = False
+            if ck_name:
+                count = frappe.db.sql(
+                    "SELECT COUNT(*) FROM `tabCareer Knowledge Skill` WHERE parent = %s",
+                    (ck_name,)
+                )[0][0]
+                if count >= 3:
+                    has_sufficient_authority = True
+
+            if has_sufficient_authority:
+                # Best-effort cache write, never blocks the response.
+                self._safe_store(cache, profile)
+            else:
+                logger.warning("SkillAgent: Career authority insufficient/missing for %r (ck_name=%r), skipping cache write.", request.role, ck_name)
 
         # ------------------------------------------------------------------
         # Optional: persist to the "Job Description" doctype
@@ -120,29 +135,44 @@ class SkillAgent:
 
     def _generate(self, request: SkillRequest) -> SkillProfile:
         import re
-        from job_search_ai.services.skill_gap.normalizer import parse_skill_string
+        from job_search_ai.agents.skill_agent.validator import validate_and_normalize_profile
 
         DUMMY_SKILL_RE = re.compile(r"^(skill\d+|unknown|n/a|placeholder|none)$", re.IGNORECASE)
 
-        def sanitize(skill_list: list[str]) -> list[str]:
-            raw_filtered = [s for s in skill_list if s and not DUMMY_SKILL_RE.match(s.strip())]
-            return parse_skill_string(raw_filtered)
+        llm = LLMService()
+        max_attempts = 3
+        last_exc = None
 
-        try:
-            llm = LLMService()
-            skills = llm.generate_skills(request.role, request.seniority)
-        except LLMServiceError as exc:
-            raise SkillAgentError(f"LLMService failed: {exc}") from exc
+        for attempt in range(max_attempts):
+            try:
+                logger.info("SkillAgent: generation attempt %d/%d for role=%r", attempt + 1, max_attempts, request.role)
+                skills = llm.generate_skills(request.role, request.seniority, feedback=str(last_exc) if last_exc else None)
+                
+                foundation = [s for s in skills.get("foundation_skills", []) if s and not DUMMY_SKILL_RE.match(s.strip())]
+                core = [s for s in skills.get("core_domain_skills", []) if s and not DUMMY_SKILL_RE.match(s.strip())]
+                industry = [s for s in skills.get("industry_skills", []) if s and not DUMMY_SKILL_RE.match(s.strip())]
+                emerging = [s for s in skills.get("emerging_skills", []) if s and not DUMMY_SKILL_RE.match(s.strip())]
 
-        return SkillProfile(
-            role_name=request.role,
-            foundation_skills=sanitize(skills["foundation_skills"]),
-            core_domain_skills=sanitize(skills["core_domain_skills"]),
-            industry_skills=sanitize(skills["industry_skills"]),
-            emerging_skills=sanitize(skills["emerging_skills"]),
-            similarity=1.0,
-            source="llm",
-        )
+                profile = SkillProfile(
+                    role_name=request.role,
+                    foundation_skills=foundation,
+                    core_domain_skills=core,
+                    industry_skills=industry,
+                    emerging_skills=emerging,
+                    similarity=1.0,
+                    source="llm",
+                )
+
+                # Normalize and validate the profile. If it violates rules, ValueError is raised.
+                is_last_attempt = (attempt == max_attempts - 1)
+                validate_and_normalize_profile(profile, truncate_excess=is_last_attempt)
+                return profile
+
+            except (LLMServiceError, ValueError) as exc:
+                last_exc = exc
+                logger.warning("SkillAgent: generation attempt %d failed validation or LLM call (%s)", attempt + 1, exc)
+
+        raise SkillAgentError(f"Skill generation and validation failed after {max_attempts} attempts: {last_exc}")
 
     def _safe_store(self, cache: SkillKnowledgeCache, profile: SkillProfile) -> None:
         try:

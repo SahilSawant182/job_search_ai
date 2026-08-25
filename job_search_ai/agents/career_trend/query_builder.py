@@ -29,7 +29,7 @@ from job_search_ai.services.knowledge.constants import JOB_SEARCH_DOMAINS
 logger = logging.getLogger(__name__)
 
 # Maximum number of interests to query for (cap Tavily usage)
-MAX_INTERESTS = 2
+MAX_INTERESTS = 1
 
 
 class QueryBuilder:
@@ -49,8 +49,12 @@ class QueryBuilder:
         Strategy
         --------
         For each interest (up to MAX_INTERESTS):
-          Q1 — Required skills for this specific role + job sites
+          Q1 — Required skills for this specific role + job sites (with branch context)
           Q2 — Career demand and hiring trends
+
+        Branch context is appended to Q1 to disambiguate generic terms.
+        For example, "Operations" with branch "Operations Management" stays
+        in business/management domain rather than returning DevOps tech results.
 
         Args:
             student: A fully-populated StudentProfile.
@@ -69,15 +73,23 @@ class QueryBuilder:
         country   = student.country or "India"
         job_sites = " OR ".join(JOB_SEARCH_DOMAINS)
 
+        # Build a branch context suffix for Q1 disambiguation
+        branch_ctx = self._branch_context(student)
+
         # Derive career focus areas from interests → skills → branch
         focus_areas = self._derive_focus_areas(student)
         queries: list[str] = []
 
         for focus in focus_areas[:MAX_INTERESTS]:
-            # Q1: What skills are required for this role?
-            queries.append(
-                f"{focus} required skills job description {job_sites} {country}"
-            )
+            # Q1: What skills are required for this role? (include branch context)
+            if branch_ctx:
+                queries.append(
+                    f"{focus} {branch_ctx} required skills job description {job_sites} {country}"
+                )
+            else:
+                queries.append(
+                    f"{focus} required skills job description {job_sites} {country}"
+                )
             # Q2: Is this career in demand?
             queries.append(
                 f"{focus} career demand hiring trends future growth {country}"
@@ -113,3 +125,41 @@ class QueryBuilder:
             areas.append(student.branch.strip())
 
         return areas
+
+    def _branch_context(self, student: StudentProfile) -> str:
+        """
+        Return a short domain-disambiguation phrase based on the student's branch.
+
+        This is prepended to Q1 so that generic interest terms (e.g. "Operations")
+        are associated with the correct domain ("business management") and not
+        pulled towards unrelated tech domains ("DevOps").
+        """
+        branch_lower = (student.branch or "").lower()
+        degree_lower = (student.degree or "").lower()
+
+        _TECH_KW  = {"computer", "software", "it", "information technology", "mca", "cse", "engineering"}
+        _BIZ_KW   = {"business", "management", "mba", "bba", "commerce", "marketing", "finance", "operations"}
+        _MED_KW   = {"medical", "nursing", "pharma", "health", "clinical", "mbbs", "bsc nursing"}
+        _SCI_KW   = {"biology", "chemistry", "physics", "biotechnology", "agriculture", "science"}
+        _ARTS_KW  = {"psychology", "sociology", "political", "communication", "journalism", "mass", "arts", "humanities", "english", "literature"}
+        _DESIGN_KW = {"design", "animation", "fashion", "fine arts", "architecture"}
+        _LEGAL_KW  = {"law", "legal", "llb"}
+
+        combined = branch_lower + " " + degree_lower
+
+        if any(k in combined for k in _TECH_KW):
+            return ""  # Tech searches need no disambiguation
+        if any(k in combined for k in _BIZ_KW):
+            return "business management"
+        if any(k in combined for k in _MED_KW):
+            return "healthcare medical"
+        if any(k in combined for k in _SCI_KW):
+            return "science research"
+        if any(k in combined for k in _ARTS_KW):
+            return "social sciences humanities"
+        if any(k in combined for k in _DESIGN_KW):
+            return "creative design"
+        if any(k in combined for k in _LEGAL_KW):
+            return "legal law"
+
+        return ""

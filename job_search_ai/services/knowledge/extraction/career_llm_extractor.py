@@ -140,36 +140,55 @@ def _build_prompt(career_focus: str, search_text: str, student: Any | None = Non
             deg_eg = '["MBA", "BBA", "B.Com"]'
             branch_eg = '["Marketing", "Business Administration"]'
 
+    # Dynamically select skills/title examples to guide LLM extraction appropriately
+    focus_lower = career_focus.lower()
+    is_data_ml = any(kw in focus_lower for kw in ["data", "analitics", "analytics", "machine", "learning", "ai", "ml", "intelligence", "statistics"])
+    is_web_software = any(kw in focus_lower for kw in ["web", "dev", "program", "code", "software", "engineer", "tech", "computer", "frontend", "backend", "fullstack"])
+
+    if is_data_ml:
+        skills_eg = '["Python", "SQL", "Pandas", "NumPy"]'
+        pref_skills_eg = '["Tableau", "Power BI", "Machine Learning"]'
+        title_eg = "Data Analyst"
+        aliases_eg = '["Data Analytics Specialist", "Junior Data Analyst"]'
+    elif is_web_software:
+        skills_eg = '["JavaScript", "HTML", "CSS", "Git"]'
+        pref_skills_eg = '["React", "Node.js", "TypeScript"]'
+        title_eg = "Frontend Developer"
+        aliases_eg = '["Frontend Engineer", "UI Developer"]'
+    else:
+        skills_eg = '["Market Research", "SEO", "Content Strategy"]'
+        pref_skills_eg = '["Google Analytics", "Copywriting"]'
+        title_eg = "Digital Marketing Specialist"
+        aliases_eg = '["SEO Specialist", "Marketing Coordinator"]'
 
     return (
         "You are a career data extractor.  Your ONLY job is to read the text below and "
         f"extract up to {MAX_CAREERS} real, hireable job roles related to: {career_focus!r}.\n\n"
         "Rules:\n"
         "1. ONLY extract actual job titles that appear in job postings "
-        "(e.g. 'Digital Marketing Manager', 'Product Manager', 'SEO Specialist').\n"
+        f"(e.g. '{title_eg}', or similar roles matching the domain).\n"
         "2. NEVER extract: company names, article headings, section headers, salary ranges, "
         "skill lists, numbered steps, academic subjects, tool names, or navigation text.\n"
         "3. For each job role, determine:\n"
-        f"   - required_skills: 3-8 must-have technical skills for this role.\n"
-        f"   - preferred_skills: 2-5 nice-to-have or advanced skills.\n"
+        f"   - required_skills: 3-8 must-have technical skills for this role (e.g. {skills_eg}).\n"
+        f"   - preferred_skills: 2-5 nice-to-have or advanced skills (e.g. {pref_skills_eg}).\n"
         f"   - suitable_degrees: list of degree types (e.g. {deg_eg}).\n"
         f"   - suitable_branches: list of academic branches (e.g. {branch_eg}).\n"
         "   - suitable_years: list of academic years as integers, e.g. [3, 4] for final-year students.\n"
-        "   - aliases: list of 2-4 alternative title variants/synonyms (e.g. ['Frontend Engineer', 'UI Developer']).\n"
+        f"   - aliases: list of 2-4 alternative title variants/synonyms (e.g. {aliases_eg}).\n"
         "   - future_demand: one of 'Very High', 'High', 'Medium', 'Low'.\n"
         "   - confidence: integer 0-100 reflecting how well the role matches the search topic.\n"
         "4. If you cannot find any real job roles, return {\"careers\": []}.\n"
-        "5. Return ONLY valid JSON. No explanations. No markdown.\n\n"
+        "5. Return ONLY valid JSON. No explanations. No markdown.\n"
+        "6. CRITICAL: Do NOT copy the sample skills exactly from the rules or the output schema unless they are actually the primary skills of the extracted role.\n\n"
         "Output schema:\n"
         "{\n"
         '  "careers": [\n'
         "    {\n"
-        '      "career_name": "exact job title",\n'
-        '      "aliases": ["Frontend Engineer", "UI Developer"],\n'
-        '      "career_name": "exact job title",\n'
-        '      "aliases": ["Frontend Engineer", "UI Developer"],\n'
-        '      "required_skills": ["JavaScript", "HTML"],\n'
-        '      "preferred_skills": ["React"],\n'
+        f'      "career_name": "{title_eg}",\n'
+        f'      "aliases": {aliases_eg},\n'
+        f'      "required_skills": {skills_eg},\n'
+        f'      "preferred_skills": {pref_skills_eg},\n'
         f'      "suitable_degrees": {deg_eg},\n'
         f'      "suitable_branches": {branch_eg},\n'
         '      "suitable_years": [3, 4],\n'
@@ -323,80 +342,357 @@ class CareerLLMExtractor:
         -------
         List of validated career dicts.  Empty list on any failure.
         """
-        if not search_text or not search_text.strip():
-            logger.warning("CareerLLMExtractor: empty search_text — returning []")
-            return []
-
-        # Load settings
-        from job_search_ai.services.settings_service import SettingsService
-        settings = SettingsService.get()
-        provider = (settings.llm_provider or "ollama").lower().strip()
-
-        if endpoint is None:
-            endpoint = settings.ollama_endpoint
-        if model is None:
-            if provider == "omniroute":
-                model = settings.omniroute_model or "career-agent"
-            else:
-                model = settings.default_llm_model
-
-        prompt = _build_prompt(career_focus, search_text, student=student)
-
-
-        try:
-            if provider == "omniroute":
-                import os
-                api_key = os.getenv("OMNIROUTE_API_KEY")
-                if not api_key:
-                    import frappe
-                    if frappe.local and getattr(frappe.local, "initialised", False):
-                        api_key = frappe.conf.get("omniroute_api_key")
-                base_url = settings.omniroute_base_url or "http://localhost:20128/v1"
-                raw_text = _call_openai_compat(prompt, base_url, api_key or "", model)
-            else:
-                raw_text = _call_ollama(prompt, endpoint, model)
-        except Exception as exc:
-            logger.warning(
-                "CareerLLMExtractor: LLM call failed (%s) — returning []", exc
-            )
-            return []
-
-        raw_text = _clean_json(raw_text)
-        if not raw_text:
-            logger.warning("CareerLLMExtractor: empty LLM response — returning []")
-            return []
-
-        try:
-            parsed = json.loads(raw_text)
-        except json.JSONDecodeError:
-            # Try to find the JSON object in the response
-            match = re.search(r'\{.*\}', raw_text, re.DOTALL)
-            if match:
-                try:
-                    parsed = json.loads(match.group(0))
-                except json.JSONDecodeError:
-                    logger.warning(
-                        "CareerLLMExtractor: failed to parse JSON — %r", raw_text[:200]
-                    )
-                    return []
-            else:
-                logger.warning(
-                    "CareerLLMExtractor: no JSON found in response — %r", raw_text[:200]
-                )
-                return []
-
-        raw_careers = parsed.get("careers", [])
-        if not isinstance(raw_careers, list):
-            logger.warning(
-                "CareerLLMExtractor: 'careers' key is not a list — got %r", type(raw_careers)
-            )
-            return []
-
+        raw_careers = []
         validated = []
-        for raw in raw_careers[:MAX_CAREERS]:
-            profile = _validate_career(raw)
-            if profile:
-                validated.append(profile)
+
+        if not search_text or not search_text.strip():
+            logger.warning("CareerLLMExtractor: empty search_text — skipping LLM call")
+        else:
+            # Load settings
+            from job_search_ai.services.settings_service import SettingsService
+            settings = SettingsService.get()
+            provider = (settings.llm_provider or "ollama").lower().strip()
+
+            if endpoint is None:
+                endpoint = settings.ollama_endpoint
+            if model is None:
+                if provider == "omniroute":
+                    model = settings.omniroute_model or "career-agent"
+                else:
+                    model = settings.default_llm_model
+
+            prompt = _build_prompt(career_focus, search_text, student=student)
+
+            raw_text = ""
+            try:
+                if provider == "omniroute":
+                    import os
+                    api_key = os.getenv("OMNIROUTE_API_KEY")
+                    if not api_key:
+                        import frappe
+                        if frappe.local and getattr(frappe.local, "initialised", False):
+                            api_key = frappe.conf.get("omniroute_api_key")
+                    base_url = settings.omniroute_base_url or "http://localhost:20128/v1"
+                    raw_text = _call_openai_compat(prompt, base_url, api_key or "", model)
+                else:
+                    raw_text = _call_ollama(prompt, endpoint, model)
+            except Exception as exc:
+                logger.warning(
+                    "CareerLLMExtractor: LLM call failed (%s)", exc
+                )
+
+            if raw_text:
+                raw_text = _clean_json(raw_text)
+                if raw_text:
+                    try:
+                        parsed = json.loads(raw_text)
+                        raw_careers = parsed.get("careers", [])
+                    except json.JSONDecodeError:
+                        # Try to find the JSON object in the response
+                        match = re.search(r'\{.*\}', raw_text, re.DOTALL)
+                        if match:
+                            try:
+                                parsed = json.loads(match.group(0))
+                                raw_careers = parsed.get("careers", [])
+                            except json.JSONDecodeError:
+                                logger.warning(
+                                    "CareerLLMExtractor: failed to parse JSON — %r", raw_text[:200]
+                                )
+                        else:
+                            logger.warning(
+                                "CareerLLMExtractor: no JSON found in response — %r", raw_text[:200]
+                            )
+
+            if not isinstance(raw_careers, list):
+                logger.warning(
+                    "CareerLLMExtractor: 'careers' key is not a list — got %r", type(raw_careers)
+                )
+                raw_careers = []
+
+            for raw in raw_careers[:MAX_CAREERS]:
+                profile = _validate_career(raw)
+                if profile:
+                    validated.append(profile)
+
+        # Fallback to local semantic search if no validated careers were extracted
+        if not validated:
+            # 1. Try predefined fallback map first (instant, high fidelity for known interests)
+            focus_clean = career_focus.strip().lower()
+            fallback_map = {
+                "entrepreneur": [
+                    {
+                        "career_name": "Entrepreneur",
+                        "aliases": ["Startup Founder", "Co-Founder", "Business Owner"],
+                        "required_skills": ["Business Strategy", "Product Development", "Financial Planning", "Leadership"],
+                        "preferred_skills": ["Marketing", "Sales", "Negotiation", "Public Speaking"],
+                        "suitable_degrees": ["MBA", "BBA", "B.Tech", "All"],
+                        "suitable_branches": ["All", "Marketing", "Business Administration", "Entrepreneurship"],
+                        "suitable_years": [3, 4],
+                        "future_demand": "High",
+                        "confidence": 90,
+                    }
+                ],
+                "frappe": [
+                    {
+                        "career_name": "Frappe Developer",
+                        "aliases": ["ERPNext Developer", "Enterprise Applications Developer", "Python Developer", "Full Stack Developer"],
+                        "required_skills": ["Python", "Frappe Framework", "Javascript", "SQL"],
+                        "preferred_skills": ["ERPNext", "Git", "MariaDB", "Redis"],
+                        "suitable_degrees": ["B.Tech", "B.E.", "MCA", "B.Sc", "All"],
+                        "suitable_branches": ["Computer Science", "Information Technology", "All"],
+                        "suitable_years": [3, 4],
+                        "future_demand": "High",
+                        "confidence": 90,
+                    }
+                ],
+                "erpnext": [
+                    {
+                        "career_name": "Frappe Developer",
+                        "aliases": ["ERPNext Developer", "Enterprise Applications Developer", "Python Developer", "Full Stack Developer"],
+                        "required_skills": ["Python", "Frappe Framework", "Javascript", "SQL"],
+                        "preferred_skills": ["ERPNext", "Git", "MariaDB", "Redis"],
+                        "suitable_degrees": ["B.Tech", "B.E.", "MCA", "B.Sc", "All"],
+                        "suitable_branches": ["Computer Science", "Information Technology", "All"],
+                        "suitable_years": [3, 4],
+                        "future_demand": "High",
+                        "confidence": 90,
+                    }
+                ],
+                "machine learning": [
+                    {
+                        "career_name": "Data Scientist",
+                        "aliases": ["ML Engineer", "Machine Learning Engineer", "Data Analyst"],
+                        "required_skills": ["Python", "Machine Learning", "Statistics", "SQL"],
+                        "preferred_skills": ["Deep Learning", "TensorFlow", "PyTorch", "R"],
+                        "suitable_degrees": ["B.Sc", "B.Tech", "M.Sc", "All"],
+                        "suitable_branches": ["All", "Computer Science", "Statistics", "Mathematics"],
+                        "suitable_years": [3, 4],
+                        "future_demand": "High",
+                        "confidence": 90,
+                    }
+                ],
+                "ml": [
+                    {
+                        "career_name": "Data Scientist",
+                        "aliases": ["ML Engineer", "Machine Learning Engineer", "Data Analyst"],
+                        "required_skills": ["Python", "Machine Learning", "Statistics", "SQL"],
+                        "preferred_skills": ["Deep Learning", "TensorFlow", "PyTorch", "R"],
+                        "suitable_degrees": ["B.Sc", "B.Tech", "M.Sc", "All"],
+                        "suitable_branches": ["All", "Computer Science", "Statistics", "Mathematics"],
+                        "suitable_years": [3, 4],
+                        "future_demand": "High",
+                        "confidence": 90,
+                    }
+                ],
+                "software development": [
+                    {
+                        "career_name": "Software Engineer",
+                        "aliases": ["Web Developer", "Software Developer", "Full Stack Developer", "Tech Lead"],
+                        "required_skills": ["Python", "Javascript", "SQL", "Git"],
+                        "preferred_skills": ["React", "HTML", "CSS", "Node.js"],
+                        "suitable_degrees": ["B.Tech", "B.E.", "MCA", "B.Com", "All"],
+                        "suitable_branches": ["All", "Computer Science", "Information Technology", "Commerce"],
+                        "suitable_years": [3, 4],
+                        "future_demand": "High",
+                        "confidence": 90,
+                    }
+                ],
+                "web development": [
+                    {
+                        "career_name": "Software Engineer",
+                        "aliases": ["Web Developer", "Software Developer", "Full Stack Developer", "Tech Lead"],
+                        "required_skills": ["Python", "Javascript", "SQL", "Git"],
+                        "preferred_skills": ["React", "HTML", "CSS", "Node.js"],
+                        "suitable_degrees": ["B.Tech", "B.E.", "MCA", "B.Com", "All"],
+                        "suitable_branches": ["All", "Computer Science", "Information Technology", "Commerce"],
+                        "suitable_years": [3, 4],
+                        "future_demand": "High",
+                        "confidence": 90,
+                    }
+                ],
+                "product": [
+                    {
+                        "career_name": "AI Product Manager",
+                        "aliases": ["Product Manager", "Business Analyst - AI", "Data-Driven Product Manager"],
+                        "required_skills": ["Product Strategy", "Product Management", "Data Analysis", "Agile Methodology"],
+                        "preferred_skills": ["Machine Learning", "SQL", "Python", "UX Design"],
+                        "suitable_degrees": ["BBA", "MBA", "B.Tech", "All"],
+                        "suitable_branches": ["All", "Business Analytics", "Marketing", "Business Administration"],
+                        "suitable_years": [3, 4],
+                        "future_demand": "High",
+                        "confidence": 90,
+                    }
+                ],
+                "analytics": [
+                    {
+                        "career_name": "Data Analyst",
+                        "aliases": ["Business Analyst", "Analytics Specialist", "Data Scientist"],
+                        "required_skills": ["Python", "SQL", "Excel", "Data Analysis"],
+                        "preferred_skills": ["Power BI", "Tableau", "Statistics"],
+                        "suitable_degrees": ["B.Sc", "B.Tech", "B.Com", "BBA", "All"],
+                        "suitable_branches": ["All", "Statistics", "Mathematics", "Computer Science"],
+                        "suitable_years": [2, 3, 4],
+                        "future_demand": "High",
+                        "confidence": 85,
+                    }
+                ],
+                "statistic": [
+                    {
+                        "career_name": "Data Analyst",
+                        "aliases": ["Statistical Analyst", "Statistician", "Data Scientist"],
+                        "required_skills": ["Statistics", "R", "SQL", "Excel"],
+                        "preferred_skills": ["Python", "Data Analysis", "Predictive Analytics"],
+                        "suitable_degrees": ["B.Sc", "M.Sc", "PhD", "B.Tech", "All"],
+                        "suitable_branches": ["All", "Statistics", "Mathematics", "Science"],
+                        "suitable_years": [2, 3, 4],
+                        "future_demand": "High",
+                        "confidence": 85,
+                    }
+                ],
+                "math": [
+                    {
+                        "career_name": "Data Scientist",
+                        "aliases": ["Quantitative Analyst", "ML Engineer", "Data Analyst"],
+                        "required_skills": ["Python", "Statistics", "Linear Algebra", "SQL"],
+                        "preferred_skills": ["Machine Learning", "R", "Excel"],
+                        "suitable_degrees": ["B.Sc", "M.Sc", "PhD", "B.Tech", "All"],
+                        "suitable_branches": ["All", "Mathematics", "Statistics", "Science"],
+                        "suitable_years": [2, 3, 4],
+                        "future_demand": "High",
+                        "confidence": 90,
+                    }
+                ],
+                "ai": [
+                    {
+                        "career_name": "AI Engineer",
+                        "aliases": ["ML Engineer", "Machine Learning Engineer", "AI Developer"],
+                        "required_skills": ["Python", "Machine Learning", "Deep Learning", "Git"],
+                        "preferred_skills": ["TensorFlow", "PyTorch", "Generative AI"],
+                        "suitable_degrees": ["B.Tech", "B.E.", "MCA", "B.Sc", "All"],
+                        "suitable_branches": ["Computer Science", "Information Technology", "Artificial Intelligence", "All"],
+                        "suitable_years": [3, 4],
+                        "future_demand": "High",
+                        "confidence": 90,
+                    }
+                ],
+                "research": [
+                    {
+                        "career_name": "Research Analyst",
+                        "aliases": ["Researcher", "Market Research Analyst"],
+                        "required_skills": ["Data Analysis", "Research Methodology", "Statistical Analysis", "Technical Writing"],
+                        "preferred_skills": ["Python", "SQL", "R", "SPSS"],
+                        "suitable_degrees": ["B.Sc", "M.Sc", "PhD", "B.Tech"],
+                        "suitable_branches": ["All", "Science", "Mathematics", "Statistics"],
+                        "suitable_years": [3, 4],
+                        "future_demand": "High",
+                        "confidence": 85,
+                    }
+                ],
+                "legal": [
+                    {
+                        "career_name": "LegalTech Specialist",
+                        "aliases": ["Legal Technology Consultant", "Legal Analyst"],
+                        "required_skills": ["Legal Research", "Contract Lifecycle Management", "Information Technology", "Process Automation"],
+                        "preferred_skills": ["SQL", "Data Analysis", "AI Tools"],
+                        "suitable_degrees": ["LLB", "B.Tech", "MCA", "B.A. LLB"],
+                        "suitable_branches": ["Law", "Computer Science", "Information Technology"],
+                        "suitable_years": [3, 4],
+                        "future_demand": "High",
+                        "confidence": 85,
+                    }
+                ],
+                "nurs": [
+                    {
+                        "career_name": "Nurse",
+                        "aliases": ["Clinical Nurse", "Registered Nurse", "Patient Care Specialist"],
+                        "required_skills": ["Patient Care", "Clinical Nursing", "Medical Dosage", "Patient Assessment"],
+                        "preferred_skills": ["Critical Care", "Emergency Care"],
+                        "suitable_degrees": ["B.Sc", "Diploma in Nursing"],
+                        "suitable_branches": ["Nursing", "Healthcare"],
+                        "suitable_years": [3, 4],
+                        "future_demand": "High",
+                        "confidence": 90,
+                    }
+                ],
+                "healthcare": [
+                    {
+                        "career_name": "Healthcare Administrator",
+                        "aliases": ["Hospital Administrator", "Clinical Data Manager"],
+                        "required_skills": ["Healthcare Management", "Patient Care Coordination", "Data Analysis", "Compliance"],
+                        "preferred_skills": ["SQL", "Electronic Health Records (EHR)"],
+                        "suitable_degrees": ["B.Sc", "M.Sc", "BBA", "MBA"],
+                        "suitable_branches": ["Nursing", "Pharmacy", "Hospital Administration", "Healthcare"],
+                        "suitable_years": [3, 4],
+                        "future_demand": "High",
+                        "confidence": 85,
+                    }
+                ],
+                "medicine": [
+                    {
+                        "career_name": "Healthcare Administrator",
+                        "aliases": ["Hospital Administrator", "Clinical Data Manager"],
+                        "required_skills": ["Healthcare Management", "Patient Care Coordination", "Data Analysis", "Compliance"],
+                        "preferred_skills": ["SQL", "Electronic Health Records (EHR)"],
+                        "suitable_degrees": ["B.Sc", "M.Sc", "BBA", "MBA"],
+                        "suitable_branches": ["Nursing", "Pharmacy", "Hospital Administration", "Healthcare"],
+                        "suitable_years": [3, 4],
+                        "future_demand": "High",
+                        "confidence": 85,
+                    }
+                ],
+                "pharmaceut": [
+                    {
+                        "career_name": "Pharma Marketing Specialist",
+                        "aliases": ["Pharmaceutical Sales Representative", "Medical Sales"],
+                        "required_skills": ["Product Knowledge", "Sales Strategy", "Customer Relationship Management", "Communication"],
+                        "preferred_skills": ["Data Analysis", "Digital Marketing"],
+                        "suitable_degrees": ["B.Pharm", "M.Pharm", "B.Sc", "MBA"],
+                        "suitable_branches": ["Pharmacy", "Marketing", "Business Administration"],
+                        "suitable_years": [3, 4],
+                        "future_demand": "High",
+                        "confidence": 85,
+                    }
+                ]
+            }
+            for key, profiles in fallback_map.items():
+                if key in focus_clean:
+                    validated = profiles
+                    logger.info("CareerLLMExtractor: successfully recovered %d careers using predefined interest fallback for focus=%r.", len(validated), career_focus)
+                    break
+
+            # 2. If still empty, attempt Qdrant vector database local search
+            if not validated:
+                logger.info("CareerLLMExtractor: LLM extraction returned no validated careers for focus=%r. Attempting local semantic search fallback.", career_focus)
+                try:
+                    from job_search_ai.services.ai.embedding_service import EmbeddingService
+                    from job_search_ai.services.ai.vector_index import VectorIndex
+                    
+                    embedding_svc = EmbeddingService()
+                    vector_index = VectorIndex()
+                    query_vector = embedding_svc.embed(career_focus)
+                    hits = vector_index.search(query_vector=query_vector, limit=3)
+                    
+                    for h in hits:
+                        if h.score < 0.50:
+                            continue
+                        payload = h.payload
+                        if not payload or not payload.get("career_name"):
+                            continue
+                        validated.append({
+                            "career_name":       payload.get("career_name"),
+                            "aliases":           payload.get("aliases", []),
+                            "required_skills":   payload.get("required_skills", []),
+                            "preferred_skills":  payload.get("preferred_skills", []),
+                            "suitable_degrees":  payload.get("degree", []),
+                            "suitable_branches": payload.get("branch", []),
+                            "suitable_years":    payload.get("years", []),
+                            "future_demand":     payload.get("future_demand", "High"),
+                            "confidence":        80,
+                        })
+                    if validated:
+                        logger.info("CareerLLMExtractor: successfully recovered %d careers using local semantic fallback.", len(validated))
+                except Exception as fallback_exc:
+                    logger.warning("CareerLLMExtractor local semantic fallback failed: %s", fallback_exc)
 
         logger.info(
             "CareerLLMExtractor: career_focus=%r  raw=%d  validated=%d",

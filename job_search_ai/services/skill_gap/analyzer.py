@@ -156,6 +156,26 @@ class SkillGapAnalyzer:
                 matched_skills_set.add(skill_name)
                 matched_skills.append(skill_name)
 
+        # INVARIANT: matched_skills ∩ missing_skills = ∅
+        # A skill cannot be both matched and missing. If normalization edge-cases
+        # caused an overlap, scrub the skill from missing_* so the Roadmap Agent
+        # never receives a contradictory skill gap report.
+        matched_keys: Set[str] = {get_skill_key(s) for s in matched_skills}
+        def _scrub_matched(skill_list: List[str]) -> List[str]:
+            cleaned = [s for s in skill_list if get_skill_key(s) not in matched_keys]
+            removed = set(skill_list) - set(cleaned)
+            if removed:
+                logger.warning(
+                    "SkillGapAnalyzer: invariant violation — skills appear in both "
+                    "matched and missing; removing from missing: %s", removed
+                )
+            return cleaned
+
+        missing_foundation  = _scrub_matched(missing_foundation)
+        missing_core_domain = _scrub_matched(missing_core_domain)
+        missing_industry    = _scrub_matched(missing_industry)
+        missing_emerging    = _scrub_matched(missing_emerging)
+
         # Construct Priority Order for Roadmap Agent
         # Foundational (Missing Foundation) -> Intermediate (Missing Core Domain) -> Advanced (Missing Industry) -> Emerging
         priority_order_set: Set[str] = set()
