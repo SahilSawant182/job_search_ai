@@ -494,6 +494,17 @@ class RecommendationEngine:
         science_synonyms = {"science", "b.sc", "bsc", "m.sc", "msc", "biology", "physics", "chemistry", "mathematics"}
         student_is_science = any(kw in sd_lower for kw in science_synonyms) and not student_is_tech
 
+        # Healthcare / Medical / Allied Health degree umbrella
+        healthcare_synonyms = {
+            "mbbs", "bhms", "bams", "bds", "bpth", "b.p.th",
+            "b.pharm", "b.pharma", "m.pharm", "b.pham",
+            "homeopathy", "homoeopathy", "ayurveda", "ayurvedic",
+            "naturopathy", "unani", "siddha", "physiotherapy",
+            "occupational therapy", "dental", "nursing", "medical",
+            "clinical", "healthcare", "allied health", "paramedical",
+        }
+        student_is_healthcare = any(kw in sd_lower for kw in healthcare_synonyms)
+
         # Arts/Humanities/Design degree umbrella
         arts_synonyms = {"arts", "humanities", "b.a", "ba", "m.a", "ma", "communication", "design", "b.des", "bdes", "psychology", "sociology", "political science"}
         student_is_arts = any(kw in sd_lower for kw in arts_synonyms)
@@ -509,6 +520,10 @@ class RecommendationEngine:
                 
             candidate_is_science = any(kw in d for kw in science_synonyms) and not any(kw in d for kw in eng_synonyms) and not any(kw in d for kw in comp_keywords)
             if student_is_science and candidate_is_science:
+                return 0.8
+
+            candidate_is_healthcare = any(kw in d for kw in healthcare_synonyms)
+            if student_is_healthcare and candidate_is_healthcare:
                 return 0.8
 
             candidate_is_arts = any(kw in d for kw in arts_synonyms)
@@ -564,7 +579,20 @@ class RecommendationEngine:
         }
         student_is_arts = any(kw in sb_lower for kw in arts_humanities_umbrella)
 
-        # Science (non-engineering) / Healthcare / Medicine umbrella
+        # Healthcare / Medical / Allied Health / Homeopathy / Ayurveda umbrella
+        healthcare_medical_umbrella = {
+            "medical", "healthcare", "health", "clinical", "nursing", "hospital",
+            "homeopathy", "homoeopathy", "homoeopathic", "homeopathic",
+            "ayurveda", "ayurvedic", "naturopathy", "unani", "siddha",
+            "physiotherapy", "occupational therapy", "dental", "dentistry",
+            "pharmacy", "pharmacology", "pharmacognosy", "paediatrics",
+            "materia medica", "diagnostics", "pathology", "radiology",
+            "gynaecology", "ophthalmology", "medicine", "surgery",
+            "paramedical", "allied health", "rehabilitation",
+        }
+        student_is_healthcare = any(kw in sb_lower for kw in healthcare_medical_umbrella)
+
+        # Science (non-engineering) umbrella
         science_umbrella = {
             "biology", "chemistry", "physics", "biotechnology", "agriculture",
             "pharmacy", "nursing", "medical", "environmental", "food technology",
@@ -580,6 +608,8 @@ class RecommendationEngine:
             if student_is_arts and any(kw in b for kw in arts_humanities_umbrella):
                 return 0.8
             if student_is_science and any(kw in b for kw in science_umbrella):
+                return 0.8
+            if student_is_healthcare and any(kw in b for kw in healthcare_medical_umbrella):
                 return 0.8
 
         student_words = set(re.findall(r'\w+', sb_lower)) - {"and", "engineering", "technology", "science"}

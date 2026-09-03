@@ -345,6 +345,72 @@ class PromptBuilder:
             f"{rule}"
         )
 
+    def build_direct(self, context: "StudentContext") -> str:
+        """
+        Build a prompt that asks the LLM to generate career recommendations
+        directly from the student profile — used when no knowledge candidates
+        exist (KB miss + Tavily miss / empty profiles).
+
+        No Evidence objects are required.  The LLM must generate career names,
+        skills, demand, and stage entirely from its own parametric knowledge.
+        """
+        skills_str    = ", ".join(context.skills)    if context.skills    else "None listed"
+        interests_str = ", ".join(context.interests) if context.interests else "None listed"
+
+        prompt = (
+            "## Role\n"
+            "You are a Senior Placement Mentor and Career Analyst. "
+            "Based ONLY on the student profile below, recommend 2 to 3 realistic career paths."
+            "\n\n"
+            "## Student Profile\n"
+            f"Degree:    {context.degree}\n"
+            f"Branch:    {context.branch}\n"
+            f"Year:      {context.academic_year}\n"
+            f"Country:   {context.country}\n"
+            f"Skills:    {skills_str}\n"
+            f"Interests: {interests_str}\n"
+            f"Readiness: {context.placement_readiness}\n"
+            f"Horizon:   {context.recommendation_horizon}\n"
+            f"Goal:      {context.career_goal}\n"
+            "\n"
+            "## Rules\n"
+            "1. Recommend ONLY careers genuinely reachable given the student's degree, branch, skills, and year.\n"
+            "2. Provide EXACTLY 2 to 3 recommendations — no more, no fewer.\n"
+            "3. Each career must have realistic required_skills (list of 3-6 skill strings).\n"
+            "4. career_stage must be one of: Emerging, Growing, Established.\n"
+            "5. future_demand must be one of: Very High, High, Moderate.\n"
+            "6. category is the broad industry category (e.g. Healthcare, Technology, Finance).\n"
+            "7. industry is the specific sector (e.g. Pharmaceuticals, Software, Banking).\n"
+            "8. confidence is an integer 20-85 (no knowledge evidence available, so cap at 85).\n"
+            "9. why_for_you must be grounded in the student's ACTUAL skills, not just interests (max 2 sentences).\n"
+            "10. strategy is an overall paragraph of actionable placement advice for this student.\n"
+            f"11. {context.year_matching_rule}\n"
+            "\n"
+            "## Output Format\n"
+            "Return ONLY valid JSON — no markdown, no explanation, no extra keys:\n"
+            "{\n"
+            '  "strategy": "<overall placement advice paragraph>",\n'
+            '  "recommended_paths": [\n'
+            "    {\n"
+            '      "career": "<job title>",\n'
+            '      "category": "<broad industry category>",\n'
+            '      "confidence": <integer 20-85>,\n'
+            '      "why_for_you": "<explanation grounded in actual skills, max 2 sentences>",\n'
+            '      "career_stage": "<Emerging|Growing|Established>",\n'
+            '      "future_demand": "<Very High|High|Moderate>",\n'
+            '      "industry": "<specific sector>",\n'
+            '      "skills": ["skill1", "skill2", "skill3"]\n'
+            "    }\n"
+            "  ]\n"
+            "}"
+        )
+
+        logger.info(
+            "PromptBuilder.build_direct: branch=%r  chars=%d",
+            context.branch, len(prompt),
+        )
+        return prompt
+
     def _output_instruction(self, is_kh: bool) -> str:
         schema = (
             '{"strategy":"...","recommended_paths":['

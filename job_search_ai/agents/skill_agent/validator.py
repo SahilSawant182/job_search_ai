@@ -5,11 +5,11 @@ from job_search_ai.services.skill_gap.normalizer import parse_skill_string, get_
 
 logger = logging.getLogger(__name__)
 
-# Enforced count limits for skill tiers
-FOUNDATION_LIMIT = 6
-CORE_DOMAIN_LIMIT = 8
-INDUSTRY_LIMIT = 5
-EMERGING_LIMIT = 3
+# Count limits for skill tiers (flexible high cap to prevent artificial truncation)
+FOUNDATION_LIMIT = 40
+CORE_DOMAIN_LIMIT = 40
+INDUSTRY_LIMIT = 40
+EMERGING_LIMIT = 40
 
 # Minimum relevance career fit score threshold
 RELEVANCE_THRESHOLD = 0.30
@@ -170,7 +170,7 @@ def calculate_relevance_metrics(profile: SkillProfile) -> dict:
         "out_of_domain_skills": out_of_domain_skills,
     }
 
-def validate_and_normalize_profile(profile: SkillProfile, truncate_excess: bool = False) -> bool:
+def validate_and_normalize_profile(profile: SkillProfile, truncate_excess: bool = True) -> bool:
     """
     Normalizes, deduplicates, and validates a SkillProfile.
     Modifies the profile in-place to contain fully canonicalized/deduplicated lists.

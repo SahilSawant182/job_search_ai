@@ -195,6 +195,22 @@ class CareerTrendAgent:
                     rec.scores = sc.scores
                     recommendations.append(rec)
 
+            if not recommendations and career_paths:
+                for cp in career_paths:
+                    hist_score = cp.get("historical_score", 0.8)
+                    conf = int(hist_score * 100) if hist_score <= 1.0 else int(hist_score)
+                    rec = CareerRecommendation(
+                        career=cp.get("career", ""),
+                        category=hit_payload.get("academic_domain", "General").title(),
+                        confidence=conf,
+                        why_for_you=f"Recommended for {student.degree} ({student.branch}) student based on cached profile match.",
+                        career_stage="Growing",
+                        future_demand="High",
+                        industry=hit_payload.get("academic_domain", "General").title(),
+                        skills=hit_payload.get("skills", []),
+                    )
+                    recommendations.append(rec)
+
             if recommendations:
                 # Deterministic strategy description in python — SKIP LLM!
                 strategy = (
@@ -220,8 +236,13 @@ class CareerTrendAgent:
                     "llm_response_time": 0.0,
                     "total_execution_time": time.perf_counter() - t_total
                 }
+                try:
+                    self._async_ensure_career_doctypes_persisted(student, res_obj)
+                except Exception as p_exc:
+                    logger.warning("Stage 0: could not persist career doctypes: %s", p_exc)
+
                 logger.info("CareerTrendAgent: HIT on Profile Recommendation Knowledge (Skip LLM and Tavily)")
-                return res_obj
+                return _sanitize_response_recommendations(student, res_obj)
 
         # ------------------------------------------------------------------
         # Stage 1 — KnowledgeRetriever (Top-K) + Recommendation Scorer Check
@@ -244,69 +265,27 @@ class CareerTrendAgent:
         scored_retrieved = engine.rank(student, retrieved) if retrieved else []
         best_retrieved_score = max((sc.final_score for sc in scored_retrieved), default=0.0)
 
-        # Recommendation-driven knowledge HIT check:
-        # A knowledge HIT occurs when local candidates exist and the top candidate clears 0.60 confidence
-        if scored_retrieved and best_retrieved_score >= 0.60:
-            # ── Knowledge HIT ──────────────────────────────────────────
-            logger.info(
-                "CareerTrendAgent: Knowledge HIT — %d scored candidates, best_score=%.4f (min=0.60) — skipping Tavily",
-                len(scored_retrieved), best_retrieved_score,
-            )
-            scored_careers = scored_retrieved
-            knowledge_hit  = True
-        else:
-            # ── Knowledge MISS / SPARSE ────────────────────────────────
-            knowledge_hit = False
-            logger.info(
-                "CareerTrendAgent: Knowledge MISS/SPARSE — scored=%d, best_score=%.4f (min=0.60) — running Tavily pipeline",
-                len(scored_retrieved), best_retrieved_score,
-            )
-
-            # Stage 2 — QueryBuilder (one set of queries covers all interests)
-            queries = self._build_queries(student)
-
-            # Stage 3 — Tavily search 
-            t = time.perf_counter()   
+        # Fallback check across all MariaDB active Career Knowledge docs if vector search yielded no strong hit
+        if not scored_retrieved or best_retrieved_score < 0.35:
             try:
-                raw_results = self._search(queries)
-            except Exception as search_exc:
-                logger.warning("CareerTrendAgent: Tavily search failed (%s) — using empty results", search_exc)
-                raw_results = []
-            t_search    = time.perf_counter() - t
-            tavily_used = True
-
-            # Stage 4 — ResultFilter  
-            t = time.perf_counter()
-            try:
-                filtered_results = self._filter(raw_results)
-            except Exception as filter_exc:
-                logger.warning("CareerTrendAgent: ResultFilter failed (%s) — using empty results", filter_exc)
-                filtered_results = []
-            t_filter = time.perf_counter() - t
-
-            # Stage 5 — KnowledgeBuilder: one build pass per interest area
-            t = time.perf_counter()
-            all_built_profiles = self._build_profiles_per_interest(student, filtered_results)
-            t_knowledge_build  = time.perf_counter() - t    
-
-            if all_built_profiles:
-                knowledge_updated = True
-                candidates = all_built_profiles
-            else:
-                # Fall back to retrieved candidates if available
-                candidates = retrieved
-
-            if not candidates:
-                logger.error("CareerTrendAgent: no candidates available — returning empty recommendation")
-                return self._empty_response(student)
-
-            scored_careers = engine.rank(student, candidates)
-
-        if not scored_careers:
-            logger.warning(
-                "CareerTrendAgent: all candidates rejected by eligibility gate — returning empty response"
-            )
-            return self._empty_response(student)
+                import frappe
+                all_db_docs = frappe.get_all("Career Knowledge", filters={"active": 1}, fields=["name"])
+                if all_db_docs:
+                    from job_search_ai.services.knowledge.knowledge_retriever import KnowledgeRetriever
+                    retriever = KnowledgeRetriever(settings)
+                    class _StubHit:
+                        def __init__(self, doc_id: str):
+                            self.id = doc_id
+                            self.score = 0.5
+                    all_candidates = retriever._load_from_mariadb([_StubHit(d["name"]) for d in all_db_docs], student)
+                    scored_all = engine.rank(student, all_candidates)
+                    if scored_all:
+                        best_all_score = scored_all[0].final_score
+                        if best_all_score >= 0.30:
+                            scored_retrieved = scored_all
+                            best_retrieved_score = best_all_score
+            except Exception as db_fallback_exc:
+                logger.warning("MariaDB candidate fallback failed: %s", db_fallback_exc)
 
         def map_career_stage(stage: str) -> str:
             stage_lower = stage.strip().lower()
@@ -326,133 +305,74 @@ class CareerTrendAgent:
                 return "High"
             return "Moderate"
 
-        recommendations: list[CareerRecommendation] = []
-        for sc in scored_careers[:20]:
-            confidence_val = int(sc.final_score * 100)
-            if confidence_val < int(MIN_FINAL_SCORE * 100):  # Require >= MIN_FINAL_SCORE Match Confidence
-                continue
-            cand_skills = list(sc.candidate.skills or [])
-            rec = CareerRecommendation(
-                career=sc.candidate.career_name,
-                category=getattr(sc.candidate, "category", "") or "General",
-                confidence=confidence_val,
-                why_for_you="",
-                career_stage=map_career_stage(getattr(sc.candidate, "career_stage", "")),
-                future_demand=map_future_demand(getattr(sc.candidate, "future_demand", "")),
-                industry=getattr(sc.candidate, "industry", "") or "General",
-                skills=cand_skills,
+        # Recommendation-driven fast execution check:
+        # A knowledge HIT occurs when local candidates exist and clear match threshold (>= 0.30)
+        if scored_retrieved and best_retrieved_score >= 0.30:
+            logger.info(
+                "CareerTrendAgent: Knowledge HIT — %d scored candidates, best_score=%.4f (min=0.30) — fast Python response",
+                len(scored_retrieved), best_retrieved_score,
             )
-            rec.scores = sc.scores
-            recommendations.append(rec)
+            recommendations: list[CareerRecommendation] = []
+            for sc in scored_retrieved[:5]:
+                confidence_val = int(sc.final_score * 100)
+                if confidence_val < int(MIN_FINAL_SCORE * 100):
+                    continue
+                cand_skills = list(sc.candidate.skills or [])
+                reasons = ", ".join(sc.reason_codes[:2]) if sc.reason_codes else "Strong alignment with academic background and skills"
+                rec = CareerRecommendation(
+                    career=sc.candidate.career_name,
+                    category=getattr(sc.candidate, "category", "") or "General",
+                    confidence=confidence_val,
+                    why_for_you=f"Recommended for {student.degree} ({student.branch}) student. {reasons}.",
+                    career_stage=map_career_stage(getattr(sc.candidate, "career_stage", "")),
+                    future_demand=map_future_demand(getattr(sc.candidate, "future_demand", "")),
+                    industry=getattr(sc.candidate, "industry", "") or "General",
+                    skills=cand_skills,
+                )
+                rec.scores = sc.scores
+                recommendations.append(rec)
 
-        if not recommendations:
-            logger.warning(
-                "CareerTrendAgent: no candidates cleared the >= %d%% confidence threshold — returning empty response",
-                int(MIN_FINAL_SCORE * 100)
-            )
-            return self._empty_response(student)
+            if recommendations:
+                top_names = [r.career for r in recommendations[:3]]
+                strategy = (
+                    f"Based on your degree ({student.degree} in {student.branch}, Year {student.year}) and skills "
+                    f"({', '.join(student.skills[:3]) if student.skills else 'your background'}), "
+                    f"the top recommended career paths are: {', '.join(top_names)}. "
+                    f"Focus on building core skills in these areas to optimize placement opportunities."
+                )
+                res_obj = CareerTrendResponse(
+                    recommended_paths=recommendations,
+                    strategy=strategy,
+                    generated_at=datetime.now(tz=timezone.utc),
+                )
+                res_obj.metrics = {
+                    "knowledge_hit": True,
+                    "knowledge_count": len(recommendations),
+                    "avg_similarity_score": avg_similarity,
+                    "tavily_used": False,
+                    "knowledge_updated": False,
+                    "model_name": "local_career_knowledge",
+                    "llm_response_time": 0.0,
+                    "total_execution_time": time.perf_counter() - t_total,
+                }
+                # Store in ProfileRecommendationKnowledge and ensure DocTypes exist
+                try:
+                    rec_knowledge.store(student, res_obj)
+                    self._async_ensure_career_doctypes_persisted(student, res_obj)
+                except Exception as st_exc:
+                    logger.warning("Failed to store profile recommendation: %s", st_exc)
 
-        # Top 5 python-ranked candidates feed the LLM prompt
-        top_candidates = [
-            sc.candidate 
-            for sc in scored_careers 
-            if int(sc.final_score * 100) >= int(MIN_FINAL_SCORE * 100)
-        ][:5]
-        evidence = Evidence.from_knowledge(top_candidates)
+                logger.info("CareerTrendAgent: Returned fast Python response in %.3fs", time.perf_counter() - t_total)
+                return _sanitize_response_recommendations(student, res_obj)
 
-        # ------------------------------------------------------------------
-        # Stage 6 — StudentContext
-        # ------------------------------------------------------------------
-        t = time.perf_counter()
-        context = self._build_context(student)
-        t_context = time.perf_counter() - t
-
-        # ------------------------------------------------------------------
-        # Stage 7 — PromptBuilder
-        # ------------------------------------------------------------------
-        t = time.perf_counter()
-        prompt = self._build_prompt(student, evidence, context, is_kh=knowledge_hit)
-        t_prompt = time.perf_counter() - t
-
-        # ------------------------------------------------------------------
-        # Stage 8 — LLM
-        # ------------------------------------------------------------------
-        t = time.perf_counter()
-        llm_service = LLMService()
-        response = self._generate_with_service(prompt, llm_service, recommendations)
-        t_llm = time.perf_counter() - t
-
-        total_time = time.perf_counter() - t_total
-
-        # ------------------------------------------------------------------
-        # Metrics
-        # ------------------------------------------------------------------
-        prompt_len = len(prompt)
-        est_tokens = prompt_len // 4
-
+        # ── Knowledge MISS / SPARSE ────────────────────────────────
         logger.info(
-            "\n"
-            "============================================================\n"
-            "  PERFORMANCE METRICS (Knowledge-First V3)\n"
-            "============================================================\n"
-            "Knowledge Hit          : %s\n"
-            "Knowledge Count        : %d\n"
-            "Avg Similarity Score   : %.4f\n"
-            "Tavily Used            : %s\n"
-            "Knowledge Updated      : %s\n"
-            "Candidates After Gate  : %d\n"
-            "------------------------------------------------------------\n"
-            "Stage Retrieval Time   : %.3f sec\n"
-            "Stage Search Time      : %.3f sec\n"
-            "Stage Filter Time      : %.3f sec\n"
-            "Stage KB Build Time    : %.3f sec\n"
-            "Stage Context Time     : %.3f sec\n"
-            "Stage Prompt Time      : %.3f sec\n"
-            "Stage LLM Time         : %.3f sec\n"
-            "------------------------------------------------------------\n"
-            "Prompt Length          : %d chars\n"
-            "Estimated Tokens       : %d\n"
-            "Model Name             : %s\n"
-            "Total Execution Time   : %.3f sec\n"
-            "============================================================",
-            "YES" if knowledge_hit else "NO",
-            len(retrieved),
-            avg_similarity,
-            "YES" if tavily_used else "NO",
-            "YES" if knowledge_updated else "NO",
-            len(scored_careers),
-            t_retrieval,
-            t_search,
-            t_filter,
-            t_knowledge_build,
-            t_context,
-            t_prompt,
-            t_llm,
-            prompt_len,
-            est_tokens,
-            llm_service.model_name,
-            total_time,
+            "CareerTrendAgent: Knowledge MISS — scored=%d, best_score=%.4f — calling single-pass direct LLM generator",
+            len(scored_retrieved), best_retrieved_score,
         )
+        res_direct = self._generate_from_profile_direct(student, t_total, tavily_used=False)
+        return _sanitize_response_recommendations(student, res_direct)
 
-        response.metrics = {
-            "knowledge_hit":          knowledge_hit,
-            "knowledge_count":        len(retrieved),
-            "avg_similarity_score":   avg_similarity,
-            "tavily_used":            tavily_used,
-            "knowledge_updated":      knowledge_updated,
-            "query_count":            len(queries) if not knowledge_hit else 0,
-            "parallel_search_time":   t_search if tavily_used else 0.0,
-            "kb_build_time":          t_knowledge_build if tavily_used else 0.0,
-            "raw_results_count":      len(raw_results) if tavily_used else 0,
-            "filtered_results_count": len(filtered_results),
-            "placement_readiness":    context.placement_readiness,
-            "recommendation_horizon": context.recommendation_horizon,
-            "prompt_length":          prompt_len,
-            "estimated_tokens":       est_tokens,
-            "model_name":             llm_service.model_name,
-            "llm_response_time":      t_llm,
-            "total_execution_time":   total_time,
-        }
 
         logger.info(
             "CareerTrendAgent finished — %d recommendations  hit=%s  tavily=%s",
@@ -627,27 +547,356 @@ class CareerTrendAgent:
         except Exception as exc:
             raise CareerTrendAgentError(f"Unexpected error in LLMService: {exc}") from exc
 
-    def _empty_response(self, student: StudentProfile) -> "CareerTrendResponse":
-        """Return a graceful empty response when no suitable careers are found."""
+    def _generate_from_profile_direct(
+        self,
+        student: StudentProfile,
+        t_total: float,
+        tavily_used: bool = True,
+    ) -> "CareerTrendResponse":
+        """
+        Last-mile fallback — fires when no knowledge candidates are available.
+        Uses SmartCareerMapper first (domain-aware python matcher).
+        If that fails (truly novel profile), it falls back to the LLM.
+        """
         from datetime import datetime, timezone
-        from job_search_ai.agents.career_trend.schemas import CareerTrendResponse
-        response = CareerTrendResponse(
-            recommended_paths=[],
-            strategy=(
-                f"We could not find suitable career matches for your profile "
-                f"({student.degree} in {student.branch}, Year {student.year}). "
-                "Please try again with more specific interests or skills."
+        from job_search_ai.agents.career_trend.smart_career_mapper import SmartCareerMapper
+        
+        logger.info("CareerTrendAgent: _generate_from_profile_direct — attempting SmartCareerMapper")
+        
+        # 1. Try SmartCareerMapper first (instant, domain-aware)
+        mapper = SmartCareerMapper()
+        mapped_recs = mapper.map_career(student, top_k=3)
+        
+        if mapped_recs:
+            logger.info("CareerTrendAgent: SmartCareerMapper returned %d paths instantly.", len(mapped_recs))
+            
+            top_names = [r.career for r in mapped_recs[:3]]
+            strategy = (
+                f"Based on your degree ({student.degree} in {student.branch}, Year {student.year}) and skills "
+                f"({', '.join(student.skills[:3]) if student.skills else 'your background'}), "
+                f"the top recommended career paths are: {', '.join(top_names)}. "
+                f"Focus on building core skills in these areas to optimize placement opportunities."
+            )
+            
+            response = CareerTrendResponse(
+                recommended_paths=mapped_recs,
+                strategy=strategy,
+                generated_at=datetime.now(tz=timezone.utc),
+            )
+            
+            response.metrics = {
+                "knowledge_hit":          False,
+                "knowledge_count":        len(mapped_recs),
+                "avg_similarity_score":   0.0,
+                "tavily_used":            False,
+                "knowledge_updated":      False,
+                "model_name":             "smart_career_mapper",
+                "llm_response_time":      0.0,
+                "total_execution_time":   time.perf_counter() - t_total,
+                "direct_profile_prompt":  False,
+            }
+        else:
+            # 2. Fall back to LLM ONLY if SmartCareerMapper failed (novel niche profile)
+            logger.info("CareerTrendAgent: SmartCareerMapper yielded. Calling LLM with profile-only prompt")
+            try:
+                context = StudentContextBuilder().build(student)
+            except Exception as ctx_exc:
+                logger.warning("CareerTrendAgent: StudentContextBuilder failed in direct path (%s)", ctx_exc)
+                return self._fallback_deterministic_response(student, t_total)
+
+            try:
+                prompt = PromptBuilder().build_direct(context)
+            except Exception as pb_exc:
+                logger.warning("CareerTrendAgent: PromptBuilder.build_direct failed (%s)", pb_exc)
+                return self._fallback_deterministic_response(student, t_total)
+
+            t_llm_start = time.perf_counter()
+            try:
+                llm_service = LLMService()
+                response = llm_service.generate_direct(prompt)
+                t_llm = time.perf_counter() - t_llm_start
+            except Exception as llm_exc:
+                logger.error(
+                    "CareerTrendAgent: generate_direct LLM call failed (%s) — falling back to deterministic response",
+                    llm_exc,
+                )
+                return self._fallback_deterministic_response(student, t_total)
+
+            response.metrics = {
+                "knowledge_hit":          False,
+                "knowledge_count":        0,
+                "avg_similarity_score":   0.0,
+                "tavily_used":            tavily_used,
+                "knowledge_updated":      False,
+                "model_name":             getattr(LLMService(), "model_name", "unknown"),
+                "llm_response_time":      t_llm,
+                "total_execution_time":   time.perf_counter() - t_total,
+                "direct_profile_prompt":  True,
+            }
+
+        logger.info(
+            "CareerTrendAgent: _generate_from_profile_direct complete — %d recommendations",
+            len(response.recommended_paths),
+        )
+
+        # Persist so the same profile benefits from cache on the next request
+        try:
+            from job_search_ai.agents.career_trend.profile_recommendation_knowledge import ProfileRecommendationKnowledge
+            from job_search_ai.services.settings_service import SettingsService
+            settings = SettingsService.get()
+            ProfileRecommendationKnowledge(settings).store(student, response)
+            self._async_ensure_career_doctypes_persisted(student, response)
+        except Exception as store_exc:
+            logger.warning("CareerTrendAgent: could not store direct response: %s", store_exc)
+
+        return response
+
+    def _fallback_deterministic_response(self, student: StudentProfile, t_total: float) -> "CareerTrendResponse":
+        """
+        Fallback deterministic generator when LLM calls fail or time out.
+        Ensures the user ALWAYS receives career recommendations within latency targets.
+        """
+        from datetime import datetime, timezone
+        from job_search_ai.agents.career_trend.schemas import CareerTrendResponse, CareerRecommendation
+
+        branch_clean = (student.branch or "Technology").strip()
+        primary_interest = student.interests[0] if student.interests else branch_clean
+        primary_skill = student.skills[0] if student.skills else "Domain Analysis"
+
+        career1_name = f"{primary_interest} Specialist" if primary_interest.lower() not in branch_clean.lower() else f"{branch_clean} Specialist"
+        career2_name = f"{branch_clean} Analyst"
+
+        recs = [
+            CareerRecommendation(
+                career=career1_name,
+                category=branch_clean,
+                confidence=75,
+                why_for_you=f"Recommended for {student.degree} ({branch_clean}) student based on interest in {primary_interest}.",
+                career_stage="Growing",
+                future_demand="High",
+                industry=branch_clean,
+                skills=student.skills[:4] if len(student.skills) >= 2 else [primary_skill, "Problem Solving", "Domain Analysis", "Project Management"],
             ),
+            CareerRecommendation(
+                career=career2_name,
+                category=branch_clean,
+                confidence=70,
+                why_for_you=f"Strong career path for {branch_clean} students focusing on analytical and domain skills.",
+                career_stage="Growing",
+                future_demand="High",
+                industry=branch_clean,
+                skills=student.skills[:3] + ["Data Analysis", "Communication"] if student.skills else ["Analytical Thinking", "Data Analysis", "Domain Knowledge"],
+            ),
+        ]
+
+        res = CareerTrendResponse(
+            recommended_paths=recs,
+            strategy=f"Based on your degree ({student.degree} in {branch_clean}), focus on building core skills in {primary_interest} and {primary_skill} to optimize career growth.",
             generated_at=datetime.now(tz=timezone.utc),
         )
-        response.metrics = {
+        res.metrics = {
             "knowledge_hit": False,
-            "knowledge_count": 0,
+            "knowledge_count": len(recs),
             "avg_similarity_score": 0.0,
-            "tavily_used": True,
+            "tavily_used": False,
             "knowledge_updated": False,
+            "model_name": "fallback_generator",
+            "llm_response_time": 0.0,
+            "total_execution_time": time.perf_counter() - t_total,
         }
+        try:
+            self._async_ensure_career_doctypes_persisted(student, res)
+        except Exception as exc:
+            logger.warning("Could not persist fallback career doctypes: %s", exc)
+        return res
+
+    def _empty_response(self, student: StudentProfile) -> "CareerTrendResponse":
+        """Fallback empty or deterministic response when LLM or context fails."""
+        return self._fallback_deterministic_response(student, time.perf_counter())
+
+    def _async_ensure_career_doctypes_persisted(self, student: StudentProfile, response: "CareerTrendResponse") -> None:
+        """Run persistence in a background thread to prevent blocking API responses."""
+        import threading
+        import frappe
+        # We must clone/dictify the response or run it safely
+        site_name = getattr(frappe.local, 'site', 'job_search_ai')
+        t = threading.Thread(target=_ensure_career_doctypes_persisted, args=(site_name, student, response), daemon=True)
+        t.start()
+
+
+def _sanitize_response_recommendations(student: StudentProfile, response: CareerTrendResponse) -> CareerTrendResponse:
+    """
+    Guarantees:
+    1. Minimum 2 recommendations for career path (never empty, never 1 item).
+    2. Every recommendation contains a complete list of required skills.
+    3. Auto-populates missing skills from MariaDB or student domain context.
+    """
+    if not response:
         return response
+
+    import frappe
+    from job_search_ai.agents.career_trend.schemas import CareerRecommendation
+
+    def fetch_db_skills(career_name: str) -> list[str]:
+        if not career_name:
+            return []
+        try:
+            ck_name = frappe.db.get_value("Career Knowledge", {"career_name": career_name}, "name")
+            if ck_name:
+                doc = frappe.get_doc("Career Knowledge", ck_name)
+                skills = [row.skill_name for row in (doc.skills or []) if row.skill_name]
+                if skills:
+                    return skills
+            cp_name = frappe.db.get_value("Career Path", {"target_role": career_name}, "name") or career_name
+            if frappe.db.exists("Career Path", cp_name):
+                cp_doc = frappe.get_doc("Career Path", cp_name)
+                prereqs = [row.prerequisite_skills for row in (cp_doc.prerequisite_skills or []) if row.prerequisite_skills]
+                m_skills = [row.skill for row in (cp_doc.path_milestone or []) if row.skill]
+                all_s = list(dict.fromkeys(prereqs + m_skills))
+                if all_s:
+                    return all_s
+        except Exception:
+            pass
+        return []
+
+    branch_clean = (student.branch or "Technology").strip()
+    primary_interest = student.interests[0] if student.interests else branch_clean
+    primary_skill = student.skills[0] if student.skills else "Domain Analysis"
+
+    paths = list(response.recommended_paths or [])
+
+    # Step 1: Ensure every existing recommendation has required skills
+    for rec in paths:
+        if not rec.skills or len(rec.skills) < 3:
+            db_skills = fetch_db_skills(rec.career)
+            if db_skills and len(db_skills) >= 3:
+                rec.skills = db_skills
+            else:
+                base_skills = list(rec.skills or [])
+                for s in (student.skills or []):
+                    if s and s not in base_skills:
+                        base_skills.append(s)
+                default_domain_skills = [
+                    "Problem Solving", "Domain Analysis", "Data Analysis",
+                    "Project Management", "Technical Communication", "Core Domain Concepts"
+                ]
+                for ds in default_domain_skills:
+                    if len(base_skills) >= 5:
+                        break
+                    if ds not in base_skills:
+                        base_skills.append(ds)
+                rec.skills = base_skills
+
+    # Step 2: Ensure minimum 2 recommendations
+    if len(paths) == 0:
+        rec1 = CareerRecommendation(
+            career=f"{primary_interest} Specialist" if primary_interest.lower() not in branch_clean.lower() else f"{branch_clean} Specialist",
+            category=branch_clean,
+            confidence=75,
+            why_for_you=f"Recommended for {student.degree} ({branch_clean}) student based on interest in {primary_interest}.",
+            career_stage="Growing",
+            future_demand="High",
+            industry=branch_clean,
+            skills=student.skills[:4] if len(student.skills) >= 2 else [primary_skill, "Problem Solving", "Domain Analysis", "Project Management"],
+        )
+        rec2 = CareerRecommendation(
+            career=f"{branch_clean} Analyst",
+            category=branch_clean,
+            confidence=70,
+            why_for_you=f"Strong career path for {branch_clean} students focusing on analytical and domain skills.",
+            career_stage="Growing",
+            future_demand="High",
+            industry=branch_clean,
+            skills=student.skills[:3] + ["Data Analysis", "Communication"] if student.skills else ["Analytical Thinking", "Data Analysis", "Domain Knowledge"],
+        )
+        paths = [rec1, rec2]
+
+    elif len(paths) == 1:
+        existing_name = paths[0].career
+        fallback_name = f"{branch_clean} Specialist" if "Analyst" in existing_name else f"{branch_clean} Analyst"
+        if fallback_name == existing_name:
+            fallback_name = f"{primary_interest} Consultant"
+        rec2 = CareerRecommendation(
+            career=fallback_name,
+            category=branch_clean,
+            confidence=70,
+            why_for_you=f"Complementary career path for {student.degree} ({branch_clean}) student.",
+            career_stage="Growing",
+            future_demand="High",
+            industry=branch_clean,
+            skills=student.skills[:4] if len(student.skills) >= 2 else [primary_skill, "Data Analysis", "Problem Solving", "Domain Knowledge"],
+        )
+        paths.append(rec2)
+
+    response.recommended_paths = paths
+    try:
+        import threading
+        import frappe
+        site_name = getattr(frappe.local, 'site', 'job_search_ai')
+        t = threading.Thread(target=_ensure_career_doctypes_persisted, args=(site_name, student, response), daemon=True)
+        t.start()
+    except Exception as exc:
+        logger.warning("Could not persist career doctypes during sanitize: %s", exc)
+    return response
+
+
+def _ensure_career_doctypes_persisted(site_name: str, student: StudentProfile, response: CareerTrendResponse) -> None:
+    """
+    Ensure all generated career recommendations exist as 'Career Knowledge' and 'Career Path'
+    DocTypes in MariaDB so that Skill Gap Analysis and Student Path Enrollment (Activate Path)
+    succeed immediately in < 1 second.
+    """
+    if not response or not response.recommended_paths:
+        return
+
+    import frappe
+    frappe.init(site=site_name)
+    frappe.connect()
+    
+    try:
+        def ensure_skill(s_name: str):
+            s_clean = s_name.strip()
+            if s_clean and not frappe.db.exists("Skill", s_clean):
+                try:
+                    frappe.get_doc({
+                        "doctype": "Skill",
+                        "skill_name": s_clean,
+                        "skill_category": "Technical",
+                        "skill_level_schema": "Beginner→Expert"
+                    }).insert(ignore_permissions=True)
+                except Exception:
+                    pass
+
+        for rec in response.recommended_paths:
+            career_name = (rec.career or "").strip()
+            if not career_name:
+                continue
+
+            skills = rec.skills or student.skills or ["Domain Knowledge", "Problem Solving"]
+            for s in skills:
+                ensure_skill(s)
+
+            # 1. Ensure Career Knowledge doc exists
+            if not frappe.db.exists("Career Knowledge", {"career_name": career_name}):
+                try:
+                    ck_doc = frappe.get_doc({
+                        "doctype": "Career Knowledge",
+                        "career_name": career_name,
+                        "industry": getattr(rec, "industry", None) or getattr(rec, "category", None) or student.branch or "General",
+                        "active": 1,
+                        "skills": [{"skill_name": s, "skill_type": "Required"} for s in skills]
+                    })
+                    ck_doc.insert(ignore_permissions=True)
+                    logger.info("Auto-created Career Knowledge doc for '%s'", career_name)
+                except Exception as exc:
+                    logger.warning("Could not auto-create Career Knowledge for '%s': %s", career_name, exc)
+
+        try:
+            frappe.db.commit()
+        except Exception as exc:
+            logger.error("Thread DB commit error: %s", exc)
+    finally:
+        frappe.destroy()
 
 
 class CareerTrendAgentError(Exception):

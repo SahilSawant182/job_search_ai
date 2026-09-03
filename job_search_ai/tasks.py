@@ -542,3 +542,16 @@ def personalize_roadmap_for_student(enrollment_doc, milestones_list):
 	enrollment_doc.milestone_points = []
 	for pt in milestone_points:
 		enrollment_doc.append("milestone_points", pt)
+
+def generate_career_path_background(career_path):
+	if not frappe.flags.in_test:
+		try:
+			frappe.db.close()
+			frappe.db.connect()
+		except Exception:
+			pass
+	try:
+		from nexedu.path_finder.api.path_enrollment import _do_create_career_path
+		_do_create_career_path(career_path)
+	except Exception as e:
+		frappe.log_error(f"Background Career Path Generation Failed: {e}", "Career Path Generation")

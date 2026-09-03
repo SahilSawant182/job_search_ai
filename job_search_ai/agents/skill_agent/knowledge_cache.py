@@ -61,6 +61,12 @@ class SkillKnowledgeCache:
                 continue
 
             payload = hit.get("payload", {})
+
+            # Ensure exact role match to avoid cross-role cache hits (e.g. Full Stack vs Python Full Stack)
+            cached_role = payload.get("role_name", "")
+            if cached_role.strip().lower() != role.strip().lower():
+                continue
+
             # If payload only has the old format, contains any of the deleted fields,
             # or is missing the new schema_version, skip it to find a newer clean cached profile.
             if (
@@ -143,7 +149,7 @@ class SkillKnowledgeCache:
             resp = requests.post(
                 self.ollama_endpoint.replace("/api/generate", "/api/embeddings"),
                 json={"model": self.embedding_model, "prompt": text},
-                timeout=30,
+                timeout=15,
             )
             resp.raise_for_status()
             return resp.json().get("embedding")

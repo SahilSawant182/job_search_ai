@@ -114,10 +114,120 @@ class LLMService:
 
         return self._parse_response(parsed_json, recommendations)
 
+    def generate_direct(self, prompt: str) -> CareerTrendResponse:
+        """
+        Call the LLM with a profile-only prompt (no pre-scored candidates)
+        and build CareerRecommendation objects entirely from the LLM JSON.
+
+        Used when the knowledge base and Tavily both return zero candidates.
+        Guarantees at least 2 recommendations are returned; if the LLM
+        returns fewer than 2, raises LLMServiceError.
+        """
+        if not prompt or not prompt.strip():
+            raise ValueError("LLMService.generate_direct requires a non-empty prompt.")
+
+        raw_response_str = self._call_llm(prompt)
+        raw_response_str = self._clean_json_string(raw_response_str)
+
+        try:
+            parsed_json = json.loads(raw_response_str)
+        except json.JSONDecodeError:
+            logger.warning("generate_direct: JSON parse failed — attempting repair.")
+            raw_response_str = self._attempt_repair(raw_response_str)
+            raw_response_str = self._clean_json_string(raw_response_str)
+            try:
+                parsed_json = json.loads(raw_response_str)
+            except json.JSONDecodeError as exc:
+                raise LLMServiceError(
+                    f"generate_direct: LLM response failed to parse as JSON even after repair. "
+                    f"Raw: {raw_response_str}"
+                ) from exc
+
+        return self._parse_direct_response(parsed_json)
+
+    def _parse_direct_response(self, raw: dict) -> CareerTrendResponse:
+        """
+        Build a CareerTrendResponse entirely from the LLM's structured output.
+        No pre-scored Python candidate list is used.
+        """
+        _VALID_STAGE  = {"Emerging", "Growing", "Established"}
+        _VALID_DEMAND = {"Very High", "High", "Moderate"}
+
+        def _norm_stage(v: str) -> str:
+            v = v.strip()
+            if v in _VALID_STAGE:
+                return v
+            vl = v.lower()
+            if "emerg" in vl:
+                return "Emerging"
+            if "establish" in vl or "immediate" in vl or "mature" in vl:
+                return "Established"
+            return "Growing"
+
+        def _norm_demand(v: str) -> str:
+            v = v.strip()
+            if v in _VALID_DEMAND:
+                return v
+            vl = v.lower()
+            if "very" in vl or "very high" in vl:
+                return "Very High"
+            if "high" in vl:
+                return "High"
+            return "Moderate"
+
+        paths: list[CareerRecommendation] = []
+        for item in raw.get("recommended_paths", []):
+            career = str(item.get("career", "")).strip()
+            if not career:
+                continue
+            try:
+                confidence = max(20, min(85, int(item.get("confidence", 60))))
+            except (ValueError, TypeError):
+                confidence = 60
+
+            rec = CareerRecommendation(
+                career       = career,
+                category     = str(item.get("category", "General")).strip() or "General",
+                confidence   = confidence,
+                why_for_you  = str(item.get("why_for_you", "")).strip(),
+                career_stage = _norm_stage(str(item.get("career_stage", "Growing"))),
+                future_demand= _norm_demand(str(item.get("future_demand", "Moderate"))),
+                industry     = str(item.get("industry", "General")).strip() or "General",
+                skills       = [str(s).strip() for s in item.get("skills", []) if str(s).strip()],
+            )
+            if not rec.why_for_you:
+                rec.why_for_you = (
+                    f"This path is well-suited to your background in {career}. "
+                    "Build the listed skills to strengthen your candidacy."
+                )
+            paths.append(rec)
+
+        if len(paths) < 2:
+            raise LLMServiceError(
+                f"generate_direct: LLM returned fewer than 2 recommendations ({len(paths)}). "
+                f"Raw JSON: {raw}"
+            )
+
+        strategy = str(raw.get("strategy", "")).strip()
+        if not strategy:
+            strategy = "Focus on building the skills listed below to improve your placement readiness."
+
+        return CareerTrendResponse(
+            recommended_paths=paths,
+            strategy=strategy,
+            generated_at=datetime.now(tz=timezone.utc),
+        )
+
     def _call_llm(self, prompt: str) -> str:
         """Call LLM with retry logic."""
         settings = SettingsService.get()
-        timeout = settings.llm_timeout_seconds
+        # Cap interactive timeout at 15s so API calls fail fast and trigger fallback generator
+        raw_timeout = getattr(settings, "llm_timeout_seconds", 15) or 15
+        try:
+            raw_timeout = int(raw_timeout)
+        except (ValueError, TypeError):
+            raw_timeout = 15
+        timeout = min(raw_timeout, 15)
         retries = settings.retry_count
         max_attempts = retries + 1
 
@@ -135,8 +245,9 @@ class LLMService:
                     return response.choices[0].message.content or ""
                 except OpenAIError as exc:
                     logger.warning("LLM Failed: %s", exc)
-                    if attempt == max_attempts:
-                        raise LLMServiceError(f"LLM request failed after {max_attempts} attempts: {exc}") from exc
+                    exc_str = str(exc)
+                    if "503" in exc_str or "service_unavailable" in exc_str or "Unsupported model" in exc_str or "retry limit" in exc_str or attempt == max_attempts:
+                        raise LLMServiceError(f"LLM request failed after {attempt} attempt(s): {exc}") from exc
         else:
             endpoint = settings.ollama_endpoint
             payload = {

@@ -33,16 +33,6 @@ def _resolve_job_profile(role: str) -> str | None:
         )
         if matches:
             return matches[0]["name"]
-
-        # Fall back to a case-insensitive partial match.
-        matches = frappe.get_all(
-            CAREER_KNOWLEDGE_DOCTYPE,
-            filters=[[CAREER_KNOWLEDGE_NAME_FIELD, "like", f"%{role}%"]],
-            fields=["name"],
-            limit=1,
-        )
-        if matches:
-            return matches[0]["name"]
     except Exception as exc:  # noqa: BLE001
         logger.warning("SkillAgent: could not resolve Career Knowledge for role=%r (%s)", role, exc)
 

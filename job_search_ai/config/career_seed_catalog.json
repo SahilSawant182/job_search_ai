@@ -1,0 +1,4213 @@
+[
+  {
+    "career_name": "Machine Learning Engineer",
+    "category": "Artificial Intelligence",
+    "industry": "Technology",
+    "career_stage": "Growing",
+    "future_demand": "Very High",
+    "suitable_degrees": [
+      "B.Tech",
+      "M.Tech",
+      "MCA",
+      "B.Sc"
+    ],
+    "suitable_branches": [
+      "AI and Data Science",
+      "Computer Science",
+      "IT",
+      "Mathematics"
+    ],
+    "required_skills": [
+      "Python",
+      "Machine Learning",
+      "Data Analysis",
+      "NumPy",
+      "Pandas"
+    ],
+    "preferred_skills": [
+      "TensorFlow",
+      "PyTorch",
+      "Scikit-learn",
+      "SQL"
+    ],
+    "interest_keywords": [
+      "machine learning",
+      "ai",
+      "deep learning",
+      "neural networks",
+      "artificial intelligence",
+      "data models"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Data Scientist",
+    "category": "Data Science",
+    "industry": "Technology",
+    "career_stage": "Growing",
+    "future_demand": "Very High",
+    "suitable_degrees": [
+      "B.Tech",
+      "M.Tech",
+      "MCA",
+      "B.Sc"
+    ],
+    "suitable_branches": [
+      "Data Science",
+      "Computer Science",
+      "Statistics",
+      "Mathematics"
+    ],
+    "required_skills": [
+      "Python",
+      "Data Analysis",
+      "SQL",
+      "Statistics",
+      "Machine Learning"
+    ],
+    "preferred_skills": [
+      "R",
+      "Tableau",
+      "PowerBI",
+      "Big Data"
+    ],
+    "interest_keywords": [
+      "data science",
+      "analytics",
+      "big data",
+      "data visualization",
+      "predictive modeling"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Backend Developer",
+    "category": "Software Engineering",
+    "industry": "Technology",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "MCA",
+      "B.Sc"
+    ],
+    "suitable_branches": [
+      "Computer Science",
+      "IT",
+      "Software Engineering"
+    ],
+    "required_skills": [
+      "Python",
+      "Java",
+      "Node.js",
+      "SQL",
+      "APIs"
+    ],
+    "preferred_skills": [
+      "Django",
+      "Spring Boot",
+      "Docker",
+      "Redis"
+    ],
+    "interest_keywords": [
+      "backend",
+      "server side",
+      "apis",
+      "databases",
+      "microservices"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Frontend Developer",
+    "category": "Software Engineering",
+    "industry": "Technology",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "MCA",
+      "BCA",
+      "B.Sc"
+    ],
+    "suitable_branches": [
+      "Computer Science",
+      "IT",
+      "Software Engineering"
+    ],
+    "required_skills": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "React"
+    ],
+    "preferred_skills": [
+      "Vue.js",
+      "Angular",
+      "TypeScript",
+      "TailwindCSS"
+    ],
+    "interest_keywords": [
+      "frontend",
+      "ui",
+      "ux",
+      "web design",
+      "web development",
+      "react"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Full Stack Developer",
+    "category": "Software Engineering",
+    "industry": "Technology",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "MCA"
+    ],
+    "suitable_branches": [
+      "Computer Science",
+      "IT"
+    ],
+    "required_skills": [
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Node.js",
+      "React",
+      "SQL"
+    ],
+    "preferred_skills": [
+      "MongoDB",
+      "Express",
+      "Docker",
+      "AWS"
+    ],
+    "interest_keywords": [
+      "full stack",
+      "web development",
+      "mern",
+      "mean",
+      "software development"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Python Full Stack Developer",
+    "category": "Software Engineering",
+    "industry": "Technology",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "MCA"
+    ],
+    "suitable_branches": [
+      "Computer Science",
+      "IT"
+    ],
+    "required_skills": [
+      "Python",
+      "Django",
+      "JavaScript",
+      "React",
+      "SQL"
+    ],
+    "preferred_skills": [
+      "PostgreSQL",
+      "Docker",
+      "FastAPI"
+    ],
+    "interest_keywords": [
+      "python",
+      "full stack",
+      "django",
+      "web development"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Frappe Developer",
+    "category": "ERP Development",
+    "industry": "Technology",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "MCA",
+      "BCA",
+      "B.Sc"
+    ],
+    "suitable_branches": [
+      "Computer Science",
+      "IT"
+    ],
+    "required_skills": [
+      "Python",
+      "JavaScript",
+      "MariaDB",
+      "Frappe",
+      "ERPNext"
+    ],
+    "preferred_skills": [
+      "Git",
+      "Linux",
+      "Redis",
+      "HTML",
+      "CSS"
+    ],
+    "interest_keywords": [
+      "frappe",
+      "erpnext",
+      "erp",
+      "open source",
+      "python development"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "DevOps Engineer",
+    "category": "Infrastructure",
+    "industry": "Technology",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "MCA"
+    ],
+    "suitable_branches": [
+      "Computer Science",
+      "IT",
+      "Networking"
+    ],
+    "required_skills": [
+      "Linux",
+      "Git",
+      "Docker",
+      "CI/CD",
+      "Bash"
+    ],
+    "preferred_skills": [
+      "Kubernetes",
+      "AWS",
+      "Terraform",
+      "Ansible"
+    ],
+    "interest_keywords": [
+      "devops",
+      "cloud",
+      "infrastructure",
+      "automation",
+      "ci/cd",
+      "deployment"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Cloud Architect",
+    "category": "Infrastructure",
+    "industry": "Technology",
+    "career_stage": "Growing",
+    "future_demand": "Very High",
+    "suitable_degrees": [
+      "B.Tech",
+      "M.Tech"
+    ],
+    "suitable_branches": [
+      "Computer Science",
+      "IT"
+    ],
+    "required_skills": [
+      "AWS",
+      "Azure",
+      "Cloud Computing",
+      "Networking",
+      "Linux"
+    ],
+    "preferred_skills": [
+      "GCP",
+      "Kubernetes",
+      "Serverless",
+      "Security"
+    ],
+    "interest_keywords": [
+      "cloud",
+      "aws",
+      "azure",
+      "architecture",
+      "scalability"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Cybersecurity Analyst",
+    "category": "Security",
+    "industry": "Technology",
+    "career_stage": "Growing",
+    "future_demand": "Very High",
+    "suitable_degrees": [
+      "B.Tech",
+      "MCA",
+      "B.Sc"
+    ],
+    "suitable_branches": [
+      "Computer Science",
+      "Cybersecurity",
+      "Networking",
+      "IT"
+    ],
+    "required_skills": [
+      "Network Security",
+      "Linux",
+      "Cryptography",
+      "Vulnerability Assessment"
+    ],
+    "preferred_skills": [
+      "Penetration Testing",
+      "Ethical Hacking",
+      "Python",
+      "SIEM"
+    ],
+    "interest_keywords": [
+      "cybersecurity",
+      "security",
+      "hacking",
+      "infosec",
+      "network security",
+      "pentesting"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Embedded Systems Engineer",
+    "category": "Hardware Engineering",
+    "industry": "Technology",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "M.Tech"
+    ],
+    "suitable_branches": [
+      "Electronics",
+      "ENTC",
+      "Electrical",
+      "Computer Science"
+    ],
+    "required_skills": [
+      "C",
+      "C++",
+      "Microcontrollers",
+      "Linux",
+      "RTOS"
+    ],
+    "preferred_skills": [
+      "Python",
+      "IoT",
+      "PCB Design",
+      "ARM Cortex"
+    ],
+    "interest_keywords": [
+      "embedded",
+      "microcontrollers",
+      "iot",
+      "hardware",
+      "c programming",
+      "electronics"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "IoT Developer",
+    "category": "Hardware & Software",
+    "industry": "Technology",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech"
+    ],
+    "suitable_branches": [
+      "Computer Science",
+      "IT",
+      "ENTC",
+      "Electronics"
+    ],
+    "required_skills": [
+      "Python",
+      "C++",
+      "Networking",
+      "Sensors",
+      "MQTT"
+    ],
+    "preferred_skills": [
+      "AWS IoT",
+      "Raspberry Pi",
+      "Arduino",
+      "Cloud"
+    ],
+    "interest_keywords": [
+      "iot",
+      "internet of things",
+      "sensors",
+      "smart devices",
+      "automation"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Blockchain Developer",
+    "category": "Web3",
+    "industry": "Technology",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "MCA"
+    ],
+    "suitable_branches": [
+      "Computer Science",
+      "IT"
+    ],
+    "required_skills": [
+      "Solidity",
+      "Smart Contracts",
+      "Cryptography",
+      "JavaScript"
+    ],
+    "preferred_skills": [
+      "Ethereum",
+      "Web3.js",
+      "Rust",
+      "Go"
+    ],
+    "interest_keywords": [
+      "blockchain",
+      "web3",
+      "crypto",
+      "smart contracts",
+      "decentralization",
+      "ethereum"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "iOS Developer",
+    "category": "Mobile Engineering",
+    "industry": "Technology",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "MCA"
+    ],
+    "suitable_branches": [
+      "Computer Science",
+      "IT"
+    ],
+    "required_skills": [
+      "Swift",
+      "iOS SDK",
+      "Xcode",
+      "UI/UX"
+    ],
+    "preferred_skills": [
+      "Objective-C",
+      "Core Data",
+      "REST APIs"
+    ],
+    "interest_keywords": [
+      "ios",
+      "mobile",
+      "apple",
+      "swift",
+      "app development"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Android Developer",
+    "category": "Mobile Engineering",
+    "industry": "Technology",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "MCA"
+    ],
+    "suitable_branches": [
+      "Computer Science",
+      "IT"
+    ],
+    "required_skills": [
+      "Kotlin",
+      "Java",
+      "Android Studio",
+      "XML"
+    ],
+    "preferred_skills": [
+      "Jetpack Compose",
+      "Firebase",
+      "REST APIs"
+    ],
+    "interest_keywords": [
+      "android",
+      "mobile",
+      "kotlin",
+      "app development"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Cross-Platform Mobile Developer",
+    "category": "Mobile Engineering",
+    "industry": "Technology",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "MCA"
+    ],
+    "suitable_branches": [
+      "Computer Science",
+      "IT"
+    ],
+    "required_skills": [
+      "Flutter",
+      "Dart",
+      "React Native",
+      "JavaScript"
+    ],
+    "preferred_skills": [
+      "Firebase",
+      "Redux",
+      "UI Design"
+    ],
+    "interest_keywords": [
+      "flutter",
+      "react native",
+      "cross platform",
+      "mobile app",
+      "dart"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Game Developer",
+    "category": "Software Engineering",
+    "industry": "Gaming",
+    "career_stage": "Growing",
+    "future_demand": "Medium",
+    "suitable_degrees": [
+      "B.Tech",
+      "MCA"
+    ],
+    "suitable_branches": [
+      "Computer Science",
+      "IT"
+    ],
+    "required_skills": [
+      "C#",
+      "Unity",
+      "C++",
+      "Unreal Engine",
+      "Mathematics"
+    ],
+    "preferred_skills": [
+      "3D Modeling",
+      "Physics Simulation",
+      "Game Design"
+    ],
+    "interest_keywords": [
+      "gaming",
+      "game dev",
+      "unity",
+      "unreal",
+      "c#",
+      "graphics"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "QA Automation Engineer",
+    "category": "Quality Assurance",
+    "industry": "Technology",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "MCA"
+    ],
+    "suitable_branches": [
+      "Computer Science",
+      "IT"
+    ],
+    "required_skills": [
+      "Python",
+      "Java",
+      "Selenium",
+      "Testing Methodologies"
+    ],
+    "preferred_skills": [
+      "Cypress",
+      "Jenkins",
+      "API Testing",
+      "Postman"
+    ],
+    "interest_keywords": [
+      "qa",
+      "testing",
+      "automation",
+      "quality assurance",
+      "selenium",
+      "bug hunting"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "VLSI Design Engineer",
+    "category": "Electronics",
+    "industry": "Semiconductor",
+    "career_stage": "Growing",
+    "future_demand": "Very High",
+    "suitable_degrees": [
+      "B.Tech",
+      "M.Tech"
+    ],
+    "suitable_branches": [
+      "Electronics",
+      "ENTC",
+      "Electrical"
+    ],
+    "required_skills": [
+      "Verilog",
+      "VHDL",
+      "Digital Electronics",
+      "CMOS",
+      "SystemVerilog"
+    ],
+    "preferred_skills": [
+      "FPGA",
+      "ASIC Design",
+      "Cadence",
+      "Synopsys"
+    ],
+    "interest_keywords": [
+      "vlsi",
+      "semiconductor",
+      "chip design",
+      "electronics",
+      "fpga",
+      "verilog"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Telecommunications Engineer",
+    "category": "Networking",
+    "industry": "Telecommunications",
+    "career_stage": "Growing",
+    "future_demand": "Medium",
+    "suitable_degrees": [
+      "B.Tech"
+    ],
+    "suitable_branches": [
+      "ENTC",
+      "Electronics",
+      "Telecommunications"
+    ],
+    "required_skills": [
+      "Signal Processing",
+      "Networking",
+      "Wireless Communication",
+      "RF Engineering"
+    ],
+    "preferred_skills": [
+      "5G Technologies",
+      "Optical Fiber",
+      "MATLAB"
+    ],
+    "interest_keywords": [
+      "telecom",
+      "networks",
+      "5g",
+      "signals",
+      "wireless",
+      "communication"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Power Systems Engineer",
+    "category": "Electrical",
+    "industry": "Energy",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "M.Tech"
+    ],
+    "suitable_branches": [
+      "Electrical"
+    ],
+    "required_skills": [
+      "Power Systems",
+      "Circuit Analysis",
+      "Electrical Machines",
+      "AutoCAD Electrical"
+    ],
+    "preferred_skills": [
+      "Renewable Energy",
+      "Smart Grids",
+      "MATLAB Simulink"
+    ],
+    "interest_keywords": [
+      "power",
+      "electricity",
+      "energy",
+      "smart grid",
+      "electrical machines",
+      "transformers"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Control Systems Engineer",
+    "category": "Electrical",
+    "industry": "Automation",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "M.Tech"
+    ],
+    "suitable_branches": [
+      "Electrical",
+      "Electronics",
+      "Instrumentation"
+    ],
+    "required_skills": [
+      "Control Theory",
+      "MATLAB",
+      "PLC",
+      "SCADA",
+      "Instrumentation"
+    ],
+    "preferred_skills": [
+      "Robotics",
+      "Automation",
+      "Simulink"
+    ],
+    "interest_keywords": [
+      "automation",
+      "plc",
+      "scada",
+      "control systems",
+      "robotics"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Mechanical Design Engineer",
+    "category": "Engineering",
+    "industry": "Manufacturing",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "M.Tech",
+      "Diploma"
+    ],
+    "suitable_branches": [
+      "Mechanical Engineering",
+      "Production Engineering",
+      "Automobile Engineering"
+    ],
+    "required_skills": [
+      "AutoCAD",
+      "SolidWorks",
+      "Engineering Drawing",
+      "Thermodynamics",
+      "Materials Science"
+    ],
+    "preferred_skills": [
+      "ANSYS",
+      "CATIA",
+      "FEA",
+      "Product Design"
+    ],
+    "interest_keywords": [
+      "mechanical design",
+      "cad",
+      "manufacturing",
+      "automotive",
+      "robotics",
+      "machines"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Thermal Engineer",
+    "category": "Engineering",
+    "industry": "Energy & Manufacturing",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "M.Tech"
+    ],
+    "suitable_branches": [
+      "Mechanical Engineering"
+    ],
+    "required_skills": [
+      "Thermodynamics",
+      "Heat Transfer",
+      "Fluid Mechanics",
+      "CFD"
+    ],
+    "preferred_skills": [
+      "ANSYS Fluent",
+      "Energy Systems",
+      "HVAC"
+    ],
+    "interest_keywords": [
+      "thermal",
+      "heat transfer",
+      "fluids",
+      "cfd",
+      "hvac",
+      "thermodynamics"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Robotics Engineer",
+    "category": "Automation",
+    "industry": "Manufacturing & Tech",
+    "career_stage": "Growing",
+    "future_demand": "Very High",
+    "suitable_degrees": [
+      "B.Tech",
+      "M.Tech"
+    ],
+    "suitable_branches": [
+      "Mechanical",
+      "Electronics",
+      "Electrical",
+      "Mechatronics"
+    ],
+    "required_skills": [
+      "Kinematics",
+      "C++",
+      "Python",
+      "ROS",
+      "Control Systems"
+    ],
+    "preferred_skills": [
+      "Computer Vision",
+      "Machine Learning",
+      "Automation"
+    ],
+    "interest_keywords": [
+      "robotics",
+      "robots",
+      "automation",
+      "ros",
+      "mechatronics",
+      "kinematics"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "HVAC Engineer",
+    "category": "Engineering",
+    "industry": "Construction",
+    "career_stage": "Growing",
+    "future_demand": "Medium",
+    "suitable_degrees": [
+      "B.Tech",
+      "Diploma"
+    ],
+    "suitable_branches": [
+      "Mechanical Engineering"
+    ],
+    "required_skills": [
+      "HVAC Systems",
+      "Thermodynamics",
+      "AutoCAD",
+      "MEP"
+    ],
+    "preferred_skills": [
+      "Revit MEP",
+      "Project Estimation",
+      "Energy Efficiency"
+    ],
+    "interest_keywords": [
+      "hvac",
+      "cooling",
+      "heating",
+      "mep",
+      "ventilation",
+      "construction"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Civil Site Engineer",
+    "category": "Engineering",
+    "industry": "Construction",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "Diploma"
+    ],
+    "suitable_branches": [
+      "Civil Engineering"
+    ],
+    "required_skills": [
+      "Site Supervision",
+      "AutoCAD",
+      "Project Management",
+      "Surveying",
+      "Structural Analysis"
+    ],
+    "preferred_skills": [
+      "Revit",
+      "STAAD Pro",
+      "Estimation"
+    ],
+    "interest_keywords": [
+      "construction",
+      "civil engineering",
+      "architecture",
+      "structures",
+      "buildings"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Structural Engineer",
+    "category": "Engineering",
+    "industry": "Construction",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "M.Tech"
+    ],
+    "suitable_branches": [
+      "Civil Engineering"
+    ],
+    "required_skills": [
+      "Structural Analysis",
+      "STAAD Pro",
+      "ETABS",
+      "AutoCAD",
+      "Concrete Design"
+    ],
+    "preferred_skills": [
+      "Steel Design",
+      "Earthquake Engineering",
+      "Revit Structure"
+    ],
+    "interest_keywords": [
+      "structural design",
+      "staad",
+      "etabs",
+      "buildings",
+      "bridges",
+      "civil engineering"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Urban Planner",
+    "category": "Architecture & Planning",
+    "industry": "Construction & Government",
+    "career_stage": "Growing",
+    "future_demand": "Medium",
+    "suitable_degrees": [
+      "B.Tech",
+      "B.Arch",
+      "M.Plan"
+    ],
+    "suitable_branches": [
+      "Civil Engineering",
+      "Architecture"
+    ],
+    "required_skills": [
+      "Urban Design",
+      "GIS",
+      "AutoCAD",
+      "Project Planning"
+    ],
+    "preferred_skills": [
+      "Environmental Planning",
+      "Transportation Planning",
+      "Policy Making"
+    ],
+    "interest_keywords": [
+      "urban planning",
+      "smart cities",
+      "architecture",
+      "town planning",
+      "gis"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Food Quality Analyst",
+    "category": "Food Science",
+    "industry": "FMCG",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "B.Sc"
+    ],
+    "suitable_branches": [
+      "Food Technology",
+      "Biotechnology",
+      "Agriculture"
+    ],
+    "required_skills": [
+      "Food Safety",
+      "HACCP",
+      "Quality Control",
+      "Microbiology",
+      "FSSAI Guidelines"
+    ],
+    "preferred_skills": [
+      "Sensory Evaluation",
+      "ISO 22000",
+      "Food Chemistry"
+    ],
+    "interest_keywords": [
+      "food tech",
+      "quality",
+      "fmcg",
+      "nutrition",
+      "food safety",
+      "haccp"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Food Processing Engineer",
+    "category": "Food Science",
+    "industry": "Manufacturing",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "M.Tech"
+    ],
+    "suitable_branches": [
+      "Food Technology",
+      "Agricultural Engineering"
+    ],
+    "required_skills": [
+      "Process Engineering",
+      "Food Preservation",
+      "Thermodynamics",
+      "Packaging Technology"
+    ],
+    "preferred_skills": [
+      "Supply Chain",
+      "Product Development",
+      "Plant Layout"
+    ],
+    "interest_keywords": [
+      "food processing",
+      "manufacturing",
+      "packaging",
+      "agriculture",
+      "dairy"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Aerospace Engineer",
+    "category": "Aeronautical",
+    "industry": "Aviation & Defense",
+    "career_stage": "Growing",
+    "future_demand": "Medium",
+    "suitable_degrees": [
+      "B.Tech",
+      "M.Tech"
+    ],
+    "suitable_branches": [
+      "Aeronautical Engineering",
+      "Aerospace Engineering",
+      "Mechanical Engineering"
+    ],
+    "required_skills": [
+      "Aerodynamics",
+      "Fluid Mechanics",
+      "AutoCAD",
+      "Propulsion",
+      "Materials Science"
+    ],
+    "preferred_skills": [
+      "ANSYS",
+      "CATIA",
+      "Flight Mechanics",
+      "CFD"
+    ],
+    "interest_keywords": [
+      "aerospace",
+      "aviation",
+      "aircraft",
+      "drones",
+      "space",
+      "aerodynamics"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Avionics Engineer",
+    "category": "Aeronautical & Electronics",
+    "industry": "Aviation",
+    "career_stage": "Growing",
+    "future_demand": "Medium",
+    "suitable_degrees": [
+      "B.Tech"
+    ],
+    "suitable_branches": [
+      "Aeronautical",
+      "Electronics",
+      "ENTC",
+      "Electrical"
+    ],
+    "required_skills": [
+      "Embedded Systems",
+      "Navigation Systems",
+      "C++",
+      "Control Systems"
+    ],
+    "preferred_skills": [
+      "Radar Systems",
+      "Communication Systems",
+      "Sensors"
+    ],
+    "interest_keywords": [
+      "avionics",
+      "aircraft systems",
+      "navigation",
+      "radar",
+      "aviation electronics"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Biomedical Engineer",
+    "category": "Healthcare Technology",
+    "industry": "Healthcare",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "M.Tech"
+    ],
+    "suitable_branches": [
+      "Biomedical Engineering",
+      "Electronics",
+      "Instrumentation"
+    ],
+    "required_skills": [
+      "Medical Equipment",
+      "Signal Processing",
+      "Biomechanics",
+      "Anatomy"
+    ],
+    "preferred_skills": [
+      "Imaging Systems",
+      "Regulatory Compliance",
+      "IoT in Healthcare"
+    ],
+    "interest_keywords": [
+      "biomedical",
+      "medical devices",
+      "healthcare tech",
+      "imaging",
+      "prosthetics"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Chemical Engineer",
+    "category": "Engineering",
+    "industry": "Manufacturing",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "M.Tech"
+    ],
+    "suitable_branches": [
+      "Chemical Engineering"
+    ],
+    "required_skills": [
+      "Process Engineering",
+      "Thermodynamics",
+      "Mass Transfer",
+      "Fluid Mechanics",
+      "Safety"
+    ],
+    "preferred_skills": [
+      "ASPEN HYSYS",
+      "Plant Design",
+      "Polymer Science"
+    ],
+    "interest_keywords": [
+      "chemical",
+      "process",
+      "refinery",
+      "pharmaceutical",
+      "manufacturing",
+      "materials"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Marketing Manager",
+    "category": "Marketing",
+    "industry": "Business",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "BBA",
+      "MBA",
+      "B.Com",
+      "BA"
+    ],
+    "suitable_branches": [
+      "Marketing",
+      "Business Administration",
+      "Commerce"
+    ],
+    "required_skills": [
+      "Digital Marketing",
+      "SEO",
+      "Content Strategy",
+      "Social Media",
+      "Communication"
+    ],
+    "preferred_skills": [
+      "Google Analytics",
+      "CRM",
+      "Email Marketing",
+      "Copywriting"
+    ],
+    "interest_keywords": [
+      "marketing",
+      "digital marketing",
+      "seo",
+      "branding",
+      "advertising",
+      "social media"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Business Analyst",
+    "category": "Business Analysis",
+    "industry": "Business",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "BBA",
+      "MBA",
+      "B.Com",
+      "B.Tech"
+    ],
+    "suitable_branches": [
+      "Business Administration",
+      "Finance",
+      "IT",
+      "Commerce",
+      "Computer Science"
+    ],
+    "required_skills": [
+      "Data Analysis",
+      "Communication",
+      "Problem Solving",
+      "Excel",
+      "Requirement Gathering"
+    ],
+    "preferred_skills": [
+      "SQL",
+      "Tableau",
+      "Agile",
+      "Scrum"
+    ],
+    "interest_keywords": [
+      "business analysis",
+      "strategy",
+      "process improvement",
+      "consulting",
+      "requirements"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Financial Analyst",
+    "category": "Finance",
+    "industry": "Business",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Com",
+      "M.Com",
+      "MBA",
+      "BBA",
+      "Economics"
+    ],
+    "suitable_branches": [
+      "Finance",
+      "Accounting",
+      "Commerce",
+      "Economics"
+    ],
+    "required_skills": [
+      "Financial Modeling",
+      "Excel",
+      "Accounting",
+      "Data Analysis",
+      "Reporting"
+    ],
+    "preferred_skills": [
+      "Valuation",
+      "PowerBI",
+      "SQL",
+      "Risk Management"
+    ],
+    "interest_keywords": [
+      "finance",
+      "investing",
+      "accounting",
+      "banking",
+      "financial markets",
+      "stocks"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Clinical Research Associate",
+    "category": "Clinical Research",
+    "industry": "Healthcare",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Pharm",
+      "M.Pharm",
+      "B.Sc",
+      "MBBS",
+      "BDS",
+      "Life Sciences"
+    ],
+    "suitable_branches": [
+      "Pharmacy",
+      "Biotechnology",
+      "Clinical Research",
+      "Medicine"
+    ],
+    "required_skills": [
+      "Clinical Trials",
+      "GCP",
+      "Data Management",
+      "Documentation",
+      "Regulatory Affairs"
+    ],
+    "preferred_skills": [
+      "Pharmacovigilance",
+      "Medical Writing",
+      "EDC Systems"
+    ],
+    "interest_keywords": [
+      "clinical research",
+      "trials",
+      "pharma",
+      "drug development",
+      "healthcare research"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Hospital Administrator",
+    "category": "Healthcare Administration",
+    "industry": "Healthcare",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "BHA",
+      "MHA",
+      "MBA",
+      "B.Sc"
+    ],
+    "suitable_branches": [
+      "Hospital Administration",
+      "Healthcare Management",
+      "Business"
+    ],
+    "required_skills": [
+      "Operations Management",
+      "Healthcare Regulations",
+      "Leadership",
+      "Communication",
+      "Budgeting"
+    ],
+    "preferred_skills": [
+      "Quality Assurance",
+      "EHR Systems",
+      "Policy Development"
+    ],
+    "interest_keywords": [
+      "hospital management",
+      "healthcare administration",
+      "public health",
+      "clinic operations"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Physiotherapist",
+    "category": "Rehabilitation",
+    "industry": "Healthcare",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "BPT",
+      "MPT"
+    ],
+    "suitable_branches": [
+      "Physiotherapy",
+      "Rehabilitation Sciences"
+    ],
+    "required_skills": [
+      "Patient Assessment",
+      "Physical Therapy",
+      "Anatomy",
+      "Rehabilitation",
+      "Communication"
+    ],
+    "preferred_skills": [
+      "Sports Injury Management",
+      "Neurological Rehab",
+      "Orthopedics"
+    ],
+    "interest_keywords": [
+      "physiotherapy",
+      "rehabilitation",
+      "sports medicine",
+      "physical therapy",
+      "fitness"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Ayurvedic Practitioner",
+    "category": "Alternative Medicine",
+    "industry": "Healthcare",
+    "career_stage": "Growing",
+    "future_demand": "Medium",
+    "suitable_degrees": [
+      "BAMS",
+      "MD (Ayurveda)"
+    ],
+    "suitable_branches": [
+      "Ayurveda",
+      "Alternative Medicine"
+    ],
+    "required_skills": [
+      "Ayurvedic Diagnosis",
+      "Herbal Medicine",
+      "Patient Counseling",
+      "Panchakarma"
+    ],
+    "preferred_skills": [
+      "Yoga Therapy",
+      "Diet Planning",
+      "Wellness Consulting"
+    ],
+    "interest_keywords": [
+      "ayurveda",
+      "herbal medicine",
+      "holistic health",
+      "alternative medicine",
+      "wellness"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Research Scientist",
+    "category": "R&D",
+    "industry": "Science",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "M.Sc",
+      "Ph.D",
+      "B.Tech"
+    ],
+    "suitable_branches": [
+      "Physics",
+      "Chemistry",
+      "Biology",
+      "Biotechnology",
+      "Materials Science"
+    ],
+    "required_skills": [
+      "Research Methodology",
+      "Data Analysis",
+      "Experiment Design",
+      "Scientific Writing"
+    ],
+    "preferred_skills": [
+      "Grant Writing",
+      "Python",
+      "R",
+      "Lab Techniques"
+    ],
+    "interest_keywords": [
+      "research",
+      "science",
+      "laboratory",
+      "experiments",
+      "innovation",
+      "discovery"
+    ],
+    "suitable_years": "4"
+  },
+  {
+    "career_name": "Content Strategist",
+    "category": "Media",
+    "industry": "Arts and Humanities",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "BA",
+      "MA",
+      "BMM"
+    ],
+    "suitable_branches": [
+      "English",
+      "Journalism",
+      "Mass Communication",
+      "Literature"
+    ],
+    "required_skills": [
+      "Copywriting",
+      "Content Strategy",
+      "SEO",
+      "Editing",
+      "Communication"
+    ],
+    "preferred_skills": [
+      "Social Media Management",
+      "Analytics",
+      "CMS"
+    ],
+    "interest_keywords": [
+      "content",
+      "writing",
+      "blogging",
+      "media",
+      "storytelling",
+      "publishing"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Corporate Lawyer",
+    "category": "Legal",
+    "industry": "Legal Services",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "LLB",
+      "LLM",
+      "BA LLB",
+      "BBA LLB"
+    ],
+    "suitable_branches": [
+      "Law",
+      "Legal Studies"
+    ],
+    "required_skills": [
+      "Corporate Law",
+      "Contract Drafting",
+      "Legal Research",
+      "Negotiation",
+      "Compliance"
+    ],
+    "preferred_skills": [
+      "Mergers & Acquisitions",
+      "Intellectual Property",
+      "Litigation"
+    ],
+    "interest_keywords": [
+      "law",
+      "legal",
+      "corporate law",
+      "compliance",
+      "contracts",
+      "justice"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "UI/UX Designer",
+    "category": "Design",
+    "industry": "Technology",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Des",
+      "M.Des",
+      "B.Tech",
+      "BA"
+    ],
+    "suitable_branches": [
+      "Design",
+      "Computer Science",
+      "Arts",
+      "Humanities"
+    ],
+    "required_skills": [
+      "Figma",
+      "User Research",
+      "Wireframing",
+      "Prototyping",
+      "Visual Design"
+    ],
+    "preferred_skills": [
+      "Adobe XD",
+      "HTML/CSS",
+      "Interaction Design",
+      "Usability Testing"
+    ],
+    "interest_keywords": [
+      "ui",
+      "ux",
+      "design",
+      "user experience",
+      "user interface",
+      "graphics",
+      "figma"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Automotive Design Engineer",
+    "category": "Engineering",
+    "industry": "Automotive",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "M.Tech",
+      "Diploma"
+    ],
+    "suitable_branches": [
+      "Automobile Engineering",
+      "Mechanical Engineering"
+    ],
+    "required_skills": [
+      "AutoCAD",
+      "CATIA",
+      "Vehicle Dynamics",
+      "Thermodynamics"
+    ],
+    "preferred_skills": [
+      "ANSYS",
+      "SolidWorks",
+      "Electric Vehicles (EV)"
+    ],
+    "interest_keywords": [
+      "automobiles",
+      "cars",
+      "vehicle design",
+      "engines",
+      "ev"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Vehicle Testing Engineer",
+    "category": "Engineering",
+    "industry": "Automotive",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "Diploma"
+    ],
+    "suitable_branches": [
+      "Automobile Engineering",
+      "Mechanical Engineering"
+    ],
+    "required_skills": [
+      "Vehicle Testing",
+      "Data Acquisition",
+      "Quality Control",
+      "Sensors"
+    ],
+    "preferred_skills": [
+      "MATLAB",
+      "NVH Analysis",
+      "Crash Testing"
+    ],
+    "interest_keywords": [
+      "testing",
+      "cars",
+      "quality",
+      "performance tuning"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Process Control Engineer",
+    "category": "Engineering",
+    "industry": "Manufacturing",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "M.Tech"
+    ],
+    "suitable_branches": [
+      "Chemical Engineering",
+      "Instrumentation and Control Engineering"
+    ],
+    "required_skills": [
+      "Process Control",
+      "PLC",
+      "SCADA",
+      "Thermodynamics"
+    ],
+    "preferred_skills": [
+      "MATLAB",
+      "DCS",
+      "Automation"
+    ],
+    "interest_keywords": [
+      "process control",
+      "chemical plants",
+      "automation",
+      "manufacturing"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Construction Project Manager",
+    "category": "Management",
+    "industry": "Construction",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "MBA",
+      "M.Tech"
+    ],
+    "suitable_branches": [
+      "Civil Construction and Management",
+      "Civil Engineering"
+    ],
+    "required_skills": [
+      "Project Management",
+      "Site Supervision",
+      "Estimation",
+      "AutoCAD"
+    ],
+    "preferred_skills": [
+      "Primavera P6",
+      "MS Project",
+      "Risk Management"
+    ],
+    "interest_keywords": [
+      "construction",
+      "management",
+      "building",
+      "real estate",
+      "projects"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Computer Vision Engineer",
+    "category": "Artificial Intelligence",
+    "industry": "Technology",
+    "career_stage": "Growing",
+    "future_demand": "Very High",
+    "suitable_degrees": [
+      "B.Tech",
+      "M.Tech"
+    ],
+    "suitable_branches": [
+      "Artificial Intelligence and Machine Learning",
+      "Artificial Intelligence and Data Science",
+      "Computer Engineering"
+    ],
+    "required_skills": [
+      "Python",
+      "OpenCV",
+      "Deep Learning",
+      "PyTorch"
+    ],
+    "preferred_skills": [
+      "TensorFlow",
+      "C++",
+      "Image Processing"
+    ],
+    "interest_keywords": [
+      "computer vision",
+      "images",
+      "facial recognition",
+      "ai"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "NLP Engineer",
+    "category": "Artificial Intelligence",
+    "industry": "Technology",
+    "career_stage": "Growing",
+    "future_demand": "Very High",
+    "suitable_degrees": [
+      "B.Tech",
+      "M.Tech"
+    ],
+    "suitable_branches": [
+      "Artificial Intelligence and Machine Learning",
+      "Artificial Intelligence and Data Science",
+      "Computer Engineering"
+    ],
+    "required_skills": [
+      "Python",
+      "Natural Language Processing",
+      "Transformers",
+      "Machine Learning"
+    ],
+    "preferred_skills": [
+      "PyTorch",
+      "HuggingFace",
+      "LLMs"
+    ],
+    "interest_keywords": [
+      "nlp",
+      "text processing",
+      "chatbots",
+      "llm",
+      "ai"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "IoT System Architect",
+    "category": "Hardware & Software",
+    "industry": "Technology",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "M.Tech"
+    ],
+    "suitable_branches": [
+      "Electronics and Computer Engineering",
+      "Electronics and Telecommunication Engineering",
+      "Computer Engineering"
+    ],
+    "required_skills": [
+      "IoT Architecture",
+      "Networking",
+      "C++",
+      "Cloud Computing"
+    ],
+    "preferred_skills": [
+      "AWS IoT",
+      "Embedded Systems",
+      "MQTT"
+    ],
+    "interest_keywords": [
+      "iot",
+      "smart devices",
+      "architecture",
+      "hardware integration"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Power Electronics Engineer",
+    "category": "Electrical",
+    "industry": "Energy",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech",
+      "M.Tech"
+    ],
+    "suitable_branches": [
+      "Electrical, Electronics and Power Engineering",
+      "Power Systems and Power Electronics"
+    ],
+    "required_skills": [
+      "Power Electronics",
+      "Circuit Design",
+      "MATLAB",
+      "Simulink"
+    ],
+    "preferred_skills": [
+      "Renewable Energy",
+      "PCB Design",
+      "Inverters"
+    ],
+    "interest_keywords": [
+      "power electronics",
+      "energy",
+      "circuits",
+      "electrical",
+      "solar"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Smart Grid Engineer",
+    "category": "Electrical",
+    "industry": "Energy",
+    "career_stage": "Growing",
+    "future_demand": "Very High",
+    "suitable_degrees": [
+      "B.Tech",
+      "M.Tech"
+    ],
+    "suitable_branches": [
+      "Electrical, Electronics and Power Engineering",
+      "Power Systems and Power Electronics"
+    ],
+    "required_skills": [
+      "Smart Grids",
+      "Power Systems",
+      "IoT",
+      "Data Analysis"
+    ],
+    "preferred_skills": [
+      "SCADA",
+      "Renewable Integration",
+      "Python"
+    ],
+    "interest_keywords": [
+      "smart grid",
+      "power distribution",
+      "energy management",
+      "electrical"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Mechatronics Engineer",
+    "category": "Automation",
+    "industry": "Robotics & Manufacturing",
+    "career_stage": "Growing",
+    "future_demand": "Very High",
+    "suitable_degrees": [
+      "B.Tech",
+      "M.Tech"
+    ],
+    "suitable_branches": [
+      "Mechanical and Mechatronics Engineering",
+      "Robotics and Artificial Intelligence"
+    ],
+    "required_skills": [
+      "Robotics",
+      "Control Systems",
+      "C++",
+      "PLC",
+      "Sensors"
+    ],
+    "preferred_skills": [
+      "ROS",
+      "Python",
+      "Automation"
+    ],
+    "interest_keywords": [
+      "mechatronics",
+      "robotics",
+      "automation",
+      "hardware",
+      "machines"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Agronomist",
+    "category": "Agriculture",
+    "industry": "Farming & Agriculture",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Sc (Agri)",
+      "M.Sc (Agri)"
+    ],
+    "suitable_branches": [
+      "Agriculture",
+      "Agronomy"
+    ],
+    "required_skills": [
+      "Crop Management",
+      "Soil Science",
+      "Pest Control",
+      "Farming Techniques"
+    ],
+    "preferred_skills": [
+      "Precision Agriculture",
+      "Data Analysis",
+      "Sustainability"
+    ],
+    "interest_keywords": [
+      "farming",
+      "crops",
+      "soil",
+      "agriculture",
+      "plants"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Horticulturist",
+    "category": "Agriculture",
+    "industry": "Farming & Agriculture",
+    "career_stage": "Growing",
+    "future_demand": "Medium",
+    "suitable_degrees": [
+      "B.Sc",
+      "M.Sc"
+    ],
+    "suitable_branches": [
+      "Horticulture",
+      "Agriculture"
+    ],
+    "required_skills": [
+      "Plant Cultivation",
+      "Botany",
+      "Pest Management",
+      "Landscape Design"
+    ],
+    "preferred_skills": [
+      "Greenhouse Management",
+      "Genetics"
+    ],
+    "interest_keywords": [
+      "horticulture",
+      "gardening",
+      "fruits",
+      "vegetables",
+      "plants"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Agricultural Economist",
+    "category": "Agriculture",
+    "industry": "Economics & Research",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Sc",
+      "M.Sc",
+      "Ph.D"
+    ],
+    "suitable_branches": [
+      "Agricultural Economics",
+      "Agriculture"
+    ],
+    "required_skills": [
+      "Economic Analysis",
+      "Market Research",
+      "Statistics",
+      "Policy Analysis"
+    ],
+    "preferred_skills": [
+      "Data Modeling",
+      "R",
+      "Python"
+    ],
+    "interest_keywords": [
+      "economics",
+      "agriculture",
+      "markets",
+      "research",
+      "finance"
+    ],
+    "suitable_years": "4"
+  },
+  {
+    "career_name": "Entomologist",
+    "category": "Agriculture",
+    "industry": "Research",
+    "career_stage": "Growing",
+    "future_demand": "Medium",
+    "suitable_degrees": [
+      "B.Sc",
+      "M.Sc"
+    ],
+    "suitable_branches": [
+      "Agricultural Entomology"
+    ],
+    "required_skills": [
+      "Insect Biology",
+      "Pest Management",
+      "Research Methodology",
+      "Data Collection"
+    ],
+    "preferred_skills": [
+      "Biopesticides",
+      "Ecology"
+    ],
+    "interest_keywords": [
+      "insects",
+      "pests",
+      "biology",
+      "research",
+      "agriculture"
+    ],
+    "suitable_years": "4"
+  },
+  {
+    "career_name": "Plant Breeder and Geneticist",
+    "category": "Agriculture",
+    "industry": "Research",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Sc",
+      "M.Sc",
+      "Ph.D"
+    ],
+    "suitable_branches": [
+      "Genetics and Plant Breeding",
+      "Agricultural Botany"
+    ],
+    "required_skills": [
+      "Genetics",
+      "Plant Biology",
+      "Research Methodology",
+      "Data Analysis"
+    ],
+    "preferred_skills": [
+      "Molecular Biology",
+      "Biotechnology"
+    ],
+    "interest_keywords": [
+      "genetics",
+      "breeding",
+      "plants",
+      "botany",
+      "research",
+      "biotech"
+    ],
+    "suitable_years": "4"
+  },
+  {
+    "career_name": "Dairy Scientist",
+    "category": "Agriculture",
+    "industry": "Animal Husbandry",
+    "career_stage": "Growing",
+    "future_demand": "Medium",
+    "suitable_degrees": [
+      "B.Sc",
+      "M.Sc"
+    ],
+    "suitable_branches": [
+      "Animal Husbandry and Dairy Science"
+    ],
+    "required_skills": [
+      "Animal Nutrition",
+      "Dairy Processing",
+      "Quality Control",
+      "Veterinary Basics"
+    ],
+    "preferred_skills": [
+      "Farm Management",
+      "Microbiology"
+    ],
+    "interest_keywords": [
+      "dairy",
+      "animals",
+      "milk",
+      "husbandry",
+      "livestock"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Agricultural Engineer",
+    "category": "Engineering",
+    "industry": "Agriculture Equipment",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "B.Tech"
+    ],
+    "suitable_branches": [
+      "Agricultural Engineering"
+    ],
+    "required_skills": [
+      "Farm Machinery",
+      "Irrigation Systems",
+      "Soil Mechanics",
+      "AutoCAD"
+    ],
+    "preferred_skills": [
+      "Precision Farming",
+      "IoT",
+      "Renewable Energy"
+    ],
+    "interest_keywords": [
+      "tractors",
+      "farming equipment",
+      "irrigation",
+      "agriculture tech",
+      "engineering"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Ethical Hacker",
+    "category": "Security",
+    "industry": "Technology",
+    "career_stage": "Growing",
+    "future_demand": "Very High",
+    "suitable_degrees": [
+      "B.Tech",
+      "MCA",
+      "B.Sc"
+    ],
+    "suitable_branches": [
+      "Cyber Security",
+      "Computer Engineering"
+    ],
+    "required_skills": [
+      "Penetration Testing",
+      "Network Security",
+      "Linux",
+      "Cryptography"
+    ],
+    "preferred_skills": [
+      "Python",
+      "Burp Suite",
+      "OWASP",
+      "CEH Certification"
+    ],
+    "interest_keywords": [
+      "hacking",
+      "security",
+      "cyber",
+      "pentesting",
+      "infosec"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Security Architect",
+    "category": "Security",
+    "industry": "Technology",
+    "career_stage": "Growing",
+    "future_demand": "Very High",
+    "suitable_degrees": [
+      "B.Tech",
+      "M.Tech"
+    ],
+    "suitable_branches": [
+      "Cyber Security",
+      "Computer Engineering"
+    ],
+    "required_skills": [
+      "Security Architecture",
+      "Cloud Security",
+      "Risk Management",
+      "Cryptography"
+    ],
+    "preferred_skills": [
+      "CISSP",
+      "AWS Security",
+      "Zero Trust"
+    ],
+    "interest_keywords": [
+      "security",
+      "architecture",
+      "cybersecurity",
+      "systems",
+      "cloud"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Database Administrator",
+    "category": "Software Engineering",
+    "industry": "Technology",
+    "career_stage": "Growing",
+    "future_demand": "Medium",
+    "suitable_degrees": [
+      "BCA",
+      "MCA",
+      "B.Tech"
+    ],
+    "suitable_branches": [
+      "Bachelor of Computer Applications (BCA)",
+      "Master of Computer Applications (MCA)",
+      "Computer Engineering"
+    ],
+    "required_skills": [
+      "SQL",
+      "Database Design",
+      "Backup & Recovery",
+      "Linux"
+    ],
+    "preferred_skills": [
+      "Oracle",
+      "PostgreSQL",
+      "NoSQL",
+      "Cloud Databases"
+    ],
+    "interest_keywords": [
+      "databases",
+      "sql",
+      "data management",
+      "administration",
+      "dba"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Human Resources Manager",
+    "category": "Management",
+    "industry": "Business",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "BBA",
+      "MBA"
+    ],
+    "suitable_branches": [
+      "Bachelor of Business Administration (BBA)",
+      "Master of Business Administration (MBA)",
+      "Basic Science and Humanities"
+    ],
+    "required_skills": [
+      "Talent Acquisition",
+      "Employee Relations",
+      "Communication",
+      "HR Policies"
+    ],
+    "preferred_skills": [
+      "HRIS",
+      "Performance Management",
+      "Payroll"
+    ],
+    "interest_keywords": [
+      "hr",
+      "human resources",
+      "recruiting",
+      "people management",
+      "business"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Supply Chain Manager",
+    "category": "Management",
+    "industry": "Business & Logistics",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "BBA",
+      "MBA"
+    ],
+    "suitable_branches": [
+      "Bachelor of Business Administration (BBA)",
+      "Master of Business Administration (MBA)"
+    ],
+    "required_skills": [
+      "Logistics",
+      "Inventory Management",
+      "Negotiation",
+      "Operations"
+    ],
+    "preferred_skills": [
+      "SAP",
+      "ERP",
+      "Data Analysis"
+    ],
+    "interest_keywords": [
+      "supply chain",
+      "logistics",
+      "operations",
+      "inventory",
+      "management"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Investment Banker",
+    "category": "Finance",
+    "industry": "Finance",
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "suitable_degrees": [
+      "MBA"
+    ],
+    "suitable_branches": [
+      "Master of Business Administration (MBA)"
+    ],
+    "required_skills": [
+      "Financial Modeling",
+      "Valuation",
+      "Mergers & Acquisitions",
+      "Excel"
+    ],
+    "preferred_skills": [
+      "Bloomberg Terminal",
+      "CFA",
+      "Corporate Finance"
+    ],
+    "interest_keywords": [
+      "finance",
+      "banking",
+      "investments",
+      "stocks",
+      "wall street",
+      "m&a"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Bridge Engineer",
+    "category": "Engineering",
+    "industry": "Construction",
+    "career_stage": "Growing",
+    "future_demand": "Medium",
+    "suitable_degrees": [
+      "B.Tech",
+      "M.Tech"
+    ],
+    "suitable_branches": [
+      "Structural Engineering",
+      "Civil Engineering"
+    ],
+    "required_skills": [
+      "Structural Analysis",
+      "Concrete Design",
+      "Steel Design",
+      "STAAD Pro"
+    ],
+    "preferred_skills": [
+      "Bridge Design Codes",
+      "AutoCAD",
+      "Seismic Design"
+    ],
+    "interest_keywords": [
+      "bridges",
+      "structures",
+      "civil engineering",
+      "design",
+      "construction"
+    ],
+    "suitable_years": "3,4"
+  },
+  {
+    "career_name": "Data Analyst",
+    "category": "Data Science",
+    "industry": "Business & Tech",
+    "career_stage": "Growing",
+    "future_demand": "Very High",
+    "suitable_degrees": [
+      "B.Sc",
+      "B.Tech",
+      "BBA"
+    ],
+    "suitable_branches": [
+      "Basic Science and Humanities",
+      "Computer Engineering",
+      "Bachelor of Business Administration (BBA)",
+      "Bachelor of Computer Applications (BCA)"
+    ],
+    "required_skills": [
+      "Excel",
+      "SQL",
+      "Data Visualization",
+      "Statistics"
+    ],
+    "preferred_skills": [
+      "Tableau",
+      "PowerBI",
+      "Python",
+      "R"
+    ],
+    "interest_keywords": [
+      "data analysis",
+      "analytics",
+      "statistics",
+      "business intelligence",
+      "dashboards"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "React Developer",
+    "category": "Software Engineering",
+    "industry": "Technology",
+    "suitable_branches": [
+      "Computer Engineering",
+      "Computer Science"
+    ],
+    "required_skills": [
+      "React",
+      "JavaScript",
+      "HTML",
+      "CSS"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "react",
+      "javascript",
+      "html",
+      "css"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Node.js Developer",
+    "category": "Software Engineering",
+    "industry": "Technology",
+    "suitable_branches": [
+      "Computer Engineering",
+      "Computer Science"
+    ],
+    "required_skills": [
+      "Node.js",
+      "JavaScript",
+      "Express",
+      "REST APIs"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "node.js",
+      "javascript",
+      "express",
+      "rest apis"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Angular Developer",
+    "category": "Software Engineering",
+    "industry": "Technology",
+    "suitable_branches": [
+      "Computer Engineering",
+      "Computer Science"
+    ],
+    "required_skills": [
+      "Angular",
+      "TypeScript",
+      "HTML",
+      "CSS"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "angular",
+      "typescript",
+      "html",
+      "css"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Vue.js Developer",
+    "category": "Software Engineering",
+    "industry": "Technology",
+    "suitable_branches": [
+      "Computer Engineering",
+      "Computer Science"
+    ],
+    "required_skills": [
+      "Vue.js",
+      "JavaScript",
+      "HTML",
+      "CSS"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "vue.js",
+      "javascript",
+      "html",
+      "css"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Golang Developer",
+    "category": "Software Engineering",
+    "industry": "Technology",
+    "suitable_branches": [
+      "Computer Engineering",
+      "Computer Science"
+    ],
+    "required_skills": [
+      "Go",
+      "Microservices",
+      "Docker",
+      "SQL"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "go",
+      "microservices",
+      "docker",
+      "sql"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Rust Developer",
+    "category": "Software Engineering",
+    "industry": "Technology",
+    "suitable_branches": [
+      "Computer Engineering",
+      "Computer Science"
+    ],
+    "required_skills": [
+      "Rust",
+      "Systems Programming",
+      "Concurrency",
+      "C++"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "rust",
+      "systems programming",
+      "concurrency",
+      "c++"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Java Backend Engineer",
+    "category": "Software Engineering",
+    "industry": "Technology",
+    "suitable_branches": [
+      "Computer Engineering",
+      "Computer Science"
+    ],
+    "required_skills": [
+      "Java",
+      "Spring Boot",
+      "Microservices",
+      "Hibernate"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "java",
+      "spring boot",
+      "microservices",
+      "hibernate"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "C++ Systems Engineer",
+    "category": "Software Engineering",
+    "industry": "Technology",
+    "suitable_branches": [
+      "Computer Engineering",
+      "Electronics and Computer Engineering"
+    ],
+    "required_skills": [
+      "C++",
+      "Linux",
+      "Multithreading",
+      "Data Structures"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "c++",
+      "linux",
+      "multithreading",
+      "data structures"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Data Engineer",
+    "category": "Data Science",
+    "industry": "Technology",
+    "suitable_branches": [
+      "Computer Engineering",
+      "Artificial Intelligence and Data Science"
+    ],
+    "required_skills": [
+      "SQL",
+      "Python",
+      "ETL",
+      "Spark"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "sql",
+      "python",
+      "etl",
+      "spark"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Big Data Engineer",
+    "category": "Data Science",
+    "industry": "Technology",
+    "suitable_branches": [
+      "Computer Engineering",
+      "Artificial Intelligence and Data Science"
+    ],
+    "required_skills": [
+      "Hadoop",
+      "Spark",
+      "Kafka",
+      "Java"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "hadoop",
+      "spark",
+      "kafka",
+      "java"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Data Architect",
+    "category": "Data Science",
+    "industry": "Technology",
+    "suitable_branches": [
+      "Computer Engineering",
+      "IT"
+    ],
+    "required_skills": [
+      "Data Modeling",
+      "SQL",
+      "Cloud Databases",
+      "Data Warehousing"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "data modeling",
+      "sql",
+      "cloud databases",
+      "data warehousing"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "MLOps Engineer",
+    "category": "Artificial Intelligence",
+    "industry": "Technology",
+    "suitable_branches": [
+      "Artificial Intelligence and Machine Learning",
+      "Computer Engineering"
+    ],
+    "required_skills": [
+      "Python",
+      "Docker",
+      "Kubernetes",
+      "Machine Learning"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "python",
+      "docker",
+      "kubernetes",
+      "machine learning"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "AI Prompt Engineer",
+    "category": "Artificial Intelligence",
+    "industry": "Technology",
+    "suitable_branches": [
+      "Artificial Intelligence and Machine Learning",
+      "Basic Science and Humanities"
+    ],
+    "required_skills": [
+      "Prompt Engineering",
+      "LLMs",
+      "Python",
+      "Creative Writing"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "prompt engineering",
+      "llms",
+      "python",
+      "creative writing"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Site Reliability Engineer (SRE)",
+    "category": "Infrastructure",
+    "industry": "Technology",
+    "suitable_branches": [
+      "Computer Engineering",
+      "IT"
+    ],
+    "required_skills": [
+      "Linux",
+      "Python",
+      "Monitoring",
+      "Kubernetes"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "linux",
+      "python",
+      "monitoring",
+      "kubernetes"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Application Security Engineer",
+    "category": "Security",
+    "industry": "Technology",
+    "suitable_branches": [
+      "Cyber Security",
+      "Computer Engineering"
+    ],
+    "required_skills": [
+      "AppSec",
+      "OWASP",
+      "Code Review",
+      "Python"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "appsec",
+      "owasp",
+      "code review",
+      "python"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Cloud Security Engineer",
+    "category": "Security",
+    "industry": "Technology",
+    "suitable_branches": [
+      "Cyber Security",
+      "Computer Engineering"
+    ],
+    "required_skills": [
+      "AWS Security",
+      "IAM",
+      "Network Security",
+      "Linux"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "aws security",
+      "iam",
+      "network security",
+      "linux"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Penetration Tester",
+    "category": "Security",
+    "industry": "Technology",
+    "suitable_branches": [
+      "Cyber Security",
+      "Computer Engineering"
+    ],
+    "required_skills": [
+      "Penetration Testing",
+      "Kali Linux",
+      "Burp Suite",
+      "Networking"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "penetration testing",
+      "kali linux",
+      "burp suite",
+      "networking"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Incident Responder",
+    "category": "Security",
+    "industry": "Technology",
+    "suitable_branches": [
+      "Cyber Security"
+    ],
+    "required_skills": [
+      "Incident Response",
+      "Digital Forensics",
+      "SIEM",
+      "Networking"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "incident response",
+      "digital forensics",
+      "siem",
+      "networking"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Network Administrator",
+    "category": "Infrastructure",
+    "industry": "Technology",
+    "suitable_branches": [
+      "Computer Engineering",
+      "Electronics and Telecommunication Engineering"
+    ],
+    "required_skills": [
+      "Networking",
+      "Cisco",
+      "Routing",
+      "Switching"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "networking",
+      "cisco",
+      "routing",
+      "switching"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Systems Administrator",
+    "category": "Infrastructure",
+    "industry": "Technology",
+    "suitable_branches": [
+      "Computer Engineering",
+      "IT"
+    ],
+    "required_skills": [
+      "Linux",
+      "Windows Server",
+      "Active Directory",
+      "Bash"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "linux",
+      "windows server",
+      "active directory",
+      "bash"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Embedded Linux Engineer",
+    "category": "Hardware & Software",
+    "industry": "Technology",
+    "suitable_branches": [
+      "Electronics and Computer Engineering",
+      "Computer Engineering"
+    ],
+    "required_skills": [
+      "Embedded Linux",
+      "C",
+      "Device Drivers",
+      "Yocto"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "embedded linux",
+      "c",
+      "device drivers",
+      "yocto"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Web3 Smart Contract Auditor",
+    "category": "Web3",
+    "industry": "Technology",
+    "suitable_branches": [
+      "Computer Engineering",
+      "Cyber Security"
+    ],
+    "required_skills": [
+      "Solidity",
+      "Smart Contracts",
+      "Security Auditing",
+      "Blockchain"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "solidity",
+      "smart contracts",
+      "security auditing",
+      "blockchain"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "DeFi Developer",
+    "category": "Web3",
+    "industry": "Finance",
+    "suitable_branches": [
+      "Computer Engineering"
+    ],
+    "required_skills": [
+      "Solidity",
+      "DeFi Protocols",
+      "Web3.js",
+      "Finance"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "solidity",
+      "defi protocols",
+      "web3.js",
+      "finance"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "3D Graphics Programmer",
+    "category": "Gaming",
+    "industry": "Technology",
+    "suitable_branches": [
+      "Computer Engineering"
+    ],
+    "required_skills": [
+      "C++",
+      "OpenGL",
+      "DirectX",
+      "Mathematics"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "c++",
+      "opengl",
+      "directx",
+      "mathematics"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "AR/VR Developer",
+    "category": "Gaming",
+    "industry": "Technology",
+    "suitable_branches": [
+      "Computer Engineering",
+      "Robotics and Artificial Intelligence"
+    ],
+    "required_skills": [
+      "Unity",
+      "C#",
+      "ARKit",
+      "VR Design"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "unity",
+      "c#",
+      "arkit",
+      "vr design"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Technical Program Manager",
+    "category": "Management",
+    "industry": "Technology",
+    "suitable_branches": [
+      "Computer Engineering",
+      "MBA"
+    ],
+    "required_skills": [
+      "Agile",
+      "Project Management",
+      "Jira",
+      "Communication"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "agile",
+      "project management",
+      "jira",
+      "communication"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Scrum Master",
+    "category": "Management",
+    "industry": "Technology",
+    "suitable_branches": [
+      "Computer Engineering",
+      "BBA"
+    ],
+    "required_skills": [
+      "Scrum",
+      "Agile",
+      "Facilitation",
+      "Jira"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "scrum",
+      "agile",
+      "facilitation",
+      "jira"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Product Manager",
+    "category": "Management",
+    "industry": "Technology",
+    "suitable_branches": [
+      "Computer Engineering",
+      "MBA"
+    ],
+    "required_skills": [
+      "Product Strategy",
+      "Market Research",
+      "Agile",
+      "User Experience"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "product strategy",
+      "market research",
+      "agile",
+      "user experience"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "FEA Engineer (Finite Element Analysis)",
+    "category": "Engineering",
+    "industry": "Manufacturing",
+    "suitable_branches": [
+      "Mechanical Engineering",
+      "Automobile Engineering",
+      "Design Engineering"
+    ],
+    "required_skills": [
+      "ANSYS",
+      "Abaqus",
+      "FEA",
+      "Mechanics of Materials"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "ansys",
+      "abaqus",
+      "fea",
+      "mechanics of materials"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "CAD Designer",
+    "category": "Engineering",
+    "industry": "Manufacturing",
+    "suitable_branches": [
+      "Mechanical Engineering",
+      "Design Engineering"
+    ],
+    "required_skills": [
+      "AutoCAD",
+      "SolidWorks",
+      "CATIA",
+      "Engineering Drawing"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "autocad",
+      "solidworks",
+      "catia",
+      "engineering drawing"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "CAM Engineer",
+    "category": "Engineering",
+    "industry": "Manufacturing",
+    "suitable_branches": [
+      "Mechanical Engineering"
+    ],
+    "required_skills": [
+      "CAM",
+      "CNC Programming",
+      "Mastercam",
+      "Machining"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "cam",
+      "cnc programming",
+      "mastercam",
+      "machining"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Maintenance Engineer",
+    "category": "Engineering",
+    "industry": "Manufacturing",
+    "suitable_branches": [
+      "Mechanical Engineering",
+      "Electrical Engineering"
+    ],
+    "required_skills": [
+      "Preventive Maintenance",
+      "Troubleshooting",
+      "Machinery",
+      "Safety"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "preventive maintenance",
+      "troubleshooting",
+      "machinery",
+      "safety"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Quality Assurance Engineer (Mechanical)",
+    "category": "Engineering",
+    "industry": "Manufacturing",
+    "suitable_branches": [
+      "Mechanical Engineering"
+    ],
+    "required_skills": [
+      "Quality Control",
+      "Six Sigma",
+      "Inspection",
+      "ISO Standards"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "quality control",
+      "six sigma",
+      "inspection",
+      "iso standards"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Supply Chain Engineer",
+    "category": "Engineering",
+    "industry": "Logistics",
+    "suitable_branches": [
+      "Mechanical Engineering",
+      "Industrial Engineering"
+    ],
+    "required_skills": [
+      "Supply Chain Management",
+      "Logistics",
+      "Optimization",
+      "ERP"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "supply chain management",
+      "logistics",
+      "optimization",
+      "erp"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Manufacturing Engineer",
+    "category": "Engineering",
+    "industry": "Manufacturing",
+    "suitable_branches": [
+      "Mechanical Engineering",
+      "Production Engineering"
+    ],
+    "required_skills": [
+      "Lean Manufacturing",
+      "Process Optimization",
+      "AutoCAD",
+      "Production Planning"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "lean manufacturing",
+      "process optimization",
+      "autocad",
+      "production planning"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Production Engineer",
+    "category": "Engineering",
+    "industry": "Manufacturing",
+    "suitable_branches": [
+      "Mechanical Engineering",
+      "Production Engineering"
+    ],
+    "required_skills": [
+      "Production Planning",
+      "Resource Allocation",
+      "Quality Control",
+      "Shop Floor Management"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "production planning",
+      "resource allocation",
+      "quality control",
+      "shop floor management"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Lean Engineer",
+    "category": "Engineering",
+    "industry": "Manufacturing",
+    "suitable_branches": [
+      "Mechanical Engineering"
+    ],
+    "required_skills": [
+      "Lean Six Sigma",
+      "Process Improvement",
+      "Kaizen",
+      "Value Stream Mapping"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "lean six sigma",
+      "process improvement",
+      "kaizen",
+      "value stream mapping"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Battery Systems Engineer",
+    "category": "Engineering",
+    "industry": "Automotive",
+    "suitable_branches": [
+      "Automobile Engineering",
+      "Electrical Engineering"
+    ],
+    "required_skills": [
+      "Battery Management Systems",
+      "Li-ion Batteries",
+      "MATLAB",
+      "Thermodynamics"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "battery management systems",
+      "li-ion batteries",
+      "matlab",
+      "thermodynamics"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "EV Charging Infrastructure Engineer",
+    "category": "Engineering",
+    "industry": "Energy",
+    "suitable_branches": [
+      "Electrical Engineering",
+      "Automobile Engineering"
+    ],
+    "required_skills": [
+      "Power Electronics",
+      "Electrical Design",
+      "Project Management",
+      "AutoCAD"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "power electronics",
+      "electrical design",
+      "project management",
+      "autocad"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Drones/UAV Engineer",
+    "category": "Engineering",
+    "industry": "Aviation",
+    "suitable_branches": [
+      "Aeronautical Engineering",
+      "Robotics and Artificial Intelligence",
+      "Electronics and Telecommunication Engineering"
+    ],
+    "required_skills": [
+      "Aerodynamics",
+      "Flight Controllers",
+      "C++",
+      "Sensors"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "aerodynamics",
+      "flight controllers",
+      "c++",
+      "sensors"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Propulsion Engineer",
+    "category": "Engineering",
+    "industry": "Aerospace",
+    "suitable_branches": [
+      "Aeronautical Engineering",
+      "Mechanical Engineering"
+    ],
+    "required_skills": [
+      "Thermodynamics",
+      "Fluid Mechanics",
+      "Propulsion Systems",
+      "ANSYS"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "thermodynamics",
+      "fluid mechanics",
+      "propulsion systems",
+      "ansys"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Geotechnical Engineer",
+    "category": "Engineering",
+    "industry": "Construction",
+    "suitable_branches": [
+      "Civil Engineering"
+    ],
+    "required_skills": [
+      "Soil Mechanics",
+      "Foundation Design",
+      "Geology",
+      "AutoCAD"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "soil mechanics",
+      "foundation design",
+      "geology",
+      "autocad"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Transportation Engineer",
+    "category": "Engineering",
+    "industry": "Construction",
+    "suitable_branches": [
+      "Civil Engineering"
+    ],
+    "required_skills": [
+      "Traffic Analysis",
+      "Highway Design",
+      "AutoCAD Civil 3D",
+      "Urban Planning"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "traffic analysis",
+      "highway design",
+      "autocad civil 3d",
+      "urban planning"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Highway Engineer",
+    "category": "Engineering",
+    "industry": "Construction",
+    "suitable_branches": [
+      "Civil Engineering"
+    ],
+    "required_skills": [
+      "Highway Design",
+      "Pavement Design",
+      "AutoCAD Civil 3D",
+      "Surveying"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "highway design",
+      "pavement design",
+      "autocad civil 3d",
+      "surveying"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Water Resources Engineer",
+    "category": "Engineering",
+    "industry": "Environmental",
+    "suitable_branches": [
+      "Civil Engineering"
+    ],
+    "required_skills": [
+      "Hydrology",
+      "Hydraulics",
+      "Water Treatment",
+      "AutoCAD"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "hydrology",
+      "hydraulics",
+      "water treatment",
+      "autocad"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Environmental Engineer",
+    "category": "Engineering",
+    "industry": "Environmental",
+    "suitable_branches": [
+      "Civil Engineering",
+      "Chemical Engineering"
+    ],
+    "required_skills": [
+      "Environmental Impact Assessment",
+      "Waste Management",
+      "Water Treatment",
+      "Sustainability"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "environmental impact assessment",
+      "waste management",
+      "water treatment",
+      "sustainability"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Land Surveyor",
+    "category": "Engineering",
+    "industry": "Construction",
+    "suitable_branches": [
+      "Civil Engineering"
+    ],
+    "required_skills": [
+      "Topographic Surveying",
+      "Total Station",
+      "GPS",
+      "AutoCAD"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "topographic surveying",
+      "total station",
+      "gps",
+      "autocad"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Construction Estimator",
+    "category": "Engineering",
+    "industry": "Construction",
+    "suitable_branches": [
+      "Civil Construction and Management",
+      "Civil Engineering"
+    ],
+    "required_skills": [
+      "Cost Estimation",
+      "Quantity Surveying",
+      "Excel",
+      "Bluebeam"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "cost estimation",
+      "quantity surveying",
+      "excel",
+      "bluebeam"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "BIM Modeler",
+    "category": "Engineering",
+    "industry": "Construction",
+    "suitable_branches": [
+      "Civil Engineering",
+      "Design Engineering"
+    ],
+    "required_skills": [
+      "Revit",
+      "BIM",
+      "Navisworks",
+      "AutoCAD"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "revit",
+      "bim",
+      "navisworks",
+      "autocad"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Construction Health & Safety Officer",
+    "category": "Management",
+    "industry": "Construction",
+    "suitable_branches": [
+      "Civil Construction and Management"
+    ],
+    "required_skills": [
+      "OSHA",
+      "Safety Inspections",
+      "Risk Assessment",
+      "First Aid"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "osha",
+      "safety inspections",
+      "risk assessment",
+      "first aid"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Contract Manager",
+    "category": "Management",
+    "industry": "Construction",
+    "suitable_branches": [
+      "Civil Construction and Management",
+      "MBA"
+    ],
+    "required_skills": [
+      "Contract Negotiation",
+      "Legal Compliance",
+      "Project Management",
+      "Procurement"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "contract negotiation",
+      "legal compliance",
+      "project management",
+      "procurement"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "PCB Designer",
+    "category": "Hardware Engineering",
+    "industry": "Electronics",
+    "suitable_branches": [
+      "Electronics and Telecommunication Engineering",
+      "Electrical, Electronics and Power Engineering"
+    ],
+    "required_skills": [
+      "Altium Designer",
+      "Eagle",
+      "Circuit Design",
+      "PCB Layout"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "altium designer",
+      "eagle",
+      "circuit design",
+      "pcb layout"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "ASIC Design Engineer",
+    "category": "Hardware Engineering",
+    "industry": "Semiconductor",
+    "suitable_branches": [
+      "Electronics and Telecommunication Engineering"
+    ],
+    "required_skills": [
+      "Verilog",
+      "SystemVerilog",
+      "ASIC Design Flow",
+      "CMOS"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "verilog",
+      "systemverilog",
+      "asic design flow",
+      "cmos"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "FPGA Engineer",
+    "category": "Hardware Engineering",
+    "industry": "Semiconductor",
+    "suitable_branches": [
+      "Electronics and Telecommunication Engineering"
+    ],
+    "required_skills": [
+      "VHDL",
+      "Verilog",
+      "FPGA Programming",
+      "Xilinx"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "vhdl",
+      "verilog",
+      "fpga programming",
+      "xilinx"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "RF Engineer",
+    "category": "Engineering",
+    "industry": "Telecommunications",
+    "suitable_branches": [
+      "Electronics and Telecommunication Engineering"
+    ],
+    "required_skills": [
+      "RF Design",
+      "Antenna Design",
+      "Electromagnetics",
+      "MATLAB"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "rf design",
+      "antenna design",
+      "electromagnetics",
+      "matlab"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Signal Processing Engineer",
+    "category": "Engineering",
+    "industry": "Telecommunications",
+    "suitable_branches": [
+      "Electronics and Telecommunication Engineering"
+    ],
+    "required_skills": [
+      "Digital Signal Processing",
+      "MATLAB",
+      "Python",
+      "Mathematics"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "digital signal processing",
+      "matlab",
+      "python",
+      "mathematics"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Electronics Test Engineer",
+    "category": "Engineering",
+    "industry": "Electronics",
+    "suitable_branches": [
+      "Electronics and Telecommunication Engineering"
+    ],
+    "required_skills": [
+      "Testing",
+      "Oscilloscopes",
+      "Multimeters",
+      "Python"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "testing",
+      "oscilloscopes",
+      "multimeters",
+      "python"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "SCADA System Engineer",
+    "category": "Engineering",
+    "industry": "Automation",
+    "suitable_branches": [
+      "Instrumentation and Control Engineering",
+      "Electrical, Electronics and Power Engineering"
+    ],
+    "required_skills": [
+      "SCADA",
+      "PLC",
+      "HMI",
+      "Industrial Networking"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "scada",
+      "plc",
+      "hmi",
+      "industrial networking"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Instrumentation Engineer",
+    "category": "Engineering",
+    "industry": "Manufacturing",
+    "suitable_branches": [
+      "Instrumentation and Control Engineering"
+    ],
+    "required_skills": [
+      "Sensors",
+      "Calibration",
+      "Control Systems",
+      "PLC"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "sensors",
+      "calibration",
+      "control systems",
+      "plc"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Motor Design Engineer",
+    "category": "Engineering",
+    "industry": "Automotive",
+    "suitable_branches": [
+      "Electrical, Electronics and Power Engineering",
+      "Automobile Engineering"
+    ],
+    "required_skills": [
+      "Electric Machines",
+      "Electromagnetics",
+      "ANSYS Maxwell",
+      "MATLAB"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "electric machines",
+      "electromagnetics",
+      "ansys maxwell",
+      "matlab"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "High Voltage Engineer",
+    "category": "Engineering",
+    "industry": "Energy",
+    "suitable_branches": [
+      "Power Systems and Power Electronics",
+      "Electrical, Electronics and Power Engineering"
+    ],
+    "required_skills": [
+      "High Voltage Systems",
+      "Switchgear",
+      "Power Transmission",
+      "Insulation"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "high voltage systems",
+      "switchgear",
+      "power transmission",
+      "insulation"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Precision Agriculture Specialist",
+    "category": "Agriculture",
+    "industry": "Farming Tech",
+    "suitable_branches": [
+      "Agricultural Engineering",
+      "Agriculture"
+    ],
+    "required_skills": [
+      "GIS",
+      "Drones",
+      "Data Analysis",
+      "Agronomy"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "gis",
+      "drones",
+      "data analysis",
+      "agronomy"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Agricultural Data Analyst",
+    "category": "Data Science",
+    "industry": "Agriculture",
+    "suitable_branches": [
+      "Agricultural Economics",
+      "Artificial Intelligence and Data Science"
+    ],
+    "required_skills": [
+      "Data Analysis",
+      "Excel",
+      "Python",
+      "Statistics"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "data analysis",
+      "excel",
+      "python",
+      "statistics"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Irrigation Engineer",
+    "category": "Engineering",
+    "industry": "Agriculture",
+    "suitable_branches": [
+      "Agricultural Engineering",
+      "Civil Engineering"
+    ],
+    "required_skills": [
+      "Hydraulics",
+      "Irrigation Systems",
+      "AutoCAD",
+      "Water Management"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "hydraulics",
+      "irrigation systems",
+      "autocad",
+      "water management"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Post-Harvest Technologist",
+    "category": "Agriculture",
+    "industry": "Food Processing",
+    "suitable_branches": [
+      "Food Technology",
+      "Agriculture"
+    ],
+    "required_skills": [
+      "Food Preservation",
+      "Quality Control",
+      "Packaging",
+      "Supply Chain"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "food preservation",
+      "quality control",
+      "packaging",
+      "supply chain"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Food Packaging Engineer",
+    "category": "Engineering",
+    "industry": "FMCG",
+    "suitable_branches": [
+      "Food Technology",
+      "Mechanical Engineering"
+    ],
+    "required_skills": [
+      "Packaging Design",
+      "Materials Science",
+      "AutoCAD",
+      "Sustainability"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "packaging design",
+      "materials science",
+      "autocad",
+      "sustainability"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Sensory Evaluator",
+    "category": "Food Science",
+    "industry": "FMCG",
+    "suitable_branches": [
+      "Food Technology"
+    ],
+    "required_skills": [
+      "Sensory Analysis",
+      "Quality Control",
+      "Statistics",
+      "Food Science"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "sensory analysis",
+      "quality control",
+      "statistics",
+      "food science"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Flavor Chemist",
+    "category": "Science",
+    "industry": "FMCG",
+    "suitable_branches": [
+      "Food Technology",
+      "Chemical Engineering"
+    ],
+    "required_skills": [
+      "Chemistry",
+      "Formulation",
+      "Analytical Chemistry",
+      "Food Science"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "chemistry",
+      "formulation",
+      "analytical chemistry",
+      "food science"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Bioinformatics Scientist",
+    "category": "Science",
+    "industry": "Healthcare & Research",
+    "suitable_branches": [
+      "Basic Science and Humanities",
+      "Artificial Intelligence and Data Science"
+    ],
+    "required_skills": [
+      "Bioinformatics",
+      "Python",
+      "Genomics",
+      "R"
+    ],
+    "career_stage": "Growing",
+    "future_demand": "High",
+    "interest_keywords": [
+      "bioinformatics",
+      "python",
+      "genomics",
+      "r"
+    ],
+    "suitable_years": "2,3,4"
+  },
+  {
+    "career_name": "Agricultural Engineering",
+    "aliases": [
+      "Agricultural Engineer",
+      "Agri Engineering"
+    ],
+    "guidance": "Design and development of farm machinery, irrigation systems, soil conservation equipment, and precision agricultural technologies."
+  },
+  {
+    "career_name": "Agricultural Economics",
+    "aliases": [
+      "Agricultural Economist",
+      "Agri Business Analyst"
+    ],
+    "guidance": "Analysis of agricultural markets, farm finance, crop insurance, supply chain economics, and agribusiness policy."
+  }
+]

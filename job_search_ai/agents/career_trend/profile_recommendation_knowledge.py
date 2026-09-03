@@ -32,47 +32,52 @@ REC_COLLECTION_SUFFIX = "_profile_rec_knowledge"
 # ──────────────────────────────────────────────────────────────────────────────
 _DOMAIN_MAP: dict[str, str] = {
     # Technology
-    "computer": "technology",
-    "cs": "technology",
+    "computer science": "technology",
+    "computer engineering": "technology",
+    "computer applications": "technology",
     "cse": "technology",
-    "software": "technology",
+    "software engineering": "technology",
+    "software development": "technology",
     "information technology": "technology",
-    "it": "technology",
     "data science": "technology",
     "artificial intelligence": "technology",
     "cybersecurity": "technology",
     "networking": "technology",
-    "cloud": "technology",
+    "cloud computing": "technology",
     "devops": "technology",
-    "web": "technology",
+    "web development": "technology",
     "mca": "technology",
+    "b.tech": "technology",
+    "btech": "technology",
+    "m.tech": "technology",
+    "b.e": "technology",
     # Engineering (non-CS)
-    "mechanical": "engineering",
-    "civil": "engineering",
-    "electrical": "engineering",
-    "electronics": "engineering",
-    "chemical": "engineering",
-    "aerospace": "engineering",
-    "industrial": "engineering",
-    "production": "engineering",
+    "mechanical engineering": "engineering",
+    "civil engineering": "engineering",
+    "electrical engineering": "engineering",
+    "electronics engineering": "engineering",
+    "chemical engineering": "engineering",
+    "aerospace engineering": "engineering",
+    "industrial engineering": "engineering",
+    "production engineering": "engineering",
     "mechatronics": "engineering",
     "robotics": "engineering",
-    "embedded": "engineering",
+    "embedded systems": "engineering",
     # Business / Commerce
-    "business": "business",
-    "management": "business",
+    "business administration": "business",
+    "business management": "business",
     "bba": "business",
     "mba": "business",
     "commerce": "business",
-    "marketing": "business",
-    "finance": "business",
+    "marketing management": "business",
+    "finance management": "business",
     "accounting": "business",
     "economics": "business",
     "entrepreneurship": "business",
-    "operations": "business",
-    "supply chain": "business",
+    "operations management": "business",
+    "supply chain management": "business",
     "human resources": "business",
-    "sales": "business",
+    "sales management": "business",
     "banking": "business",
     # Science (non-engineering)
     "biology": "science",
@@ -86,22 +91,47 @@ _DOMAIN_MAP: dict[str, str] = {
     "agriculture": "science",
     "food technology": "science",
     "pharmacy": "science",
-    "environmental": "science",
-    # Healthcare
+    "b.pharm": "science",
+    "m.pharm": "science",
+    "pharmacognosy": "science",
+    "environmental science": "science",
+    "b.pham": "science",
+    "b.pharma": "science",
+    # Healthcare / Medical / Allied Health
     "nursing": "healthcare",
-    "medical": "healthcare",
     "mbbs": "healthcare",
     "bsc nursing": "healthcare",
     "clinical": "healthcare",
     "healthcare": "healthcare",
+    "bhms": "healthcare",
+    "bams": "healthcare",
+    "bds": "healthcare",
+    "bpth": "healthcare",
+    "b.p.th": "healthcare",
+    "physiotherapy": "healthcare",
+    "occupational therapy": "healthcare",
+    "homeopathy": "healthcare",
+    "homoeopathy": "healthcare",
+    "homoeopathic": "healthcare",
+    "homeopathic": "healthcare",
+    "ayurveda": "healthcare",
+    "ayurvedic": "healthcare",
+    "dental surgery": "healthcare",
+    "naturopathy": "healthcare",
+    "unani": "healthcare",
+    "siddha": "healthcare",
+    "materia medica": "healthcare",
+    "paediatrics": "healthcare",
+    "gynaecology": "healthcare",
+    "radiology": "healthcare",
+    "pathology": "healthcare",
+    "ophthalmology": "healthcare",
     # Arts / Humanities / Social Sciences
     "psychology": "humanities",
     "sociology": "humanities",
     "political science": "humanities",
-    "economics": "humanities",
-    "arts": "humanities",
     "humanities": "humanities",
-    "english": "humanities",
+    "english literature": "humanities",
     "literature": "humanities",
     "philosophy": "humanities",
     "history": "humanities",
@@ -112,13 +142,13 @@ _DOMAIN_MAP: dict[str, str] = {
     "design": "creative",
     "graphic design": "creative",
     "animation": "creative",
-    "fashion": "creative",
+    "fashion design": "creative",
     "fine arts": "creative",
     "interaction design": "creative",
     "b.des": "creative",
     # Legal
     "law": "legal",
-    "legal": "legal",
+    "legal studies": "legal",
     "llb": "legal",
     # Education
     "education": "education",
@@ -127,12 +157,11 @@ _DOMAIN_MAP: dict[str, str] = {
 }
 
 # Families that can share recommendations with each other
-# (cross-family compatibility, e.g. business ↔ economics minor overlaps)
 _COMPATIBLE_FAMILIES: dict[str, set[str]] = {
     "technology":  {"technology"},
     "engineering": {"engineering", "technology"},   # Tech cross-over is fine
     "business":    {"business"},
-    "science":     {"science"},
+    "science":     {"science", "healthcare"},        # Biomedical / pharma overlap
     "healthcare":  {"healthcare", "science"},        # Medical + biotech overlap
     "humanities":  {"humanities"},
     "creative":    {"creative"},
@@ -141,15 +170,43 @@ _COMPATIBLE_FAMILIES: dict[str, set[str]] = {
 }
 
 
+import re as _re
+
 def _classify_domain(branch: str, degree: str) -> str:
-    """Return the academic domain family for a (branch, degree) pair."""
+    """
+    Return the academic domain family for a (branch, degree) pair.
+
+    Uses whole-word / whole-token matching to prevent short keywords like
+    'cs', 'it', 'ba', 'ma' from matching inside longer words
+    (e.g. 'cs' inside 'homoeopathics', 'it' inside 'Quality').
+    Longer keyword matches always win over shorter ones.
+    """
     combined = (branch + " " + degree).lower().strip()
-    # Longest-match wins
-    best = ("unknown", 0)
+
+    # Tokenise: keep alphanumeric runs and dots (for abbreviations like b.tech)
+    tokens = set(_re.findall(r'[a-z][a-z0-9.]*', combined))
+
+    best_family  = "unknown"
+    best_len     = 0
+
     for keyword, family in _DOMAIN_MAP.items():
-        if keyword in combined and len(keyword) > best[1]:
-            best = (family, len(keyword))
-    return best[0]
+        kw = keyword.lower().strip()
+        kw_len = len(kw)
+
+        # Multi-word keywords: check as a substring of the full combined text
+        # but ONLY after verifying the keyword starts/ends on a word boundary.
+        if " " in kw:
+            pattern = r'\b' + _re.escape(kw) + r'\b'
+            if _re.search(pattern, combined) and kw_len > best_len:
+                best_family = family
+                best_len    = kw_len
+        else:
+            # Single-word / abbreviation: must appear as a complete token
+            if kw in tokens and kw_len > best_len:
+                best_family = family
+                best_len    = kw_len
+
+    return best_family
 
 
 def _domains_compatible(student_domain: str, cached_domain: str) -> bool:
@@ -266,10 +323,19 @@ class ProfileRecommendationKnowledge:
         from job_search_ai.services.knowledge.constants import MIN_FINAL_SCORE
         min_conf = int(MIN_FINAL_SCORE * 100)
 
+        if isinstance(response, list):
+            rec_paths = response
+        elif hasattr(response, "recommended_paths"):
+            rec_paths = getattr(response, "recommended_paths", []) or []
+        elif isinstance(response, dict):
+            rec_paths = response.get("recommended_paths", []) or []
+        else:
+            rec_paths = []
+
         career_paths_payload = [
-            {"career": r.career, "historical_score": round(r.confidence / 100.0, 4)}
-            for r in response.recommended_paths
-            if r.career and r.confidence >= min_conf
+            {"career": getattr(r, "career", r.get("career") if isinstance(r, dict) else None), "historical_score": round(getattr(r, "confidence", r.get("confidence", 0) if isinstance(r, dict) else 0) / 100.0, 4)}
+            for r in rec_paths
+            if getattr(r, "career", r.get("career") if isinstance(r, dict) else None) and getattr(r, "confidence", r.get("confidence", 0) if isinstance(r, dict) else 0) >= min_conf
         ]
         if not career_paths_payload:
             logger.warning("ProfileRecommendationKnowledge: no valid career paths to store")
@@ -345,4 +411,10 @@ def _jaccard(a: set, b: set) -> float:
         return 1.0
     if not a or not b:
         return 0.0
-    return len(a & b) / max(len(a), len(b))
+    matches = 0
+    for item_a in a:
+        for item_b in b:
+            if item_a in item_b or item_b in item_a:
+                matches += 1
+                break
+    return matches / max(len(a), len(b))

@@ -25,11 +25,8 @@ class LLMService:
             self.base_url = settings.ollama_endpoint
             self.model_name = settings.default_llm_model
 
-    def generate_skills(self, role: str, seniority: str | None = None, feedback: str | None = None) -> dict:
-        """Returns a dict containing all 8 new skill profile fields."""
-        
-        # Load guidance skills from Career Knowledge database
-        guidance_skills = []
+    def _fetch_guidance_skills(self, role: str) -> list[str]:
+        """Fetch Career Knowledge skills from DB once — shared by generate_skills and _build_prompt."""
         try:
             from job_search_ai.agents.skill_agent.doctype_writer import _resolve_job_profile
             ck_name = _resolve_job_profile(role)
@@ -39,10 +36,15 @@ class LLMService:
                     (ck_name,),
                     as_dict=True
                 )
-                guidance_skills = [s["skill_name"] for s in skills_list if s.get("skill_name")]
+                return [s["skill_name"] for s in skills_list if s.get("skill_name")]
         except Exception as e:
-            logger.warning("LLMService: Failed to fetch guidance skills: %s", e)
+            logger.warning("LLMService: Failed to fetch guidance skills for %r: %s", role, e)
+        return []
 
+    def generate_skills(self, role: str, seniority: str | None = None, feedback: str | None = None) -> dict:
+        """Returns a dict containing all 8 new skill profile fields."""
+        # Fetch guidance skills ONCE and reuse in prompt building — avoids the duplicate DB query
+        guidance_skills = self._fetch_guidance_skills(role)
         prompt = self._build_prompt(role, seniority, feedback, guidance_skills)
 
         last_exc: Exception | None = None
@@ -56,19 +58,9 @@ class LLMService:
         raise LLMServiceError(f"Skill generation failed after retries: {last_exc}") from last_exc
 
     def _build_prompt(self, role, seniority, feedback=None, guidance_skills=None):
+        # guidance_skills are passed in from generate_skills() — no DB query needed here
         if not guidance_skills:
-            try:
-                from job_search_ai.agents.skill_agent.doctype_writer import _resolve_job_profile
-                ck_name = _resolve_job_profile(role)
-                if ck_name:
-                    skills_list = frappe.db.sql(
-                        "SELECT skill_name FROM `tabCareer Knowledge Skill` WHERE parent = %s",
-                        (ck_name,),
-                        as_dict=True
-                    )
-                    guidance_skills = [s["skill_name"] for s in skills_list if s.get("skill_name")]
-            except Exception as e:
-                logger.warning("LLMService: failed to query Career Knowledge skills for %r: %s", role, e)
+            guidance_skills = []
 
         career_knowledge_section = ""
         if guidance_skills:
@@ -209,10 +201,7 @@ class LLMService:
         - json_only
 
         TARGET COUNTS:
-        - foundation_skills: 3 to 6 skills (strings)
-        - core_domain_skills: 4 to 8 skills (strings)
-        - industry_skills: 2 to 5 skills (strings)
-        - emerging_skills: 0 to 3 skills (strings)
+        - Output the complete, natural set of skills essential for this career path. Small or niche roles may have fewer skills, while broad or complex roles may have many skills. Do not artificially pad or artificially limit the skill lists.
 
         EXAMPLE:
         {few_shot_example}
@@ -254,15 +243,25 @@ class LLMService:
         compressed_prompt = prompt
 
         if self.provider == "omniroute":
+            api_key = None
+            if frappe.local and getattr(frappe.local, "initialised", False):
+                api_key = frappe.conf.get("omniroute_api_key")
+            
+            headers = {"Content-Type": "application/json"}
+            if api_key:
+                headers["Authorization"] = f"Bearer {api_key}"
+
             resp = requests.post(
                 f"{self.base_url.rstrip('/')}/chat/completions",
+                headers=headers,
                 json={
                     "model": self.model_name,
                     "messages": compressed_messages,
                     "temperature": 0.2,
+                    "max_tokens": 1500,
                     "stream": False,
                 },
-                timeout=self.timeout,
+                timeout=120,
             )
             resp.raise_for_status()
             data = resp.json()
@@ -275,9 +274,10 @@ class LLMService:
                     "model": self.model_name,
                     "prompt": compressed_prompt,
                     "stream": False,
-                    "options": {"temperature": 0.2},
+                    "keep_alive": "24h",
+                    "options": {"temperature": 0.1, "num_predict": 500},
                 },
-                timeout=self.timeout,
+                timeout=180,
             )
             resp.raise_for_status()
             data = resp.json()
