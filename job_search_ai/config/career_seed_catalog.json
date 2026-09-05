@@ -4209,5 +4209,772 @@
       "Agri Business Analyst"
     ],
     "guidance": "Analysis of agricultural markets, farm finance, crop insurance, supply chain economics, and agribusiness policy."
+  },
+  {
+    "career_name": "MERN Stack Developer",
+    "aliases": [
+      "MongoDB Express React Node Developer",
+      "MERN Developer"
+    ],
+    "guidance": "Full stack JavaScript developer specializing in MongoDB, Express.js, React, and Node.js ecosystem for building modern web applications."
+  },
+  {
+    "career_name": "MEAN Stack Developer",
+    "aliases": [
+      "MongoDB Express Angular Node Developer",
+      "MEAN Developer"
+    ],
+    "guidance": "Full stack JavaScript developer using MongoDB, Express.js, Angular, and Node.js for enterprise web applications."
+  },
+  {
+    "career_name": ".NET Developer",
+    "aliases": [
+      "C# Developer",
+      "ASP.NET Developer",
+      "Dotnet Developer"
+    ],
+    "guidance": "Backend and full stack developer using Microsoft .NET ecosystem including ASP.NET Core, C#, Entity Framework, and Azure for enterprise software."
+  },
+  {
+    "career_name": "Flutter Developer",
+    "aliases": [
+      "Flutter App Developer",
+      "Dart Developer",
+      "Flutter Mobile Developer"
+    ],
+    "guidance": "Cross-platform mobile and web application developer using Google Flutter framework and Dart programming language."
+  },
+  {
+    "career_name": "Kotlin Developer",
+    "aliases": [
+      "Kotlin Android Developer",
+      "Kotlin Backend Developer"
+    ],
+    "guidance": "Developer using Kotlin for Android app development, server-side Kotlin (Ktor), and multiplatform projects."
+  },
+  {
+    "career_name": "SwiftUI Developer",
+    "aliases": [
+      "Swift Developer",
+      "iOS SwiftUI Developer",
+      "Apple Platform Developer"
+    ],
+    "guidance": "Native Apple platform developer using Swift and SwiftUI for iPhone, iPad, macOS, and watchOS application development."
+  },
+  {
+    "career_name": "TypeScript Developer",
+    "aliases": [
+      "TypeScript Engineer",
+      "TS Developer"
+    ],
+    "guidance": "Strongly-typed JavaScript developer specializing in TypeScript for large-scale frontend and backend applications with enhanced code safety."
+  },
+  {
+    "career_name": "GraphQL Developer",
+    "aliases": [
+      "GraphQL API Developer",
+      "GraphQL Engineer"
+    ],
+    "guidance": "API developer specializing in designing and building GraphQL schemas, resolvers, and federated microservices APIs."
+  },
+  {
+    "career_name": "Microservices Architect",
+    "aliases": [
+      "Microservices Engineer",
+      "Distributed Systems Architect"
+    ],
+    "guidance": "Software architect specializing in designing and implementing microservices-based systems, event-driven architecture, API gateways, and service meshes."
+  },
+  {
+    "career_name": "Platform Engineer",
+    "aliases": [
+      "Internal Developer Platform Engineer",
+      "Developer Experience Engineer",
+      "IDP Engineer"
+    ],
+    "guidance": "Engineer building internal developer platforms, toolchains, CI/CD pipelines, and developer experience tooling to accelerate product engineering teams."
+  },
+  {
+    "career_name": "LLM Engineer",
+    "aliases": [
+      "Large Language Model Engineer",
+      "Generative AI Engineer",
+      "Foundation Model Engineer"
+    ],
+    "guidance": "Engineer specializing in fine-tuning, deploying, and building applications on top of large language models including RAG pipelines, vector databases, and agentic workflows."
+  },
+  {
+    "career_name": "AI Agent Developer",
+    "aliases": [
+      "Agentic AI Developer",
+      "AI Automation Engineer",
+      "LangChain Developer"
+    ],
+    "guidance": "Developer building autonomous AI agents using frameworks like LangChain, CrewAI, AutoGen and integrating multi-step LLM reasoning pipelines into enterprise systems."
+  },
+  {
+    "career_name": "RAG Pipeline Engineer",
+    "aliases": [
+      "Retrieval Augmented Generation Engineer",
+      "Vector Search Engineer"
+    ],
+    "guidance": "Specialist in building retrieval-augmented generation systems combining vector databases, embedding models, and LLM inference for knowledge-grounded AI applications."
+  },
+  {
+    "career_name": "Kubernetes Engineer",
+    "aliases": [
+      "K8s Engineer",
+      "Container Orchestration Engineer"
+    ],
+    "guidance": "Infrastructure engineer specializing in container orchestration with Kubernetes, Helm charts, service mesh (Istio), and cloud-native deployments."
+  },
+  {
+    "career_name": "SDET (Software Development Engineer in Test)",
+    "aliases": [
+      "SDET",
+      "Test Automation Engineer",
+      "Quality Engineering Developer"
+    ],
+    "guidance": "Hybrid developer-tester writing automated test frameworks, performance tests, and CI-integrated test pipelines using tools like Selenium, Cypress, Playwright, k6."
+  },
+  {
+    "career_name": "Unity Game Developer",
+    "aliases": [
+      "Unity Developer",
+      "Game Engineer (Unity)",
+      "Unity 3D Developer"
+    ],
+    "guidance": "Game developer building 2D/3D games, simulations, and interactive experiences using the Unity engine with C# scripting."
+  },
+  {
+    "career_name": "Unreal Engine Developer",
+    "aliases": [
+      "Unreal Developer",
+      "UE5 Developer",
+      "AAA Game Developer"
+    ],
+    "guidance": "Game developer creating high-fidelity AAA games, virtual production environments, and metaverse experiences using Unreal Engine and C++/Blueprints."
+  },
+  {
+    "career_name": "WebGL Developer",
+    "aliases": [
+      "Three.js Developer",
+      "WebGPU Developer",
+      "3D Web Developer"
+    ],
+    "guidance": "Frontend developer specializing in GPU-accelerated 3D graphics rendering in the browser using WebGL, Three.js, WebGPU, and Babylon.js."
+  },
+  {
+    "career_name": "Electron.js Developer",
+    "aliases": [
+      "Desktop App Developer",
+      "Electron Developer",
+      "Cross-Platform Desktop Developer"
+    ],
+    "guidance": "Developer building cross-platform desktop applications using Electron.js, combining web technologies with native OS APIs."
+  },
+  {
+    "career_name": "Salesforce Developer",
+    "aliases": [
+      "Salesforce CRM Developer",
+      "SFDC Developer",
+      "Apex Developer"
+    ],
+    "guidance": "CRM developer building custom solutions on the Salesforce platform using Apex, Lightning Web Components, Visualforce, and Salesforce integrations."
+  },
+  {
+    "career_name": "SAP Developer",
+    "aliases": [
+      "SAP ABAP Developer",
+      "SAP S4HANA Developer",
+      "SAP ERP Developer"
+    ],
+    "guidance": "Enterprise developer working with SAP ERP systems including ABAP programming, SAP S/4HANA, SAP BTP, and business process customization."
+  },
+  {
+    "career_name": "WordPress Developer",
+    "aliases": [
+      "WordPress Plugin Developer",
+      "WooCommerce Developer",
+      "CMS Developer"
+    ],
+    "guidance": "Web developer specializing in WordPress theme and plugin development, WooCommerce e-commerce, and headless WordPress with REST API/GraphQL."
+  },
+  {
+    "career_name": "Low Code / No Code Developer",
+    "aliases": [
+      "Power Platform Developer",
+      "Bubble Developer",
+      "OutSystems Developer",
+      "No Code Engineer"
+    ],
+    "guidance": "Developer building enterprise applications using low-code/no-code platforms like Microsoft Power Platform, OutSystems, Mendix, Appian, and Bubble."
+  },
+  {
+    "career_name": "Technical Writer",
+    "aliases": [
+      "API Documentation Engineer",
+      "Developer Relations Writer"
+    ],
+    "guidance": "Technology communicator creating developer documentation, API references, user guides, tutorials, and SDK documentation for software products."
+  },
+  {
+    "career_name": "Solution Architect",
+    "aliases": [
+      "Enterprise Solution Architect",
+      "Software Solution Architect"
+    ],
+    "guidance": "Senior architect designing end-to-end technology solutions for complex business problems, defining system architecture, integration patterns, and technology stacks."
+  },
+  {
+    "career_name": "API Developer",
+    "aliases": [
+      "API Engineer",
+      "REST API Developer",
+      "Backend API Specialist"
+    ],
+    "guidance": "Backend developer specializing in designing, building, and documenting RESTful and GraphQL APIs with best practices in versioning, authentication, and rate limiting."
+  },
+  {
+    "career_name": "PHP Developer",
+    "aliases": [
+      "Laravel Developer",
+      "PHP Backend Developer",
+      "Symfony Developer"
+    ],
+    "guidance": "Server-side web developer using PHP and frameworks like Laravel and Symfony for dynamic web applications and CMS platforms."
+  },
+  {
+    "career_name": "Ruby on Rails Developer",
+    "aliases": [
+      "Rails Developer",
+      "Ruby Developer"
+    ],
+    "guidance": "Full stack developer using Ruby on Rails framework for rapid web application development with convention-over-configuration architecture."
+  },
+  {
+    "career_name": "Django Developer",
+    "aliases": [
+      "Python Django Developer",
+      "Django Backend Developer"
+    ],
+    "guidance": "Python web developer specializing in Django framework for building scalable web applications, REST APIs, and admin dashboards."
+  },
+  {
+    "career_name": "Data Warehouse Engineer",
+    "aliases": [
+      "DWH Engineer",
+      "Business Intelligence Engineer",
+      "BI Engineer"
+    ],
+    "guidance": "Data engineer specializing in designing and building data warehouses, data marts, ETL pipelines, and business intelligence reporting systems."
+  },
+  {
+    "career_name": "Prompt Engineer",
+    "aliases": [
+      "LLM Prompt Specialist",
+      "AI Prompt Designer"
+    ],
+    "guidance": "Specialist designing and optimizing prompts for large language models to maximize output quality, reliability, and task completion across diverse AI applications."
+  },
+  {
+    "career_name": "Scrum Master / Agile Coach",
+    "aliases": [
+      "Agile Coach",
+      "Scrum Facilitator",
+      "Agile Transformation Lead"
+    ],
+    "guidance": "Agile practitioner facilitating scrum ceremonies, coaching engineering teams on agile methodologies, removing impediments, and driving continuous improvement."
+  },
+  {
+    "career_name": "Growth Hacker",
+    "aliases": [
+      "Growth Engineer",
+      "Growth Marketing Analyst",
+      "Product Growth Specialist"
+    ],
+    "guidance": "Data-driven marketer and product specialist focused on rapid user acquisition, retention optimization, funnel analysis, and viral growth experiments."
+  },
+  {
+    "career_name": "SEO Specialist",
+    "aliases": [
+      "Search Engine Optimization Expert",
+      "Technical SEO Engineer"
+    ],
+    "guidance": "Digital marketing specialist optimizing web content and site structure for search engine rankings including technical SEO, on-page optimization, and link building."
+  },
+  {
+    "career_name": "Solar Energy Engineer",
+    "aliases": [
+      "PV Systems Engineer",
+      "Solar PV Engineer",
+      "Renewable Energy Engineer"
+    ],
+    "guidance": "Engineer designing, installing, and optimizing solar photovoltaic systems, energy storage, and grid-tied solar power plants."
+  },
+  {
+    "career_name": "Wind Energy Engineer",
+    "aliases": [
+      "Wind Turbine Engineer",
+      "Offshore Wind Engineer",
+      "Wind Farm Engineer"
+    ],
+    "guidance": "Renewable energy engineer specializing in wind turbine design, wind farm layout optimization, and offshore/onshore wind energy project management."
+  },
+  {
+    "career_name": "PLC Engineer",
+    "aliases": [
+      "PLC Programmer",
+      "Programmable Logic Controller Engineer",
+      "Industrial Control Engineer"
+    ],
+    "guidance": "Industrial automation engineer programming PLCs (Siemens, Allen Bradley, Schneider) for manufacturing, process control, and factory automation systems."
+  },
+  {
+    "career_name": "DCS Engineer",
+    "aliases": [
+      "Distributed Control System Engineer",
+      "Process Automation Engineer"
+    ],
+    "guidance": "Process automation engineer designing and commissioning Distributed Control Systems for oil & gas, chemical, and power generation industries."
+  },
+  {
+    "career_name": "Protection Engineer",
+    "aliases": [
+      "Electrical Protection Engineer",
+      "Relay Protection Engineer"
+    ],
+    "guidance": "Power systems engineer specializing in electrical protection schemes, relay coordination, fault analysis, and substation protection system design."
+  },
+  {
+    "career_name": "Substation Engineer",
+    "aliases": [
+      "EHV Substation Engineer",
+      "Grid Substation Engineer"
+    ],
+    "guidance": "Electrical engineer designing and commissioning high-voltage substations including transformer sizing, busbar design, switchgear, and protection coordination."
+  },
+  {
+    "career_name": "Industrial Automation Engineer",
+    "aliases": [
+      "Factory Automation Engineer",
+      "Automation Controls Engineer",
+      "Industry 4.0 Engineer"
+    ],
+    "guidance": "Engineer implementing industrial automation systems using PLCs, SCADA, robots, and vision systems in manufacturing, automotive, and process industries."
+  },
+  {
+    "career_name": "Drives Engineer",
+    "aliases": [
+      "VFD Engineer",
+      "Variable Frequency Drive Engineer",
+      "Motor Drives Specialist"
+    ],
+    "guidance": "Electrical engineer specializing in AC/DC motor drives, variable frequency drives (VFDs), servo systems, and drive applications in industrial plants."
+  },
+  {
+    "career_name": "Cable Design Engineer",
+    "aliases": [
+      "Power Cable Engineer",
+      "HV Cable Engineer",
+      "Cable Systems Engineer"
+    ],
+    "guidance": "Electrical engineer designing high-voltage and low-voltage power cable systems, cable sizing, routing, and underground/overhead transmission line design."
+  },
+  {
+    "career_name": "Battery Management System (BMS) Engineer",
+    "aliases": [
+      "BMS Engineer",
+      "Energy Storage Engineer",
+      "Battery Pack Engineer"
+    ],
+    "guidance": "Engineer designing battery management systems for EVs and energy storage, including cell balancing, SoC estimation, thermal management, and safety algorithms."
+  },
+  {
+    "career_name": "Welding Engineer",
+    "aliases": [
+      "Welding Technology Engineer",
+      "Fabrication Engineer"
+    ],
+    "guidance": "Manufacturing engineer specializing in welding processes (MIG, TIG, Laser), welding procedure qualification, weld inspection, and structural fabrication."
+  },
+  {
+    "career_name": "NDT Engineer",
+    "aliases": [
+      "Non-Destructive Testing Engineer",
+      "NDT Inspector",
+      "Quality NDT Specialist"
+    ],
+    "guidance": "Quality assurance engineer using non-destructive testing methods (UT, RT, MT, PT, ET) to inspect materials and welds without causing damage."
+  },
+  {
+    "career_name": "Tool Design Engineer",
+    "aliases": [
+      "Tooling Engineer",
+      "Jig and Fixture Designer"
+    ],
+    "guidance": "Mechanical engineer designing cutting tools, jigs, fixtures, dies, and molds for precision manufacturing and mass production tooling."
+  },
+  {
+    "career_name": "Mould Design Engineer",
+    "aliases": [
+      "Injection Mould Designer",
+      "Plastics Mould Engineer",
+      "Die Design Engineer"
+    ],
+    "guidance": "Engineer designing injection moulds, compression moulds, and dies for plastic and metal parts using CAD tools like SolidWorks and Moldflow simulation."
+  },
+  {
+    "career_name": "CFD Engineer",
+    "aliases": [
+      "Computational Fluid Dynamics Engineer",
+      "Fluid Simulation Engineer"
+    ],
+    "guidance": "Simulation engineer using computational fluid dynamics software (ANSYS Fluent, OpenFOAM) to analyze fluid flow, heat transfer, and aerodynamics."
+  },
+  {
+    "career_name": "CNC Programmer",
+    "aliases": [
+      "CNC Machinist Programmer",
+      "G-Code Programmer",
+      "CAM Programmer"
+    ],
+    "guidance": "Manufacturing technologist programming CNC machines using CAM software (Mastercam, CATIA NC) for precision machining of metal and composite components."
+  },
+  {
+    "career_name": "Reliability Engineer",
+    "aliases": [
+      "Plant Reliability Engineer",
+      "Maintenance Reliability Engineer"
+    ],
+    "guidance": "Engineer applying reliability-centered maintenance (RCM), failure mode analysis (FMEA), and root cause analysis (RCA) to maximize plant equipment availability."
+  },
+  {
+    "career_name": "Materials Engineer",
+    "aliases": [
+      "Materials Scientist",
+      "Metallurgical Engineer",
+      "Composites Engineer"
+    ],
+    "guidance": "Engineer selecting, testing, and developing engineering materials (metals, polymers, composites, ceramics) for structural, thermal, and functional applications."
+  },
+  {
+    "career_name": "Hydraulics Engineer",
+    "aliases": [
+      "Fluid Power Engineer",
+      "Hydraulic Systems Engineer"
+    ],
+    "guidance": "Mechanical engineer designing hydraulic systems including cylinders, pumps, valves, and hydraulic circuits for heavy machinery, aerospace, and industrial equipment."
+  },
+  {
+    "career_name": "Simulation Engineer",
+    "aliases": [
+      "CAE Engineer",
+      "FEA Simulation Specialist",
+      "Virtual Testing Engineer"
+    ],
+    "guidance": "Engineer using computer-aided engineering (CAE) tools for structural, thermal, crash, and dynamic simulations to virtually validate product designs before prototyping."
+  },
+  {
+    "career_name": "Project Engineer (Mechanical)",
+    "aliases": [
+      "Project Engineer",
+      "Technical Project Manager (Mechanical)"
+    ],
+    "guidance": "Mechanical engineer managing technical project delivery including scope, procurement, vendor management, inspection, and commissioning of plant or equipment projects."
+  },
+  {
+    "career_name": "EPC Engineer",
+    "aliases": [
+      "Engineering Procurement Construction Engineer",
+      "Plant Engineer"
+    ],
+    "guidance": "Engineer working in EPC (Engineering, Procurement, and Construction) firms managing complete project lifecycle from design through commissioning in oil, gas, or power sectors."
+  },
+  {
+    "career_name": "Quantity Surveyor",
+    "aliases": [
+      "QS Engineer",
+      "Cost Estimator (Civil)",
+      "Bill of Quantities Engineer"
+    ],
+    "guidance": "Construction cost professional managing project finances, preparing bills of quantities, cost estimates, variation orders, and final account settlements."
+  },
+  {
+    "career_name": "MEP Engineer",
+    "aliases": [
+      "Mechanical Electrical Plumbing Engineer",
+      "Building Services Engineer"
+    ],
+    "guidance": "Building services engineer designing and coordinating mechanical, electrical, and plumbing (MEP) systems in commercial, residential, and infrastructure projects."
+  },
+  {
+    "career_name": "Tunnel Engineer",
+    "aliases": [
+      "Underground Works Engineer",
+      "Tunneling Specialist"
+    ],
+    "guidance": "Civil engineer specializing in underground tunnel design, boring machine selection, geotechnical investigation, and tunnel lining system design."
+  },
+  {
+    "career_name": "Coastal & Hydraulic Engineer",
+    "aliases": [
+      "Coastal Engineer",
+      "Hydraulic Engineer",
+      "Port Engineer"
+    ],
+    "guidance": "Civil engineer specializing in coastal protection, harbour design, flood management, river engineering, and hydraulic modeling using software like MIKE and HEC-RAS."
+  },
+  {
+    "career_name": "Fire Safety Engineer",
+    "aliases": [
+      "Fire Protection Engineer",
+      "Fire & Life Safety Engineer"
+    ],
+    "guidance": "Specialist engineer designing fire detection, suppression, evacuation, and life safety systems for buildings in compliance with NFPA, NBC, and IS fire codes."
+  },
+  {
+    "career_name": "Green Building Consultant",
+    "aliases": [
+      "LEED Consultant",
+      "Sustainable Buildings Engineer",
+      "GRIHA Consultant"
+    ],
+    "guidance": "Sustainability consultant helping design and certify energy-efficient buildings under green rating systems like LEED, GRIHA, and IGBC."
+  },
+  {
+    "career_name": "Foundation Engineer",
+    "aliases": [
+      "Deep Foundation Engineer",
+      "Pile Foundation Specialist"
+    ],
+    "guidance": "Geotechnical engineer specializing in foundation design including shallow foundations, deep piles, caissons, ground improvement, and retaining structures."
+  },
+  {
+    "career_name": "Seismic Engineer",
+    "aliases": [
+      "Earthquake Engineer",
+      "Seismic Design Specialist"
+    ],
+    "guidance": "Structural engineer specializing in earthquake-resistant design, seismic hazard assessment, base isolation systems, and retrofitting of existing structures."
+  },
+  {
+    "career_name": "Soil Scientist",
+    "aliases": [
+      "Pedologist",
+      "Soil Health Specialist",
+      "Land Resource Scientist"
+    ],
+    "guidance": "Scientist studying soil composition, fertility, classification, and land use management for sustainable agricultural production and environmental conservation."
+  },
+  {
+    "career_name": "Farm Manager",
+    "aliases": [
+      "Agricultural Farm Manager",
+      "Estate Manager",
+      "Agri Operations Manager"
+    ],
+    "guidance": "Professional managing all aspects of farm operations including crop planning, resource allocation, labor management, harvest scheduling, and farm profitability."
+  },
+  {
+    "career_name": "Crop Protection Specialist",
+    "aliases": [
+      "Pesticide Specialist",
+      "Integrated Pest Management Specialist",
+      "Plant Protection Specialist"
+    ],
+    "guidance": "Agronomist specializing in pest, disease, and weed management strategies using integrated pest management (IPM), biocontrol, and chemical control methods."
+  },
+  {
+    "career_name": "Seed Technologist",
+    "aliases": [
+      "Seed Scientist",
+      "Seed Production Specialist"
+    ],
+    "guidance": "Agricultural scientist specializing in seed quality testing, seed treatment, hybrid seed production, seed certification, and seed storage technology."
+  },
+  {
+    "career_name": "Aquaculture Specialist",
+    "aliases": [
+      "Fish Farmer",
+      "Aquaculture Technologist",
+      "Marine Aquaculture Engineer"
+    ],
+    "guidance": "Specialist in fish, shrimp, and marine organism farming including pond management, water quality, disease control, feeding, and sustainable aquaculture practices."
+  },
+  {
+    "career_name": "Organic Farming Consultant",
+    "aliases": [
+      "Organic Agriculture Specialist",
+      "Sustainable Farming Advisor"
+    ],
+    "guidance": "Consultant advising farmers on certified organic production methods, soil health, natural pest management, composting, and organic certification compliance."
+  },
+  {
+    "career_name": "Agri Supply Chain Manager",
+    "aliases": [
+      "Agricultural Logistics Manager",
+      "Farm-to-Fork Supply Chain Specialist"
+    ],
+    "guidance": "Supply chain professional managing procurement, storage, processing, and distribution of agricultural commodities from farm gate to retail or export markets."
+  },
+  {
+    "career_name": "Remote Sensing Analyst",
+    "aliases": [
+      "GIS Analyst",
+      "Satellite Imagery Analyst",
+      "Geospatial Data Analyst"
+    ],
+    "guidance": "Specialist using satellite imagery, drone data, GIS, and remote sensing tools for crop monitoring, land use mapping, yield estimation, and environmental assessment."
+  },
+  {
+    "career_name": "Operations Manager",
+    "aliases": [
+      "Business Operations Manager",
+      "COO",
+      "Process Operations Manager"
+    ],
+    "guidance": "Senior professional overseeing day-to-day business operations including process optimization, resource management, vendor relations, and operational KPI delivery."
+  },
+  {
+    "career_name": "Project Manager",
+    "aliases": [
+      "PMP Certified Project Manager",
+      "Technical Project Manager",
+      "IT Project Manager"
+    ],
+    "guidance": "Certified project manager (PMP/PRINCE2) overseeing end-to-end project delivery, stakeholder management, risk mitigation, budget control, and timeline adherence."
+  },
+  {
+    "career_name": "Risk Analyst",
+    "aliases": [
+      "Financial Risk Analyst",
+      "Credit Risk Analyst",
+      "Operational Risk Analyst"
+    ],
+    "guidance": "Financial professional identifying, quantifying, and mitigating risks including credit risk, market risk, operational risk, and regulatory compliance risks."
+  },
+  {
+    "career_name": "Tax Consultant",
+    "aliases": [
+      "Taxation Specialist",
+      "Direct Tax Consultant",
+      "GST Consultant",
+      "CA Tax Advisor"
+    ],
+    "guidance": "Finance professional specializing in tax planning, compliance, GST filing, income tax advisory, transfer pricing, and tax litigation support."
+  },
+  {
+    "career_name": "Chartered Accountant",
+    "aliases": [
+      "CA",
+      "CPA",
+      "Certified Accountant"
+    ],
+    "guidance": "Certified accounting professional handling statutory audits, financial reporting, tax compliance, management accounting, and financial advisory services."
+  },
+  {
+    "career_name": "E-commerce Manager",
+    "aliases": [
+      "Online Retail Manager",
+      "E-commerce Operations Head",
+      "Marketplace Manager"
+    ],
+    "guidance": "Professional managing end-to-end e-commerce operations including platform management (Amazon, Flipkart, Shopify), product listings, pricing, and customer experience."
+  },
+  {
+    "career_name": "Brand Manager",
+    "aliases": [
+      "Brand Strategist",
+      "Product Brand Manager",
+      "Marketing Brand Executive"
+    ],
+    "guidance": "Marketing professional responsible for brand positioning, identity development, campaign management, consumer research, and brand equity building."
+  },
+  {
+    "career_name": "Management Consultant",
+    "aliases": [
+      "Strategy Consultant",
+      "Business Transformation Consultant"
+    ],
+    "guidance": "Professional advising organizations on strategy, operations, finance, and technology to improve performance, drive cost optimization, and manage change."
+  },
+  {
+    "career_name": "Logistics Manager",
+    "aliases": [
+      "Freight Manager",
+      "Distribution Manager",
+      "3PL Manager"
+    ],
+    "guidance": "Operations professional managing transportation, warehousing, customs clearance, freight forwarding, and last-mile delivery to optimize supply chain efficiency."
+  },
+  {
+    "career_name": "Data Analyst (Business)",
+    "aliases": [
+      "Business Intelligence Analyst",
+      "Reporting Analyst",
+      "Excel/Power BI Analyst"
+    ],
+    "guidance": "Business analyst transforming raw data into actionable insights using Excel, Power BI, Tableau, SQL, and statistical techniques for business decision support."
+  },
+  {
+    "career_name": "Digital Marketing Manager",
+    "aliases": [
+      "Performance Marketing Manager",
+      "Digital Advertising Manager",
+      "Online Marketing Manager"
+    ],
+    "guidance": "Marketing manager overseeing paid search (PPC), social media advertising, email marketing, SEO, content marketing, and marketing analytics to drive online growth."
+  },
+  {
+    "career_name": "Quality Control Analyst",
+    "aliases": [
+      "QC Lab Analyst",
+      "Food Safety Analyst",
+      "Product Quality Analyst"
+    ],
+    "guidance": "Laboratory professional performing quality control testing of raw materials, in-process samples, and finished products to ensure compliance with food safety and regulatory standards."
+  },
+  {
+    "career_name": "Regulatory Affairs Specialist",
+    "aliases": [
+      "Regulatory Affairs Officer",
+      "Drug Regulatory Specialist",
+      "FSSAI Compliance Officer"
+    ],
+    "guidance": "Professional managing regulatory submissions, product approvals, labeling compliance, and regulatory strategy for food, pharmaceutical, and medical device companies."
+  },
+  {
+    "career_name": "Biotechnology Researcher",
+    "aliases": [
+      "Biotech Research Scientist",
+      "Molecular Biology Researcher"
+    ],
+    "guidance": "Research scientist conducting experiments in molecular biology, genetic engineering, protein expression, fermentation, and bioproduction for pharmaceutical and agricultural applications."
+  },
+  {
+    "career_name": "Pharmaceutical Formulation Scientist",
+    "aliases": [
+      "Drug Formulation Scientist",
+      "Dosage Form Development Scientist"
+    ],
+    "guidance": "Scientist developing pharmaceutical formulations (tablets, capsules, injectables, biologics) through preformulation studies, stability testing, and scale-up to manufacturing."
+  },
+  {
+    "career_name": "Medical Device Engineer",
+    "aliases": [
+      "Medical Equipment Engineer",
+      "Clinical Engineering Specialist"
+    ],
+    "guidance": "Engineer designing, testing, and maintaining medical devices including imaging systems, surgical instruments, wearables, and implantable devices per FDA/CE regulatory standards."
+  },
+  {
+    "career_name": "Health Informatics Specialist",
+    "aliases": [
+      "Healthcare IT Specialist",
+      "Electronic Health Record Specialist",
+      "Clinical Informatics Analyst"
+    ],
+    "guidance": "Professional at the intersection of healthcare and information technology managing EHR systems, clinical data analytics, HL7/FHIR interoperability, and hospital IT infrastructure."
   }
 ]

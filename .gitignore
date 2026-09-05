@@ -53,3 +53,8 @@ jspm_packages/
 
 # Aider AI Chat
 .aider*
+
+# Scratch & Temporary Test Files
+job_search_ai/scratch/
+*.log
+*.txt
